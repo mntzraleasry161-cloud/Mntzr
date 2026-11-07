@@ -588,7 +588,7 @@ label:first-child{margin-top:0}
       <div class="role-desc">استقبل الطلبات<br>واكسب أكثر</div>
     </button>
   </div>
-  <div class="role-footer">v2.2 — تكسي: 1000 د.ع لكل 4 كم</div>
+  <div class="role-footer">v2.2 — تكسي: 1000 د.ع لكل 3 كم</div>
 </div>
 
 <!-- ===================== AUTH ===================== -->
@@ -673,7 +673,7 @@ label:first-child{margin-top:0}
           <span class="emoji">🛺</span><strong>تكتك</strong><small>مشوار سريع</small>
         </button>
         <button class="service-3d" onclick="selectService('taxi')">
-          <span class="emoji">🚕</span><strong>تكسي</strong><small>1000 د.ع / 4 كم</small>
+          <span class="emoji">🚕</span><strong>تكسي</strong><small>1000 د.ع / 3 كم</small>
         </button>
       </div>
       <button class="cta-primary" onclick="selectService('taxi')">ابدأ الآن ➜</button>
@@ -683,7 +683,7 @@ label:first-child{margin-top:0}
       <div class="section-title" id="bookingTitle">🚕 اطلب تكسي</div>
       <div class="fare-notice">
         <span class="big">💰</span>
-        <span id="fareText">1000 دينار لكل 4 كيلومتر</span>
+        <span id="fareText">1000 دينار لكل 3 كيلومتر</span>
       </div>
       <p class="muted" style="margin-top:12px">حدد موقع الانطلاق والوجهة على الخريطة.</p>
       <div class="map-tabs">
@@ -809,11 +809,11 @@ label:first-child{margin-top:0}
 /* =========================================================
    KOKTON — v2.2
    ✅ سبلاش سينمائي كامل
-   ✅ تكسي: 1000 د.ع لكل 4 كم (rate = 250 د.ع/كم)
+   ✅ تكسي: 1000 د.ع لكل 3 كم (rate = 1000/3 ≈ 333.33 د.ع/كم)
    ✅ زر تبديل المظهر 🌙/☀️
    ✅ زر تبديل الحساب ⇄
    ========================================================= */
-console.log('🎬 KOKTON v2.2 — سبلاش سينمائي + تكسي: 1000 د.ع لكل 4 كم');
+console.log('🎬 KOKTON v2.2 — سبلاش سينمائي + تكسي: 1000 د.ع لكل 3 كم');
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n).toLocaleString('en-US');
@@ -846,12 +846,12 @@ function toggleTheme() {
 applyTheme(getStoredTheme());
 
 /* =========================================================
-   SERVICES — تكسي = 250 د.ع/كم → 4 كم = 1000 د.ع
+   SERVICES — تكسي = 1000 د.ع / 3 كم → 333.33 د.ع/كم
    ========================================================= */
 const SERVICES = {
-  taxi:     { label: 'تكسي 🚕',       rate: 250,  min: 1000, icon: '🚕', fareText: '1000 دينار لكل 4 كيلومتر' },
-  tuktuk:   { label: 'تكتك 🛺',       rate: 1000, min: 2000, icon: '🛺', fareText: '1000 دينار لكل كيلومتر' },
-  delivery: { label: 'مندوب توصيل 🛵', rate: 2000, min: 4000, icon: '🛵', fareText: '2000 دينار لكل كيلومتر' }
+  taxi:     { label: 'تكسي 🚕',       rate: 1000 / 3, min: 1000, icon: '🚕', fareText: '1000 دينار لكل 3 كيلومتر' },
+  tuktuk:   { label: 'تكتك 🛺',       rate: 1000,     min: 2000, icon: '🛺', fareText: '1000 دينار لكل كيلومتر' },
+  delivery: { label: 'مندوب توصيل 🛵', rate: 2000,     min: 4000, icon: '🛵', fareText: '2000 دينار لكل كيلومتر' }
 };
 
 const STATUS = {
@@ -1004,7 +1004,8 @@ function calcPrice(service, km) {
   if (!km || km <= 0) return null;
   const s = SERVICES[service];
   const raw = km * s.rate;
-  return Math.max(s.min, Math.round(raw / 250) * 250);
+  // تقريب لأقرب 100 دينار عراقي
+  return Math.max(s.min, Math.round(raw / 100) * 100);
 }
 
 /* =========================================================
