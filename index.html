@@ -12,8 +12,7 @@
 
 body{
  margin:0;
- background:
- radial-gradient(circle at top,#28583a,#102b20 60%,#07140f);
+ background:radial-gradient(circle at top,#28583a,#102b20 60%,#07140f);
  color:white;
  font-family:Cairo,Arial,sans-serif;
  text-align:center;
@@ -34,10 +33,7 @@ h1{
  text-shadow:0 0 15px #b7a04e;
 }
 
-.subtitle{
- color:#b9d3a9;
- font-size:13px;
-}
+.subtitle{color:#b9d3a9;font-size:13px}
 
 .section{
  width:min(95%,850px);
@@ -49,54 +45,27 @@ h1{
  box-shadow:0 10px 35px #0007,inset 0 0 20px #315c3922;
 }
 
-.section-title{
- color:#d8c17a;
- font-size:18px;
- font-weight:900;
- margin:10px 0 18px;
-}
+.section-title{color:#d8c17a;font-size:18px;font-weight:900;margin:10px 0 18px}
 
-.buttons{
- display:flex;
- flex-wrap:wrap;
- justify-content:center;
- gap:12px;
-}
+.buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
 
 .btn{
- position:relative;
- overflow:hidden;
- cursor:pointer;
- border:2px solid #c4a45a;
- border-radius:13px;
- min-width:135px;
- padding:13px 18px;
- color:white;
- font-family:inherit;
- font-weight:900;
- font-size:15px;
+ position:relative;overflow:hidden;cursor:pointer;
+ border:2px solid #c4a45a;border-radius:13px;
+ min-width:135px;padding:13px 18px;color:white;
+ font-family:inherit;font-weight:900;font-size:15px;
  text-shadow:0 2px 4px #0009;
- box-shadow:inset 0 3px 5px #ffffff44,
- inset 0 -5px 8px #0007,
- 0 6px 12px #0008;
+ box-shadow:inset 0 3px 5px #ffffff44,inset 0 -5px 8px #0007,0 6px 12px #0008;
  transition:.15s;
 }
 
 .btn:before{
- content:"";
- position:absolute;
- top:0;
- left:10%;
- width:80%;
- height:45%;
+ content:"";position:absolute;top:0;left:10%;width:80%;height:45%;
  background:linear-gradient(#ffffff55,transparent);
- border-radius:0 0 50% 50%;
- pointer-events:none;
+ border-radius:0 0 50% 50%;pointer-events:none;
 }
 
-.btn:active{
- transform:translateY(4px);
-}
+.btn:active{transform:translateY(4px)}
 
 .gold{background:linear-gradient(#e8d18a,#a98a3c,#665020);color:#241d0c}
 .green{background:linear-gradient(#65a96c,#28643b,#123b26)}
@@ -105,118 +74,60 @@ h1{
 .red{background:linear-gradient(#a85b4c,#71352c,#3d1b19)}
 .orange{background:linear-gradient(#b99a58,#77602c,#453719)}
 
-.large{
- width:min(90%,340px);
- padding:18px;
- font-size:22px;
- border-radius:35px;
-}
-
+.large{width:min(90%,340px);padding:18px;font-size:22px;border-radius:35px}
 .small{min-width:110px;font-size:13px;padding:10px}
 
 #gameScreen{display:none}
 
 #game{
- width:100%;
- height:55vh;
- min-height:340px;
- max-height:620px;
- touch-action:none;
- overflow:hidden;
- border-radius:15px;
+ width:100%;height:55vh;min-height:340px;max-height:620px;
+ touch-action:none;overflow:hidden;border-radius:15px;
 }
 
 #game canvas{display:block}
 
 .game-panel{
- width:min(96%,800px);
- margin:15px auto;
- padding:13px;
+ width:min(96%,800px);margin:15px auto;padding:13px;
  background:linear-gradient(145deg,#1b3828,#10251b);
- border:1px solid #71956c77;
- border-radius:18px;
+ border:1px solid #71956c77;border-radius:18px;
 }
 
-#status{
- color:#d5dca1;
- font-weight:900;
- font-size:16px;
- margin:10px;
-}
+#status{color:#d5dca1;font-weight:900;font-size:16px;margin:10px}
 
 #moves{
- max-height:65px;
- overflow:auto;
- color:#d4e1ce;
- font-size:12px;
- overflow-wrap:anywhere;
- margin-top:12px;
+ max-height:65px;overflow:auto;color:#d4e1ce;font-size:12px;
+ overflow-wrap:anywhere;margin-top:12px;
 }
 
 select{
- background:#193d2b;
- color:white;
- border:1px solid #c4a45a;
- border-radius:10px;
- padding:10px;
- font-family:inherit;
- font-weight:bold;
+ background:#193d2b;color:white;border:1px solid #c4a45a;border-radius:10px;
+ padding:10px;font-family:inherit;font-weight:bold;
 }
 
-#promotion{
- display:none;
- padding:12px;
- background:#244832;
- border-radius:12px;
- margin:10px;
-}
+#promotion{display:none;padding:12px;background:#244832;border-radius:12px;margin:10px}
 
 #settings{
- display:none;
- position:fixed;
- inset:0;
- z-index:10;
- background:#000b;
- justify-content:center;
- align-items:center;
- padding:15px;
+ display:none;position:fixed;inset:0;z-index:10;background:#000b;
+ justify-content:center;align-items:center;padding:15px;
 }
 
 .modal{
  width:min(95%,400px);
  background:linear-gradient(145deg,#315b3c,#10271b);
- border:2px solid #c4a45a;
- border-radius:20px;
- padding:22px;
+ border:2px solid #c4a45a;border-radius:20px;padding:22px;
  box-shadow:0 0 35px #000;
 }
 
 .setting-row{
- display:flex;
- justify-content:space-between;
- align-items:center;
- padding:12px 0;
- border-bottom:1px solid #ffffff22;
+ display:flex;justify-content:space-between;align-items:center;
+ padding:12px 0;border-bottom:1px solid #ffffff22;
 }
 
-input[type=checkbox]{
- width:22px;
- height:22px;
- accent-color:#c4a45a;
-}
+input[type=checkbox]{width:22px;height:22px;accent-color:#c4a45a}
 
-#notice{
- color:#d8c17a;
- min-height:25px;
- font-size:13px;
- margin:8px;
-}
+#notice{color:#d8c17a;min-height:25px;font-size:13px;margin:8px}
 
-.footer{
- color:#a9bba5;
- font-size:11px;
- padding:15px;
-}
+.footer{color:#a9bba5;font-size:11px;padding:15px}
 </style>
 </head>
 
@@ -227,44 +138,25 @@ input[type=checkbox]{
 <div class="subtitle">مملكة الغابة المظلمة ⚔️</div>
 </header>
 
-<!-- القائمة الرئيسية -->
 <div id="menuScreen">
-
 <div class="section">
 <div class="section-title">👑 أهلاً بك في مملكة الوحوش</div>
-
 <div style="font-size:65px;margin:10px">🐉 🌲 👹</div>
-
-<p style="color:#c4d8b9;font-size:13px">
-استعد للمعركة... اختر جيشك وابدأ المواجهة!
-</p>
-
-<button class="btn gold large" onclick="startGame()">
-⚔️ ابدأ المواجهة
-</button>
+<p style="color:#c4d8b9;font-size:13px">استعد للمعركة... اختر جيشك وابدأ المواجهة!</p>
+<button class="btn gold large" onclick="startGame()">⚔️ ابدأ المواجهة</button>
 </div>
 
 <div class="section">
 <div class="section-title">🎮 أوضاع اللعب</div>
-
 <div class="buttons">
-<button class="btn green" onclick="startGame()">
-🤖 ضد الكمبيوتر
-</button>
-
-<button class="btn purple" onclick="comingSoon('اللعب أونلاين')">
-🌐 اللعب أونلاين
-</button>
-
-<button class="btn orange" onclick="comingSoon('التحديات الكبرى')">
-🏆 التحديات الكبرى
-</button>
+<button class="btn green" onclick="startGame()">🤖 ضد الكمبيوتر</button>
+<button class="btn purple" onclick="comingSoon('اللعب أونلاين')">🌐 اللعب أونلاين</button>
+<button class="btn orange" onclick="comingSoon('التحديات الكبرى')">🏆 التحديات الكبرى</button>
 </div>
 </div>
 
 <div class="section">
 <div class="section-title">✨ المملكة</div>
-
 <div class="buttons">
 <button class="btn gold small" onclick="openSettings()">⚙️ الإعدادات</button>
 <button class="btn gold small" onclick="comingSoon('الإنجازات')">🏅 الإنجازات</button>
@@ -272,73 +164,54 @@ input[type=checkbox]{
 <button class="btn purple small" onclick="comingSoon('المتجر')">🛒 المتجر</button>
 <button class="btn blue small" onclick="comingSoon('الحساب الشخصي')">👤 حسابي</button>
 </div>
-
 <div id="notice"></div>
 </div>
-
 </div>
 
-<!-- شاشة اللعب -->
 <div id="gameScreen">
-
 <div class="game-panel">
 <div class="buttons">
-
 <select id="level">
 <option value="easy">🟢 سهل</option>
 <option value="hard">🔴 صعب</option>
 </select>
-
 <button class="btn gold small" onclick="newGame()">🔄 لعبة جديدة</button>
 <button class="btn blue small" onclick="undoMove()">↩️ تراجع</button>
 <button class="btn red small" onclick="backMenu()">🏠 الرئيسية</button>
-
 </div>
 </div>
 
 <div id="game"></div>
 
 <div class="game-panel">
-
 <div id="status">دورك الآن - الأبيض</div>
 
 <div id="promotion">
 <strong>👑 اختر ترقية البيدق</strong>
-
 <div class="buttons" style="margin-top:10px">
 <button class="btn gold small" onclick="promote('q')">ملكة 👑</button>
 <button class="btn gold small" onclick="promote('r')">قلعة 🏰</button>
 <button class="btn gold small" onclick="promote('b')">فيل 🔮</button>
 <button class="btn gold small" onclick="promote('n')">حصان 🐴</button>
 </div>
-
 </div>
 
 <div id="moves">سجل الحركات سيظهر هنا</div>
-
 </div>
 </div>
 
-<!-- الإعدادات -->
 <div id="settings">
-
 <div class="modal">
 <h2 style="color:#d8c17a">⚙️ الإعدادات</h2>
-
 <div class="setting-row">
 <span>🔊 أصوات النقر</span>
 <input type="checkbox" id="sound" checked>
 </div>
-
 <div class="setting-row">
 <span>✨ المؤثرات الصوتية</span>
 <input type="checkbox" id="effects" checked>
 </div>
-
-<p style="color:#c4d8b9;font-size:12px">
-يمكنك تغيير الإعدادات أثناء اللعب.
-</p>
-
+<p style="color:#c4d8b9;font-size:12px">يمكنك تغيير الإعدادات أثناء اللعب.</p>
 <button class="btn green" onclick="closeSettings()">حفظ وإغلاق</button>
 </div>
 </div>
@@ -359,837 +232,826 @@ import * as THREE from "three";
 import {OrbitControls} from "OrbitControls";
 import {Chess} from "chess";
 
-const chess=new Chess();
-const holder=document.getElementById("game");
+const chess = new Chess();
+const holder = document.getElementById("game");
 
-let selected=null;
-let thinking=false;
-let pendingPromotion=null;
-let snapshots=[];
-let gameStarted=false;
-let initialized=false;
+let selected = null;
+let thinking = false;
+let pendingPromotion = null;
+let gameStarted = false;
+let initialized = false;
+let turnToken = 0;
 
-const files="abcdefgh";
+const files = "abcdefgh";
+
+/* ============================================================
+   أدوات مساعدة عامة
+   ============================================================ */
 
 function position(square){
  return {
-  x:files.indexOf(square[0])-3.5,
-  z:Number(square[1])-4.5
+  x: files.indexOf(square[0]) - 3.5,
+  z: 4.5 - Number(square[1])
  };
 }
 
 function sound(){
- if(!document.getElementById("sound").checked)return;
-
+ if(!document.getElementById("sound").checked) return;
  try{
-  const AudioContext=window.AudioContext||window.webkitAudioContext;
-  if(!AudioContext)return;
-
-  const ctx=new AudioContext();
-  const osc=ctx.createOscillator();
-  const gain=ctx.createGain();
-
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if(!AudioContext) return;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
   osc.connect(gain);
   gain.connect(ctx.destination);
-
-  osc.frequency.value=650;
-  gain.gain.setValueAtTime(.07,ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.12);
-
+  osc.frequency.value = 650;
+  gain.gain.setValueAtTime(.07, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .12);
   osc.start();
-  osc.stop(ctx.currentTime+.12);
-  osc.onended=()=>ctx.close();
-
+  osc.stop(ctx.currentTime + .12);
+  osc.onended = () => ctx.close();
  }catch(e){}
 }
 
 function notice(msg){
- document.getElementById("notice").textContent=msg;
+ document.getElementById("notice").textContent = msg;
 }
 
-window.comingSoon=function(name){
+window.comingSoon = function(name){
  sound();
- notice("✨ "+name+" - قريباً في تحديث جديد!");
+ notice("✨ " + name + " - قريباً في تحديث جديد!");
 };
 
-window.openSettings=function(){
+window.openSettings = function(){
  sound();
- document.getElementById("settings").style.display="flex";
+ document.getElementById("settings").style.display = "flex";
 };
 
-window.closeSettings=function(){
+window.closeSettings = function(){
  sound();
- document.getElementById("settings").style.display="none";
+ document.getElementById("settings").style.display = "none";
 };
 
-/* المشهد ثلاثي الأبعاد */
+/* ============================================================
+   المشهد ثلاثي الأبعاد
+   ============================================================ */
 
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x10251a);
-scene.fog=new THREE.Fog(0x10251a,17,35);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x10251a);
+scene.fog = new THREE.Fog(0x10251a, 17, 35);
 
-const camera=new THREE.PerspectiveCamera(45,1,.1,100);
-camera.position.set(7,9,11);
+const camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
+camera.position.set(3, 10, 12);
 
-const renderer=new THREE.WebGLRenderer({
- antialias:true,
- alpha:false
-});
-
-renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputColorSpace=THREE.SRGBColorSpace;
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 holder.appendChild(renderer.domElement);
 
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.target.set(0,0,0);
-controls.enableDamping=true;
-controls.enablePan=false;
-controls.minDistance=8;
-controls.maxDistance=16;
-controls.maxPolarAngle=Math.PI/2.15;
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0, 0);
+controls.enableDamping = true;
+controls.enablePan = false;
+controls.minDistance = 8;
+controls.maxDistance = 20;
+controls.maxPolarAngle = Math.PI / 2.15;
 
-scene.add(new THREE.HemisphereLight(0xd6efcf,0x172b1c,2));
+scene.add(new THREE.HemisphereLight(0xd6efcf, 0x172b1c, 2));
 
-const sun=new THREE.DirectionalLight(0xffe8bd,3);
-sun.position.set(5,10,7);
-sun.castShadow=true;
-sun.shadow.mapSize.set(1024,1024);
+const sun = new THREE.DirectionalLight(0xffe8bd, 3);
+sun.position.set(5, 10, 7);
+sun.castShadow = true;
+sun.shadow.mapSize.set(1024, 1024);
 scene.add(sun);
 
-const greenLight=new THREE.PointLight(0x3dff85,1.3,15);
-greenLight.position.set(-5,4,-4);
+const greenLight = new THREE.PointLight(0x3dff85, 1.3, 15);
+greenLight.position.set(-5, 4, -4);
 scene.add(greenLight);
 
-const floor=new THREE.Mesh(
- new THREE.PlaneGeometry(200,200),
- new THREE.MeshStandardMaterial({
-  color:0x10291b,
-  roughness:1
- })
+const floor = new THREE.Mesh(
+ new THREE.PlaneGeometry(200, 200),
+ new THREE.MeshStandardMaterial({ color: 0x10291b, roughness: 1 })
 );
-
-floor.rotation.x=-Math.PI/2;
-floor.position.y=-.7;
-floor.receiveShadow=true;
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = -.7;
+floor.receiveShadow = true;
 scene.add(floor);
 
-/* قاعدة الشطرنج */
+/* ============================================================
+   قاعدة الشطرنج والحواف
+   ============================================================ */
 
-const base=new THREE.Mesh(
- new THREE.BoxGeometry(8.7,.65,8.7),
- new THREE.MeshStandardMaterial({
-  color:0x263d2a,
-  metalness:.45,
-  roughness:.4
- })
+const base = new THREE.Mesh(
+ new THREE.BoxGeometry(8.7, .65, 8.7),
+ new THREE.MeshStandardMaterial({ color: 0x263d2a, metalness: .45, roughness: .4 })
 );
-
-base.position.y=-.4;
-base.receiveShadow=true;
+base.position.y = -.4;
+base.receiveShadow = true;
 scene.add(base);
 
-/* الحواف الذهبية والخشبية */
+const trimMaterial = new THREE.MeshStandardMaterial({ color: 0xc4a45a, metalness: .75, roughness: .25 });
 
-const trimMaterial=new THREE.MeshStandardMaterial({
- color:0xc4a45a,
- metalness:.75,
- roughness:.25
-});
-
-function addTrim(x,z,sx,sz){
- const m=new THREE.Mesh(
-  new THREE.BoxGeometry(sx,.13,sz),
-  trimMaterial
- );
- m.position.set(x,.045,z);
- m.castShadow=true;
+function addTrim(x, z, sx, sz){
+ const m = new THREE.Mesh(new THREE.BoxGeometry(sx, .13, sz), trimMaterial);
+ m.position.set(x, .045, z);
+ m.castShadow = true;
  scene.add(m);
 }
 
-addTrim(0,4.12,8.35,.13);
-addTrim(0,-4.12,8.35,.13);
-addTrim(4.12,0,.13,8.35);
-addTrim(-4.12,0,.13,8.35);
+addTrim(0, 4.12, 8.35, .13);
+addTrim(0, -4.12, 8.35, .13);
+addTrim(4.12, 0, .13, 8.35);
+addTrim(-4.12, 0, .13, 8.35);
 
-const board=new THREE.Group();
+const board = new THREE.Group();
 scene.add(board);
 
-const pieces=new THREE.Group();
+const pieces = new THREE.Group();
 scene.add(pieces);
 
-const squares=[];
+const squares = [];
 
-/* إنشاء الرقعة */
+/* ============================================================
+   إنشاء الرقعة
+   ============================================================ */
 
 function makeBoard(){
+ for(let rank = 8; rank >= 1; rank--){
+  for(let f = 0; f < 8; f++){
+   const s = files[f] + rank;
+   const p = position(s);
+   const light = (rank + f) % 2 === 0;
 
- for(let rank=8;rank>=1;rank--){
-
-  for(let f=0;f<8;f++){
-
-   const s=files[f]+rank;
-   const p=position(s);
-
-   const light=(rank+f)%2===0;
-
-   const mat=new THREE.MeshStandardMaterial({
-    color:light?0x9dbb77:0x345a3b,
-    roughness:.75,
-    metalness:.05
+   const mat = new THREE.MeshStandardMaterial({
+    color: light ? 0x9dbb77 : 0x345a3b,
+    roughness: .75,
+    metalness: .05
    });
 
-   const mesh=new THREE.Mesh(
-    new THREE.BoxGeometry(.99,.15,.99),
-    mat
-   );
-
-   mesh.position.set(p.x,-.035,p.z);
-   mesh.receiveShadow=true;
-   mesh.castShadow=true;
-   mesh.userData.square=s;
+   const mesh = new THREE.Mesh(new THREE.BoxGeometry(.99, .15, .99), mat);
+   mesh.position.set(p.x, -.035, p.z);
+   mesh.receiveShadow = true;
+   mesh.castShadow = true;
+   mesh.userData.square = s;
 
    board.add(mesh);
    squares.push(mesh);
-
   }
  }
-
 }
 
-/* نظام بناء الوحوش */
+/* ============================================================
+   إدارة الموارد المشتركة (Geometries + Materials)
+   لمنع تسريب الذاكرة عند كل نقلة
+   ============================================================ */
 
-function monster(type,color){
+const geoCache = new Map();
+const matCache = new Map();
 
- const g=new THREE.Group();
+function geo(key, factory){
+ if(!geoCache.has(key)) geoCache.set(key, factory());
+ return geoCache.get(key);
+}
 
- const isWhite=color==="w";
+function mat(key, factory){
+ if(!matCache.has(key)) matCache.set(key, factory());
+ return matCache.get(key);
+}
 
- const main=new THREE.MeshStandardMaterial({
-  color:isWhite?0x427e50:0x343d35,
-  roughness:.38,
-  metalness:.15
- });
+function getGeoSphere(){ return geo('sphere', () => new THREE.SphereGeometry(1, 20, 16)); }
+function getGeoCone(){ return geo('cone', () => new THREE.ConeGeometry(1, 1, 12)); }
+function getGeoBox(){ return geo('box', () => new THREE.BoxGeometry(1, 1, 1)); }
+function getGeoCyl(rt, rb, h){
+ const k = `cyl_${rt}_${rb}_${h}`;
+ return geo(k, () => new THREE.CylinderGeometry(rt, rb, h, 14));
+}
 
- const skin=new THREE.MeshStandardMaterial({
-  color:isWhite?0x75a75c:0x59604a,
-  roughness:.55
- });
+function getMats(color){
+ const isW = color === "w";
+ return {
+  main: mat(`main_${color}`, () => new THREE.MeshStandardMaterial({
+   color: isW ? 0x427e50 : 0x343d35, roughness: .38, metalness: .15
+  })),
+  skin: mat(`skin_${color}`, () => new THREE.MeshStandardMaterial({
+   color: isW ? 0x75a75c : 0x59604a, roughness: .55
+  })),
+  eye: mat(`eye_${color}`, () => new THREE.MeshStandardMaterial({
+   color: isW ? 0x9dff4e : 0xff3b20,
+   emissive: isW ? 0x42ff00 : 0xff1600,
+   emissiveIntensity: 2
+  })),
+  dark: mat('dark', () => new THREE.MeshStandardMaterial({ color: 0x101710, roughness: .8 })),
+  gold: mat('gold', () => new THREE.MeshStandardMaterial({ color: 0xc9a64c, metalness: .75, roughness: .25 })),
+  bone: mat('bone', () => new THREE.MeshStandardMaterial({ color: 0xe3d9b8, roughness: .5 })),
+  armor: mat('armor', () => new THREE.MeshStandardMaterial({ color: 0x455c3b, metalness: .8, roughness: .3 }))
+ };
+}
 
- const dark=new THREE.MeshStandardMaterial({
-  color:0x101710,
-  roughness:.8
- });
+/* ============================================================
+   بناء الوحوش
+   ============================================================ */
 
- const gold=new THREE.MeshStandardMaterial({
-  color:0xc9a64c,
-  metalness:.75,
-  roughness:.25
- });
+function monster(type, color){
+ const g = new THREE.Group();
+ const M = getMats(color);
 
- const bone=new THREE.MeshStandardMaterial({
-  color:0xe3d9b8,
-  roughness:.5
- });
-
- const eye=new THREE.MeshStandardMaterial({
-  color:isWhite?0x9dff4e:0xff3b20,
-  emissive:isWhite?0x42ff00:0xff1600,
-  emissiveIntensity:2
- });
-
- function sphere(x,y,z,sx,sy,sz,mat){
-  const m=new THREE.Mesh(
-   new THREE.SphereGeometry(1,24,20),
-   mat
-  );
-
-  m.position.set(x,y,z);
-  m.scale.set(sx,sy,sz);
-  m.castShadow=true;
-  m.receiveShadow=true;
-  g.add(m);
-  return m;
+ function sphere(x, y, z, sx, sy, sz, m){
+  const mesh = new THREE.Mesh(getGeoSphere(), m);
+  mesh.position.set(x, y, z);
+  mesh.scale.set(sx, sy, sz);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  g.add(mesh);
+  return mesh;
  }
 
- function cone(x,y,z,r,h,mat,rotation=0){
-  const m=new THREE.Mesh(
-   new THREE.ConeGeometry(r,h,12),
-   mat
-  );
-
-  m.position.set(x,y,z);
-  m.rotation.z=rotation;
-  m.castShadow=true;
-  g.add(m);
-  return m;
+ function cone(x, y, z, r, h, m, rotation = 0){
+  const mesh = new THREE.Mesh(getGeoCone(), m);
+  mesh.position.set(x, y, z);
+  mesh.scale.set(r, h, r);
+  mesh.rotation.z = rotation;
+  mesh.castShadow = true;
+  g.add(mesh);
+  return mesh;
  }
 
- function box(x,y,z,sx,sy,sz,mat){
-  const m=new THREE.Mesh(
-   new THREE.BoxGeometry(sx,sy,sz),
-   mat
-  );
-
-  m.position.set(x,y,z);
-  m.castShadow=true;
-  g.add(m);
-  return m;
+ function box(x, y, z, sx, sy, sz, m){
+  const mesh = new THREE.Mesh(getGeoBox(), m);
+  mesh.position.set(x, y, z);
+  mesh.scale.set(sx, sy, sz);
+  mesh.castShadow = true;
+  g.add(mesh);
+  return mesh;
  }
 
- function cylinder(x,y,z,rt,rb,h,mat){
-  const m=new THREE.Mesh(
-   new THREE.CylinderGeometry(rt,rb,h,16),
-   mat
-  );
-
-  m.position.set(x,y,z);
-  m.castShadow=true;
-  g.add(m);
-  return m;
+ function cylinder(x, y, z, rt, rb, h, m){
+  const mesh = new THREE.Mesh(getGeoCyl(rt, rb, h), m);
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true;
+  g.add(mesh);
+  return mesh;
  }
 
  /* الجسم */
-
- sphere(0,.42,0,.38,.48,.34,main);
- sphere(0,.87,0,.38,.38,.34,skin);
+ sphere(0, .42, 0, .38, .48, .34, M.main);
+ sphere(0, .87, 0, .38, .38, .34, M.skin);
 
  /* الرأس */
-
- sphere(0,1.12,.02,.39,.37,.35,main);
+ sphere(0, 1.12, .02, .39, .37, .35, M.main);
 
  /* الفك */
-
- sphere(0,.91,.28,.29,.17,.22,dark);
+ sphere(0, .91, .28, .29, .17, .22, M.dark);
 
  /* الأسنان */
-
- for(let x=-.2;x<=.21;x+=.1){
-  cone(x,.91,.47,.055,.16,bone,Math.PI);
+ for(let x = -.2; x <= .21; x += .1){
+  cone(x, .91, .47, .055, .16, M.bone, Math.PI);
  }
 
  /* العيون المتوهجة */
-
- for(const x of [-.16,.16]){
-  sphere(x,1.17,.31,.105,.105,.055,dark);
-  sphere(x,1.17,.36,.055,.065,.035,eye);
+ for(const x of [-.16, .16]){
+  sphere(x, 1.17, .31, .105, .105, .055, M.dark);
+  sphere(x, 1.17, .36, .055, .065, .035, M.eye);
  }
 
  /* القرون */
-
- cone(-.28,1.53,0,.17,.48,bone,-.35);
- cone(.28,1.53,0,.17,.48,bone,.35);
+ cone(-.28, 1.53, 0, .17, .48, M.bone, -.35);
+ cone(.28, 1.53, 0, .17, .48, M.bone, .35);
 
  /* الأكتاف */
-
- for(const x of [-.4,.4]){
-  sphere(x,.57,0,.2,.24,.22,skin);
+ for(const x of [-.4, .4]){
+  sphere(x, .57, 0, .2, .24, .22, M.skin);
  }
 
  /* الذراعان والمخالب */
-
- for(const x of [-.46,.46]){
-
-  const arm=sphere(x,.36,.15,.13,.27,.14,main);
-  arm.rotation.z=x<0?-.35:.35;
-
-  sphere(x,.15,.22,.15,.13,.14,dark);
-
-  for(let j=-1;j<=1;j++){
-   cone(x+j*.09,.04,.34,.045,.2,bone,Math.PI);
+ for(const x of [-.46, .46]){
+  const arm = sphere(x, .36, .15, .13, .27, .14, M.main);
+  arm.rotation.z = x < 0 ? -.35 : .35;
+  sphere(x, .15, .22, .15, .13, .14, M.dark);
+  for(let j = -1; j <= 1; j++){
+   cone(x + j * .09, .04, .34, .045, .2, M.bone, Math.PI);
   }
-
  }
 
  /* أشواك الظهر */
-
- for(let i=0;i<4;i++){
-  cone(
-   0,
-   .45+i*.17,
-   -.34,
-   .11,
-   .32,
-   dark
-  );
+ for(let i = 0; i < 4; i++){
+  cone(0, .45 + i * .17, -.34, .11, .32, M.dark);
  }
 
  /* تصميم خاص لكل قطعة */
-
- if(type==="k"){
-
-  /* الملك الوحش */
-
-  cylinder(0,1.42,0,.31,.4,.25,gold);
-
-  for(let i=0;i<5;i++){
-   const a=(Math.PI*2/5)*i;
-
-   cone(
-    Math.cos(a)*.28,
-    1.72,
-    Math.sin(a)*.28,
-    .12,
-    .38,
-    bone
-   );
+ if(type === "k"){
+  cylinder(0, 1.42, 0, .31, .4, .25, M.gold);
+  for(let i = 0; i < 5; i++){
+   const a = (Math.PI * 2 / 5) * i;
+   cone(Math.cos(a) * .28, 1.72, Math.sin(a) * .28, .12, .38, M.bone);
   }
-
-  sphere(0,1.57,0,.18,.16,.18,gold);
-
-  cone(0,1.95,0,.09,.35,eye);
-
+  sphere(0, 1.57, 0, .18, .16, .18, M.gold);
+  cone(0, 1.95, 0, .09, .35, M.eye);
  }
 
- if(type==="q"){
-
-  /* الملكة */
-
-  sphere(0,1.48,0,.36,.15,.36,gold);
-
-  for(let i=0;i<7;i++){
-
-   const a=(Math.PI*2/7)*i;
-
-   cone(
-    Math.cos(a)*.3,
-    1.76,
-    Math.sin(a)*.3,
-    .12,
-    .4,
-    bone
-   );
-
+ if(type === "q"){
+  sphere(0, 1.48, 0, .36, .15, .36, M.gold);
+  for(let i = 0; i < 7; i++){
+   const a = (Math.PI * 2 / 7) * i;
+   cone(Math.cos(a) * .3, 1.76, Math.sin(a) * .3, .12, .4, M.bone);
   }
-
-  sphere(0,1.65,0,.13,.15,.13,eye);
-
+  sphere(0, 1.65, 0, .13, .15, .13, M.eye);
  }
 
- if(type==="r"){
-
-  /* القلعة الوحش */
-
-  const armor=new THREE.MeshStandardMaterial({
-   color:0x455c3b,
-   metalness:.8,
-   roughness:.3
-  });
-
-  cylinder(0,1.4,0,.43,.48,.35,armor);
-
-  for(let i=-1;i<=1;i++){
-   box(i*.22,1.68,0,.13,.3,.25,gold);
+ if(type === "r"){
+  cylinder(0, 1.4, 0, .43, .48, .35, M.armor);
+  for(let i = -1; i <= 1; i++){
+   box(i * .22, 1.68, 0, .13, .3, .25, M.gold);
   }
-
-  sphere(0,1.83,0,.15,.16,.15,eye);
-
+  sphere(0, 1.83, 0, .15, .16, .15, M.eye);
  }
 
- if(type==="b"){
-
-  /* الفيل الوحش */
-
-  cone(0,1.8,0,.22,.7,bone);
-
-  sphere(0,1.47,0,.24,.18,.24,gold);
-
-  cone(-.22,1.35,0,.09,.3,bone,-.5);
-  cone(.22,1.35,0,.09,.3,bone,.5);
-
+ if(type === "b"){
+  cone(0, 1.8, 0, .22, .7, M.bone);
+  sphere(0, 1.47, 0, .24, .18, .24, M.gold);
+  cone(-.22, 1.35, 0, .09, .3, M.bone, -.5);
+  cone(.22, 1.35, 0, .09, .3, M.bone, .5);
  }
 
- if(type==="n"){
-
-  /* الحصان الوحش */
-
-  sphere(0,1.05,.32,.2,.34,.22,main);
-
-  sphere(0,1.38,.34,.22,.3,.2,skin);
-
-  cone(0,1.7,.34,.13,.35,bone);
-
-  for(let i=0;i<4;i++){
-   cone(-.18+i*.12,1.63,.15,.08,.35,gold,-.3);
+ if(type === "n"){
+  sphere(0, 1.05, .32, .2, .34, .22, M.main);
+  sphere(0, 1.38, .34, .22, .3, .2, M.skin);
+  cone(0, 1.7, .34, .13, .35, M.bone);
+  for(let i = 0; i < 4; i++){
+   cone(-.18 + i * .12, 1.63, .15, .08, .35, M.gold, -.3);
   }
-
-  sphere(0,1.37,.53,.07,.07,.04,eye);
-
+  sphere(0, 1.37, .53, .07, .07, .04, M.eye);
  }
 
- if(type==="p"){
-
-  /* الجندي */
-
-  sphere(0,1.4,0,.2,.22,.2,gold);
-
-  cone(0,1.7,0,.13,.4,bone);
-
+ if(type === "p"){
+  sphere(0, 1.4, 0, .2, .22, .2, M.gold);
+  cone(0, 1.7, 0, .13, .4, M.bone);
  }
 
  return g;
 }
 
-/* رسم القطع */
+/* ============================================================
+   رسم القطع (بدون تسريب ذاكرة - الموارد مشتركة عبر caches)
+   ============================================================ */
 
 function draw(){
-
  pieces.clear();
 
- const state=chess.board();
+ const state = chess.board();
 
- for(let r=0;r<8;r++){
+ for(let r = 0; r < 8; r++){
+  for(let f = 0; f < 8; f++){
+   const p = state[r][f];
+   if(!p) continue;
 
-  for(let f=0;f<8;f++){
+   const s = files[f] + (8 - r);
+   const pos = position(s);
 
-   const p=state[r][f];
-
-   if(!p)continue;
-
-   const s=files[f]+(8-r);
-   const pos=position(s);
-
-   const obj=monster(p.type,p.color);
-
-   obj.position.set(pos.x,.05,pos.z);
-   obj.userData.square=s;
-   obj.userData.color=p.color;
+   const obj = monster(p.type, p.color);
+   obj.position.set(pos.x, .05, pos.z);
+   obj.rotation.y = p.color === "w" ? Math.PI : 0;
+   obj.userData.square = s;
+   obj.userData.color = p.color;
 
    pieces.add(obj);
-
   }
-
  }
-
 }
 
-/* تلوين الحركات */
+/* ============================================================
+   تلوين الحركات + إبراز الملك المكشوش
+   ============================================================ */
 
 function resetColors(){
-
- squares.forEach(s=>{
-
-  const rank=Number(s.userData.square[1]);
-  const f=files.indexOf(s.userData.square[0]);
-
-  s.material.color.setHex(
-   (rank+f)%2===0?0x9dbb77:0x345a3b
-  );
-
+ squares.forEach(s => {
+  const rank = Number(s.userData.square[1]);
+  const f = files.indexOf(s.userData.square[0]);
+  s.material.color.setHex((rank + f) % 2 === 0 ? 0x9dbb77 : 0x345a3b);
  });
 
+ /* إبراز الملك المكشوش */
+ if(chess.isCheck()){
+  const kingColor = chess.turn();
+  const king = chess.board().flat().find(p => p && p.type === "k" && p.color === kingColor);
+  if(king){
+   const sq = squares.find(s => s.userData.square === king.square);
+   if(sq) sq.material.color.setHex(0xd9534f);
+  }
+ }
 }
 
 function showMoves(from){
-
  resetColors();
 
- const moves=chess.moves({
-  square:from,
-  verbose:true
+ const moves = chess.moves({ square: from, verbose: true });
+
+ moves.forEach(m => {
+  const sq = squares.find(x => x.userData.square === m.to);
+  if(sq) sq.material.color.setHex(0x8edb65);
  });
-
- moves.forEach(m=>{
-
-  const sq=squares.find(x=>x.userData.square===m.to);
-
-  if(sq)sq.material.color.setHex(0x8edb65);
-
- });
-
 }
 
-/* حالة اللعبة */
+/* ============================================================
+   حالة اللعبة
+   ============================================================ */
 
 function updateStatus(){
-
- const status=document.getElementById("status");
+ const status = document.getElementById("status");
 
  if(chess.isCheckmate()){
-
-  status.textContent="🏆 كش مات! "+(chess.turn()==="w"?"الأسود":"الأبيض")+" فاز!";
+  status.textContent = "🏆 كش مات! " + (chess.turn() === "w" ? "الأسود" : "الأبيض") + " فاز!";
   return true;
-
  }
 
  if(chess.isStalemate()){
-
-  status.textContent="🤝 تعادل بسبب الجمود!";
+  status.textContent = "🤝 تعادل بسبب الجمود!";
   return true;
-
  }
 
  if(chess.isDraw()){
-
-  status.textContent="🤝 المباراة انتهت بالتعادل";
+  status.textContent = "🤝 المباراة انتهت بالتعادل";
   return true;
-
  }
 
  if(chess.isCheck()){
-
-  status.textContent="⚠️ كش! الملك مهدد";
+  status.textContent = "⚠️ كش! الملك مهدد";
   return false;
-
  }
 
- status.textContent=chess.turn()==="w"?
- "دورك الآن - الأبيض":"🤖 الكمبيوتر يفكر...";
+ status.textContent = chess.turn() === "w"
+  ? "دورك الآن - الأبيض"
+  : "🤖 الكمبيوتر يفكر...";
 
  return false;
-
 }
 
-function saveMove(){
- snapshots.push(chess.fen());
-}
+/* ============================================================
+   تنفيذ الحركة
+   ============================================================ */
 
-function makeMove(from,to,promotion="q"){
-
+function makeMove(from, to, promotion = "q"){
  try{
-
-  const move=chess.move({from,to,promotion});
-
-  if(!move)return false;
+  const move = chess.move({ from, to, promotion });
+  if(!move) return false;
 
   draw();
   resetColors();
-  selected=null;
+  selected = null;
 
-  document.getElementById("moves").textContent=
-   chess.history().join("  ");
-
+  document.getElementById("moves").textContent = chess.history().join("  ");
   sound();
 
   return true;
-
  }catch(e){
-
   return false;
-
  }
-
 }
 
-/* تقييم القطع */
+/* ============================================================
+   تقييم اللوحة (سريع - بدون استدعاءات مكلفة)
+   ============================================================ */
+
+const PIECE_VALUES = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 };
 
 function evaluate(){
-
- if(chess.isCheckmate()){
-  return chess.turn()==="w"?100000:-100000;
- }
-
- if(chess.isDraw())return 0;
-
- const values={
-  p:100,n:320,b:330,r:500,q:900,k:20000
- };
-
- let score=0;
-
- chess.board().forEach((row,r)=>{
-
-  row.forEach((p,f)=>{
-
-   if(!p)return;
-
-   let value=values[p.type];
-
-   if(p.type==="p"){
-    value+=(p.color==="b"?r:7-r)*4;
-   }
-
-   const center=7-(
-    Math.abs(3.5-f)+Math.abs(3.5-r)
-   );
-
-   value+=center*2;
-
-   score+=p.color==="b"?value:-value;
-
+ let score = 0;
+ chess.board().forEach((row, r) => {
+  row.forEach((p, f) => {
+   if(!p) return;
+   let value = PIECE_VALUES[p.type];
+   if(p.type === "p") value += (p.color === "b" ? r : 7 - r) * 4;
+   const center = 7 - (Math.abs(3.5 - f) + Math.abs(3.5 - r));
+   value += center * 2;
+   score += p.color === "b" ? value : -value;
   });
-
  });
-
  return score;
-
 }
 
-function minimax(depth,alpha,beta,maximizing){
+/* ============================================================
+   Minimax مع Alpha-Beta + ترتيب الحركات
+   يستخدم كائنات الحركة (verbose) بدل نصوص SAN = أسرع بكثير
+   ============================================================ */
 
- if(depth===0||chess.isGameOver())return evaluate();
+function orderMoves(moves){
+ moves.sort((a, b) => {
+  const av = (a.captured ? 10 : 0) + (a.promotion ? 8 : 0);
+  const bv = (b.captured ? 10 : 0) + (b.promotion ? 8 : 0);
+  return bv - av;
+ });
+ return moves;
+}
 
- const moves=chess.moves();
+function minimax(depth, alpha, beta, maximizing){
+ if(depth === 0) return evaluate();
+
+ const moves = chess.moves({ verbose: true });
+ if(!moves.length) return evaluate(); // كش مات أو جمود
+
+ orderMoves(moves);
 
  if(maximizing){
-
-  let best=-Infinity;
-
+  let best = -Infinity;
   for(const m of moves){
-
    chess.move(m);
-
-   best=Math.max(
-    best,
-    minimax(depth-1,alpha,beta,false)
-   );
-
+   best = Math.max(best, minimax(depth - 1, alpha, beta, false));
    chess.undo();
-
-   alpha=Math.max(alpha,best);
-
-   if(beta<=alpha)break;
-
+   alpha = Math.max(alpha, best);
+   if(beta <= alpha) break;
   }
-
   return best;
-
- }else{
-
-  let best=Infinity;
-
+ } else {
+  let best = Infinity;
   for(const m of moves){
-
    chess.move(m);
-
-   best=Math.min(
-    best,
-    minimax(depth-1,alpha,beta,true)
-   );
-
+   best = Math.min(best, minimax(depth - 1, alpha, beta, true));
    chess.undo();
-
-   beta=Math.min(beta,best);
-
-   if(beta<=alpha)break;
-
+   beta = Math.min(beta, best);
+   if(beta <= alpha) break;
   }
-
   return best;
-
  }
-
 }
 
-/* الكمبيوتر */
+/* ============================================================
+   الكمبيوتر
+   ============================================================ */
 
 function computer(){
+ if(chess.isGameOver()) return;
 
- if(chess.isGameOver())return;
-
- const moves=chess.moves();
-
- if(!moves.length)return;
+ const moves = chess.moves({ verbose: true });
+ if(!moves.length) return;
 
  let chosen;
 
- if(document.getElementById("level").value==="easy"){
-
-  const captures=moves.filter(m=>m.includes("x"));
-
-  const pool=Math.random()<.5&&captures.length?captures:moves;
-
-  chosen=pool[Math.floor(Math.random()*pool.length)];
-
- }else{
-
-  let best=-Infinity;
-
+ if(document.getElementById("level").value === "easy"){
+  const captures = moves.filter(m => m.captured);
+  const pool = (Math.random() < .5 && captures.length) ? captures : moves;
+  chosen = pool[Math.floor(Math.random() * pool.length)];
+ } else {
+  orderMoves(moves);
+  let best = -Infinity;
   for(const m of moves){
-
    chess.move(m);
-
-   const score=minimax(2,-Infinity,Infinity,false);
-
+   const score = minimax(3, -Infinity, Infinity, false);
    chess.undo();
-
-   if(score>best){
-    best=score;
-    chosen=m;
+   if(score > best){
+    best = score;
+    chosen = m;
    }
-
   }
-
  }
 
  if(chosen){
-
   chess.move(chosen);
-
   draw();
-
-  document.getElementById("moves").textContent=
-   chess.history().join("  ");
-
+  resetColors();
+  document.getElementById("moves").textContent = chess.history().join("  ");
   sound();
   updateStatus();
-
  }
-
 }
 
-function executePlayerMove(from,to,promotion){
+/* ============================================================
+   تنفيذ نقلة اللاعب + جدولة رد الحاسوب (بدون Race Condition)
+   ============================================================ */
 
- if(!makeMove(from,to,promotion))return;
+function executePlayerMove(from, to, promotion){
+ if(!makeMove(from, to, promotion)) return;
 
- document.getElementById("promotion").style.display="none";
+ document.getElementById("promotion").style.display = "none";
 
- if(updateStatus())return;
+ if(updateStatus()) return; // اللعبة انتهت
 
- thinking=true;
+ thinking = true;
+ const myToken = ++turnToken;
 
- setTimeout(()=>{
-
-  if(gameStarted&&!chess.isGameOver()){
+ setTimeout(() => {
+  if(myToken !== turnToken) return; // أُلغيت (لعبة جديدة/عودة للقائمة)
+  if(gameStarted && !chess.isGameOver()){
    computer();
   }
-
-  thinking=false;
-
- },350);
-
+  thinking = false;
+ }, 350);
 }
 
-/* اختيار القطع وتحريكها */
+/* ============================================================
+   التفاعل: النقر على الرقعة (مع تمييز السحب للكاميرا)
+   ============================================================ */
 
 function onClick(event){
+ if(!gameStarted || thinking || chess.isGameOver() || pendingPromotion) return;
+ if(chess.turn() !== "w") return;
 
- if(!gameStarted||thinking||chess.isGameOver()||pendingPromotion)return;
-
- if(chess.turn()!=="w")return;
-
- const rect=renderer.domElement.getBoundingClientRect();
-
- const pointer=new THREE.Vector2(
-  ((event.clientX-rect.left)/rect.width)*2-1,
-  -((event.clientY-rect.top)/rect.height)*2+1
+ const rect = renderer.domElement.getBoundingClientRect();
+ const pointer = new THREE.Vector2(
+  ((event.clientX - rect.left) / rect.width) * 2 - 1,
+  -((event.clientY - rect.top) / rect.height) * 2 + 1
  );
 
- const ray=new THREE.Raycaster();
+ const ray = new THREE.Raycaster();
+ ray.setFromCamera(pointer, camera);
 
- ray.setFromCamera(pointer,camera);
+ const hits = ray.intersectObjects([...pieces.children, ...squares], true);
+ if(!hits.length) return;
 
- const hits=ray.intersectObjects(
-  [...pieces.children,...squares],
-  true
- );
+ let object = hits[0].object;
+ while(object.parent && object.parent !== pieces) object = object.parent;
 
- if(!hits.length)return;
-
- let object=hits[0].object;
-
- while(object.parent&&object.parent!==pieces){
-  object=object.parent;
+ /* محاولة اختيار قطعة بيضاء */
+ if(object.parent === pieces && object.userData.color === "w"){
+  if(selected === object.userData.square){
+   /* نفس القطعة = إلغاء التحديد */
+   selected = null;
+   resetColors();
+   return;
+  }
+  selected = object.userData.square;
+  showMoves(selected);
+  sound();
+  return;
  }
 
- if(object.parent===pieces){
+ /* محاولة تحريك القطعة المختارة */
+ if(!selected) return;
 
-  if(object.userData.color==="w"){
+ const squareHit = ray.intersectObjects(squares, false);
+ if(!squareHit.length) return;
 
-   selected=object.userData.square;
+ const to = squareHit[0].object.userData.square;
 
-   showMoves(selected);
+ const possible = chess.moves({ square: selected, verbose: true });
+ const move = possible.find(m => m.to === to);
 
-  
+ if(!move){
+  /* نقرة على مربع غير صالح = إلغاء التحديد */
+  selected = null;
+  resetColors();
+  return;
+ }
+
+ if(move.flags.includes("p")){
+  pendingPromotion = { from: selected, to };
+  document.getElementById("promotion").style.display = "block";
+  return;
+ }
+
+ executePlayerMove(selected, to, "q");
+}
+
+/* تمييز السحب من النقر العادي */
+let pointerDown = null;
+
+renderer.domElement.addEventListener("pointerdown", (e) => {
+ pointerDown = { x: e.clientX, y: e.clientY };
+});
+
+renderer.domElement.addEventListener("pointerup", (e) => {
+ if(!pointerDown) return;
+ const dist = Math.hypot(e.clientX - pointerDown.x, e.clientY - pointerDown.y);
+ pointerDown = null;
+ if(dist > 8) return; // كان سحباً، لا تعتبره نقرة
+ onClick(e);
+});
+
+/* ============================================================
+   الترقية
+   ============================================================ */
+
+window.promote = function(type){
+ if(!pendingPromotion) return;
+ const p = pendingPromotion;
+ pendingPromotion = null;
+ executePlayerMove(p.from, p.to, type);
+};
+
+/* ============================================================
+   بدء اللعبة
+   ============================================================ */
+
+window.startGame = function(){
+ sound();
+
+ document.getElementById("menuScreen").style.display = "none";
+ document.getElementById("gameScreen").style.display = "block";
+ gameStarted = true;
+
+ if(!initialized){
+  initialized = true;
+  makeBoard();
+  draw();
+  updateStatus();
+ } else {
+  newGame();
+ }
+
+ resize();
+};
+
+/* ============================================================
+   لعبة جديدة
+   ============================================================ */
+
+window.newGame = function(){
+ turnToken++;         // يُلغي أي مؤقت سابق
+ chess.reset();
+ selected = null;
+ pendingPromotion = null;
+ thinking = false;
+ gameStarted = true;
+
+ document.getElementById("promotion").style.display = "none";
+ document.getElementById("moves").textContent = "";
+
+ draw();
+ resetColors();
+ updateStatus();
+ sound();
+};
+
+/* ============================================================
+   التراجع
+   ============================================================ */
+
+window.undoMove = function(){
+ if(thinking) return;
+
+ /* إن كانت هناك ترقية معلّقة، ألغِها أولاً */
+ if(pendingPromotion){
+  pendingPromotion = null;
+  document.getElementById("promotion").style.display = "none";
+  selected = null;
+  resetColors();
+  return;
+ }
+
+ if(chess.history().length < 2) return;
+
+ turnToken++;         // يُلغي أي رد معلّق من الحاسوب
+ chess.undo();
+ chess.undo();
+
+ selected = null;
+
+ draw();
+ resetColors();
+ document.getElementById("moves").textContent = chess.history().join("  ");
+ updateStatus();
+ sound();
+};
+
+/* ============================================================
+   العودة للقائمة
+   ============================================================ */
+
+window.backMenu = function(){
+ turnToken++;         // يُلغي أي مؤقت معلّق
+ gameStarted = false;
+ thinking = false;
+
+ document.getElementById("gameScreen").style.display = "none";
+ document.getElementById("menuScreen").style.display = "block";
+
+ sound();
+};
+
+/* ============================================================
+   تغيير الحجم (ResizeObserver + window resize)
+   ============================================================ */
+
+function resize(){
+ const w = holder.clientWidth;
+ const h = holder.clientHeight;
+ if(!w || !h) return;
+
+ camera.aspect = w / h;
+ camera.updateProjectionMatrix();
+ renderer.setSize(w, h);
+}
+
+if(typeof ResizeObserver !== "undefined"){
+ new ResizeObserver(resize).observe(holder);
+}
+window.addEventListener("resize", resize);
+window.addEventListener("orientationchange", () => setTimeout(resize, 100));
+
+/* ============================================================
+   حلقة العرض
+   ============================================================ */
+
+function animate(){
+ requestAnimationFrame(animate);
+ controls.update();
+ renderer.render(scene, camera);
+}
+
+animate();
+
+</script>
+</body>
+</html>
