@@ -22,6 +22,8 @@
  --pubg-panel:#1a1a1a;
 }
 
+html,body{height:100%}
+
 body{
  margin:0;
  background:radial-gradient(circle at 20% 0%, #1a1a1a 0%, #0a0a0a 55%, #000 100%);
@@ -29,6 +31,8 @@ body{
  font-family:Cairo,Arial,sans-serif;
  text-align:center;
  min-height:100vh;
+ overscroll-behavior:none;
+ -webkit-tap-highlight-color:transparent;
 }
 
 /* subtle military grid texture */
@@ -96,7 +100,6 @@ header{
  box-shadow:0 10px 35px #0008, inset 0 0 22px rgba(245,197,24,0.04);
 }
 
-/* PUBG-style corner brackets */
 .section::before,.section::after{
  content:"";position:absolute;width:16px;height:16px;
  border-color:var(--pubg-gold);border-style:solid;pointer-events:none;
@@ -112,7 +115,7 @@ header{
  text-transform:uppercase;
 }
 
-/* ============ BUTTONS (PUBG-style angular) ============ */
+/* ============ BUTTONS ============ */
 .buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
 
 .btn{
@@ -487,8 +490,8 @@ input[type=range]{
 <script type="module">
 
 import * as THREE from "three";
-import {OrbitControls} from "OrbitControls";
-import {Chess} from "chess";
+import { OrbitControls } from "OrbitControls";
+import { Chess } from "chess";
 
 /* ضع GOOGLE_CLIENT_ID هنا لتفعيل تسجيل الدخول بجوجل */
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
@@ -502,6 +505,8 @@ let pendingPromotion = null;
 let gameStarted = false;
 let initialized = false;
 let currentUser = null;
+let aiTimer = null;          // ✅ مؤقت الكمبيوتر (يُلغى عند تغيير الحالة)
+let audioCtx = null;         // ✅ سياق صوت واحد مشترك
 
 const files = "abcdefgh";
 
@@ -516,23 +521,48 @@ function position(square){
  };
 }
 
-function sound(){
- const snd = document.getElementById("sound");
- if(!snd || !snd.checked) return;
+/* ============================================================
+   AUDIO  (إصلاح: سياق واحد + تفعيل خيار المؤثرات)
+   ============================================================ */
+
+function getAudioCtx(){
+ const AC = window.AudioContext || window.webkitAudioContext;
+ if(!AC) return null;
+ if(!audioCtx) audioCtx = new AC();
+ if(audioCtx.state === "suspended") audioCtx.resume();
+ return audioCtx;
+}
+
+function beep(freq, dur, vol, type){
+ const ctx = getAudioCtx();
+ if(!ctx) return;
  try{
-  const AC = window.AudioContext || window.webkitAudioContext;
-  if(!AC) return;
-  const ctx = new AC();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
-  osc.connect(gain); gain.connect(ctx.destination);
-  osc.frequency.value = 650;
-  gain.gain.setValueAtTime(.07, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .12);
+  osc.type = type || "sine";
+  osc.frequency.value = freq;
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  gain.gain.setValueAtTime(vol, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
   osc.start();
-  osc.stop(ctx.currentTime + .12);
-  osc.onended = () => ctx.close();
+  osc.stop(ctx.currentTime + dur);
  }catch(e){}
+}
+
+function sound(){
+ const snd = document.getElementById("sound");
+ if(snd && !snd.checked) return;
+ beep(650, 0.12, 0.07);
+}
+
+/* ✅ المؤثرات كانت لا تعمل — الآن مربوطة بمربع "المؤثرات الصوتية" */
+function effect(kind){
+ const snd = document.getElementById("sound");
+ const fx  = document.getElementById("effects");
+ if((snd && !snd.checked) || (fx && !fx.checked)) return;
+ if(kind === "capture") beep(220, 0.20, 0.09, "square");
+ else if(kind === "check") beep(900, 0.16, 0.08, "triangle");
 }
 
 function notice(msg){
@@ -561,7 +591,7 @@ window.closeSettings = function(){
 
 function saveUser(user){
  currentUser = user;
- localStorage.setItem("kokton_user", JSON.stringify(user));
+ try{ localStorage.setItem("kokton_user", JSON.stringify(user)); }catch(e){}
 
  const badge = document.getElementById("userBadge");
  if(badge){
@@ -599,8 +629,9 @@ function handleGoogleCredential(response){
 
 window.loginGoogle = function(){
  const msgEl = document.getElementById("loginMsg");
+ msgEl.textContent = "";
 
- if(!window.google || !google.accounts){
+ if(!window.google || !google.accounts || !google.accounts.id){
   msgEl.textContent = "⚠️ خدمة جوجل غير محمّلة. جرّب الدخول كضيف.";
   return;
  }
@@ -627,12 +658,13 @@ window.loginGoogle = function(){
 };
 
 window.logout = function(){
- localStorage.removeItem("kokton_user");
+ try{ localStorage.removeItem("kokton_user"); }catch(e){}
  location.reload();
 };
 
 (function restoreSession(){
- const saved = localStorage.getItem("kokton_user");
+ let saved = null;
+ try{ saved = localStorage.getItem("kokton_user"); }catch(e){}
  if(saved){
   try{ saveUser(JSON.parse(saved)); }catch(e){}
  }
@@ -644,49 +676,12 @@ window.logout = function(){
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x04080a);
-scene.fog = new THREE.Fog(0x04080a, 14, 48);
+/* ✅ الضباب كان يبدأ عند 14 وهي مسافة الكاميرا تقريباً → الرقعة كانت مظللة */
+scene.fog = new THREE.Fog(0x04080a, 24, 70);
 
-const camera = new THREE.PerspectiveCamera(45, 1, .1, 200);
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
 camera.position.set(3, 10, 12);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-holder.appendChild(renderer.domElement);
-
-/* Camera controls disabled — adjustable only via settings */
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, 0);
-controls.enableDamping = false;
-controls.enablePan = false;
-controls.enableRotate = false;
-controls.enableZoom = false;
-controls.enabled = false;
-
-/* Lighting */
-scene.add(new THREE.HemisphereLight(0x4a6b55, 0x0a140e, 1.2));
-
-const moon = new THREE.DirectionalLight(0x9fc9ff, 1.8);
-moon.position.set(-6, 14, -8);
-moon.castShadow = true;
-moon.shadow.mapSize.set(1024, 1024);
-moon.shadow.camera.left = -12;
-moon.shadow.camera.right = 12;
-moon.shadow.camera.top = 12;
-moon.shadow.camera.bottom = -12;
-scene.add(moon);
-
-const greenLight = new THREE.PointLight(0x3dff85, 1.1, 18);
-greenLight.position.set(-5, 4, -4);
-scene.add(greenLight);
-
-/* Floor */
-const floor = new THREE.Mesh(
- new THREE.PlaneGeometry(300, 300),
- new THREE.MeshStandardMaterial({ color: 0x080f0b, roughness: 1 })
-);
-floor.rotation.x = -Math.PI / 2;
-floor.position.
+renderer.shadowMap.enabled = tr
