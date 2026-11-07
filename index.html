@@ -116,6 +116,7 @@ select{
  background:linear-gradient(145deg,#315b3c,#10271b);
  border:2px solid #c4a45a;border-radius:20px;padding:22px;
  box-shadow:0 0 35px #000;
+ max-height:92vh;overflow-y:auto;
 }
 
 .setting-row{
@@ -123,7 +124,41 @@ select{
  padding:12px 0;border-bottom:1px solid #ffffff22;
 }
 
+/* صفوف جديدة لأشرطة الكاميرا */
+.setting-row.col{
+ flex-direction:column;
+ align-items:stretch;
+ gap:8px;
+}
+
+.setting-row.col input[type=range]{
+ width:100%;
+}
+
 input[type=checkbox]{width:22px;height:22px;accent-color:#c4a45a}
+
+input[type=range]{
+ accent-color:#c4a45a;
+ cursor:pointer;
+ height:6px;
+}
+
+.cam-label{
+ color:#d8c17a;
+ font-size:13px;
+ display:flex;
+ justify-content:space-between;
+}
+
+.cam-label b{
+ color:#ffe89a;
+ font-weight:900;
+}
+
+.section-mini-title{
+ color:#d8c17a;font-size:14px;font-weight:900;
+ margin:16px 0 6px;text-align:right;
+}
 
 #notice{color:#d8c17a;min-height:25px;font-size:13px;margin:8px}
 
@@ -202,7 +237,8 @@ input[type=checkbox]{width:22px;height:22px;accent-color:#c4a45a}
 
 <div id="settings">
 <div class="modal">
-<h2 style="color:#d8c17a">⚙️ الإعدادات</h2>
+<h2 style="color:#d8c17a;margin-top:0">⚙️ الإعدادات</h2>
+
 <div class="setting-row">
 <span>🔊 أصوات النقر</span>
 <input type="checkbox" id="sound" checked>
@@ -211,7 +247,35 @@ input[type=checkbox]{width:22px;height:22px;accent-color:#c4a45a}
 <span>✨ المؤثرات الصوتية</span>
 <input type="checkbox" id="effects" checked>
 </div>
-<p style="color:#c4d8b9;font-size:12px">يمكنك تغيير الإعدادات أثناء اللعب.</p>
+
+<!-- ========== إضافة: إعدادات الكاميرا ========== -->
+<div class="section-mini-title">🎥 زوايا الكاميرا (تثبيت القاعدة)</div>
+
+<div class="setting-row col">
+<div class="cam-label">
+<span>🔄 زاوية الدوران</span>
+<b><span id="camAzVal">20</span>°</b>
+</div>
+<input type="range" id="camAzimuth" min="0" max="360" value="20" oninput="updateCamSetting()">
+</div>
+
+<div class="setting-row col">
+<div class="cam-label">
+<span>⬆️ ارتفاع الكاميرا</span>
+<b><span id="camElVal">45</span>°</b>
+</div>
+<input type="range" id="camElevation" min="15" max="80" value="45" oninput="updateCamSetting()">
+</div>
+
+<div class="setting-row col">
+<div class="cam-label">
+<span>🔍 تقريب الكاميرا</span>
+<b><span id="camDistVal">13</span></b>
+</div>
+<input type="range" id="camDistance" min="8" max="20" value="13" oninput="updateCamSetting()">
+</div>
+
+<p style="color:#c4d8b9;font-size:12px">القاعدة ثابتة تماماً — تحكم بالكاميرا من هنا فقط.</p>
 <button class="btn green" onclick="closeSettings()">حفظ وإغلاق</button>
 </div>
 </div>
@@ -301,7 +365,6 @@ scene.background = new THREE.Color(0x10251a);
 scene.fog = new THREE.Fog(0x10251a, 17, 35);
 
 const camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
-camera.position.set(3, 10, 12);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
@@ -311,13 +374,56 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 holder.appendChild(renderer.domElement);
 
+/* ============================================================
+   نظام التحكم بالكاميرا (تثبيت القاعدة + إعدادات من النافذة)
+   ============================================================ */
+
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, 0);
-controls.enableDamping = true;
+controls.target.set(0, 0.3, 0);
+controls.enableDamping = false;
 controls.enablePan = false;
 controls.minDistance = 8;
 controls.maxDistance = 20;
 controls.maxPolarAngle = Math.PI / 2.15;
+// تعطيل السحب واللمس تماماً — القاعدة ثابتة
+controls.enabled = false;
+
+// إعدادات الكاميرا الافتراضية
+const camSettings = {
+ azimuth: 20,
+ elevation: 45,
+ distance: 13
+};
+
+function applyCamera(){
+ const az = THREE.MathUtils.degToRad(camSettings.azimuth);
+ const el = THREE.MathUtils.degToRad(camSettings.elevation);
+ const d  = camSettings.distance;
+ const x = d * Math.cos(el) * Math.sin(az);
+ const y = d * Math.sin(el);
+ const z = d * Math.cos(el) * Math.cos(az);
+ camera.position.set(x, y, z);
+ camera.lookAt(0, 0.3, 0);
+}
+
+window.updateCamSetting = function(){
+ const az = Number(document.getElementById("camAzimuth").value);
+ const el = Number(document.getElementById("camElevation").value);
+ const di = Number(document.getElementById("camDistance").value);
+
+ camSettings.azimuth = az;
+ camSettings.elevation = el;
+ camSettings.distance = di;
+
+ document.getElementById("camAzVal").textContent = az;
+ document.getElementById("camElVal").textContent = el;
+ document.getElementById("camDistVal").textContent = di;
+
+ applyCamera();
+};
+
+// تطبيق الوضعية الابتدائية
+applyCamera();
 
 scene.add(new THREE.HemisphereLight(0xd6efcf, 0x172b1c, 2));
 
@@ -339,6 +445,107 @@ floor.rotation.x = -Math.PI / 2;
 floor.position.y = -.7;
 floor.receiveShadow = true;
 scene.add(floor);
+
+/* ============================================================
+   🌲 أشجار مرعبة تحيط بالمملكة (إضافة جديدة)
+   ============================================================ */
+
+const treeTrunkMat = new THREE.MeshStandardMaterial({ color: 0x1a120c, roughness: 1, metalness: 0 });
+const treeBranchMat = new THREE.MeshStandardMaterial({ color: 0x0e0a07, roughness: 1 });
+const treeHollowMat = new THREE.MeshStandardMaterial({ color: 0x050302, roughness: 1 });
+const treeEyeMat = new THREE.MeshStandardMaterial({
+ color: 0xff2200,
+ emissive: 0xff1500,
+ emissiveIntensity: 3.5
+});
+
+function addScaryTree(x, z, scale = 1.5, seed = 0){
+ const tree = new THREE.Group();
+
+ // جذع ملتوٍ من 4 مقاطع
+ const segments = [
+  { y: 0.9,  r1: 0.42, r2: 0.32, h: 1.8, rz: 0.05,  x: 0.00 },
+  { y: 2.4,  r1: 0.32, r2: 0.22, h: 1.6, rz: -0.15, x: 0.12 },
+  { y: 3.7,  r1: 0.22, r2: 0.10, h: 1.4, rz: -0.30, x: 0.32 },
+  { y: 4.6,  r1: 0.10, r2: 0.03, h: 1.0, rz: -0.50, x: 0.55 }
+ ];
+ segments.forEach(s => {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(s.r2, s.r1, s.h, 7), treeTrunkMat);
+  m.position.set(s.x, s.y, 0);
+  m.rotation.z = s.rz;
+  m.castShadow = true;
+  m.receiveShadow = true;
+  tree.add(m);
+ });
+
+ // فروع يابسة متشابكة
+ const branchCount = 8;
+ for(let i = 0; i < branchCount; i++){
+  const a = (Math.PI * 2 / branchCount) * i + seed;
+  const bh = 1.0 + (i % 3) * 0.25;
+  const br = new THREE.Mesh(new THREE.ConeGeometry(0.08, bh, 6), treeBranchMat);
+  const by = 1.8 + (i % 4) * 0.7;
+  const brr = 0.35 + (i % 2) * 0.2;
+  br.position.set(Math.cos(a) * brr + 0.15, by, Math.sin(a) * brr);
+  br.rotation.z = -Math.cos(a) * 0.9;
+  br.rotation.x = Math.sin(a) * 0.9;
+  br.castShadow = true;
+  tree.add(br);
+ }
+
+ // تجويف مظلم في الجذع
+ const hollow = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 10), treeHollowMat);
+ hollow.position.set(0.05, 1.8, 0.28);
+ tree.add(hollow);
+
+ // عينان متوهجتان
+ const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 8), treeEyeMat);
+ eyeL.position.set(-0.06, 1.86, 0.42);
+ tree.add(eyeL);
+
+ const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 8), treeEyeMat);
+ eyeR.position.set(0.14, 1.86, 0.42);
+ tree.add(eyeR);
+
+ // وهج أحمر خفيف
+ const glow = new THREE.PointLight(0xff2200, 1.2, 5);
+ glow.position.set(0.05, 1.85, 0.6);
+ tree.add(glow);
+
+ tree.position.set(x, -0.7, z);
+ tree.scale.setScalar(scale);
+ tree.rotation.y = seed;
+ scene.add(tree);
+ return tree;
+}
+
+function addScaryForest(){
+ const trees = [
+  // الحلقة القريبة (أشجار كبيرة)
+  { x: -10, z: -8,  s: 1.7 },
+  { x: -12, z: -2,  s: 1.5 },
+  { x: -10, z:  6,  s: 1.6 },
+  { x:  -7, z: -12, s: 1.4 },
+  { x:   7, z: -12, s: 1.5 },
+  { x:  10, z: -8,  s: 1.7 },
+  { x:  12, z: -2,  s: 1.6 },
+  { x:  10, z:  6,  s: 1.5 },
+  { x:   7, z:  12, s: 1.6 },
+  { x:  -7, z:  12, s: 1.5 },
+  // الحلقة البعيدة (أشجار أصغر داخل الضباب)
+  { x: -15, z:   0, s: 1.2 },
+  { x:  15, z:   0, s: 1.2 },
+  { x:   0, z: -15, s: 1.3 },
+  { x:   0, z:  15, s: 1.3 },
+  { x: -14, z: -12, s: 1.1 },
+  { x:  14, z: -12, s: 1.1 },
+  { x: -14, z:  12, s: 1.1 },
+  { x:  14, z:  12, s: 1.1 }
+ ];
+ trees.forEach((t, i) => addScaryTree(t.x, t.z, t.s, i * 0.47));
+}
+
+addScaryForest();
 
 /* ============================================================
    قاعدة الشطرنج والحواف
@@ -479,478 +686,4 @@ function chessPiece(type, color){
  }
 
  function box(x, y, z, sx, sy, sz, m){
-  const mesh = new THREE.Mesh(getGeoBox(), m);
-  mesh.position.set(x, y, z);
-  mesh.scale.set(sx, sy, sz);
-  mesh.castShadow = true;
-  g.add(mesh);
-  return mesh;
- }
-
- function cylinder(x, y, z, rt, rb, h, m){
-  const mesh = new THREE.Mesh(getGeoCyl(rt, rb, h), m);
-  mesh.position.set(x, y, z);
-  mesh.castShadow = true;
-  g.add(mesh);
-  return mesh;
- }
-
- /* القاعدة المشتركة لكل القطع */
- cylinder(0, 0.06, 0, 0.42, 0.46, 0.12, M.main);
- cylinder(0, 0.14, 0, 0.36, 0.42, 0.06, M.gold);
- cylinder(0, 0.19, 0, 0.32, 0.36, 0.04, M.main);
-
- /* ============ البيدق ============ */
- if(type === "p"){
-  sphere(0, 0.35, 0, 0.20, 0.16, 0.20, M.main);
-  cylinder(0, 0.48, 0, 0.12, 0.16, 0.12, M.gold);
-  sphere(0, 0.70, 0, 0.19, 0.21, 0.19, M.skin);
-  sphere(0, 0.88, 0, 0.06, 0.06, 0.06, M.eye);
- }
-
- /* ============ القلعة ============ */
- if(type === "r"){
-  cylinder(0, 0.55, 0, 0.24, 0.32, 0.60, M.main);
-  cylinder(0, 0.90, 0, 0.30, 0.26, 0.12, M.gold);
-  for(let i = 0; i < 6; i++){
-   const a = (Math.PI * 2 / 6) * i;
-   box(Math.cos(a) * 0.24, 1.03, Math.sin(a) * 0.24, 0.12, 0.16, 0.12, M.gold);
-  }
-  sphere(0, 1.15, 0, 0.07, 0.07, 0.07, M.eye);
- }
-
- /* ============ الحصان ============ */
- if(type === "n"){
-  cylinder(0, 0.35, 0, 0.22, 0.28, 0.30, M.main);
-  sphere(0, 0.55, 0, 0.22, 0.20, 0.22, M.main);
-  sphere(0, 0.78, 0.10, 0.18, 0.22, 0.20, M.skin);
-  sphere(0, 0.92, 0.22, 0.14, 0.16, 0.18, M.skin);
-  sphere(0, 0.88, 0.40, 0.11, 0.10, 0.12, M.skin);
-  cone(-0.10, 1.10, 0.10, 0.05, 0.18, M.skin, 0, -0.15);
-  cone(0.10, 1.10, 0.10, 0.05, 0.18, M.skin, 0, 0.15);
-  sphere(-0.10, 0.98, 0.32, 0.04, 0.04, 0.02, M.eye);
-  sphere(0.10, 0.98, 0.32, 0.04, 0.04, 0.02, M.eye);
-  for(let i = 0; i < 3; i++){
-   cone(0, 0.95 + i * 0.04, -0.08 - i * 0.05, 0.06, 0.14, M.dark, 0.3, 0);
-  }
- }
-
- /* ============ الفيل ============ */
- if(type === "b"){
-  cylinder(0, 0.40, 0, 0.18, 0.26, 0.30, M.main);
-  sphere(0, 0.60, 0, 0.20, 0.14, 0.20, M.main);
-  cylinder(0, 0.70, 0, 0.08, 0.15, 0.15, M.gold);
-  cone(0, 0.95, 0, 0.18, 0.40, M.skin);
-  sphere(0, 1.22, 0, 0.08, 0.08, 0.08, M.eye);
-  box(0, 0.95, 0.14, 0.02, 0.15, 0.06, M.dark);
- }
-
- /* ============ الملكة ============ */
- if(type === "q"){
-  cylinder(0, 0.45, 0, 0.20, 0.28, 0.35, M.main);
-  sphere(0, 0.70, 0, 0.22, 0.12, 0.22, M.main);
-  cylinder(0, 0.85, 0, 0.18, 0.20, 0.10, M.gold);
-  for(let i = 0; i < 8; i++){
-   const a = (Math.PI * 2 / 8) * i;
-   cone(Math.cos(a) * 0.16, 1.03, Math.sin(a) * 0.16, 0.045, 0.20, M.gold);
-  }
-  sphere(0, 1.18, 0, 0.07, 0.07, 0.07, M.eye);
- }
-
- /* ============ الملك ============ */
- if(type === "k"){
-  cylinder(0, 0.45, 0, 0.22, 0.30, 0.35, M.main);
-  sphere(0, 0.70, 0, 0.24, 0.14, 0.24, M.main);
-  cylinder(0, 0.88, 0, 0.20, 0.22, 0.14, M.gold);
-  box(0, 1.15, 0, 0.05, 0.28, 0.05, M.eye);
-  box(0, 1.20, 0, 0.20, 0.05, 0.05, M.eye);
- }
-
- return g;
-}
-
-/* ============================================================
-   رسم القطع
-   ============================================================ */
-
-function draw(){
- pieces.clear();
-
- const state = chess.board();
-
- for(let r = 0; r < 8; r++){
-  for(let f = 0; f < 8; f++){
-   const p = state[r][f];
-   if(!p) continue;
-
-   const s = files[f] + (8 - r);
-   const pos = position(s);
-
-   const obj = chessPiece(p.type, p.color);
-   obj.position.set(pos.x, 0.05, pos.z);
-   obj.rotation.y = p.color === "w" ? Math.PI : 0;
-   obj.userData.square = s;
-   obj.userData.color = p.color;
-
-   pieces.add(obj);
-  }
- }
-}
-
-/* ============================================================
-   تلوين الحركات + إبراز الملك المكشوش
-   ============================================================ */
-
-function resetColors(){
- squares.forEach(s => {
-  const rank = Number(s.userData.square[1]);
-  const f = files.indexOf(s.userData.square[0]);
-  s.material.color.setHex((rank + f) % 2 === 0 ? 0x9dbb77 : 0x345a3b);
- });
-
- if(chess.isCheck()){
-  const kingColor = chess.turn();
-  const king = chess.board().flat().find(p => p && p.type === "k" && p.color === kingColor);
-  if(king && king.square){
-   const sq = squares.find(s => s.userData.square === king.square);
-   if(sq) sq.material.color.setHex(0xd9534f);
-  }
- }
-}
-
-function showMoves(from){
- resetColors();
-
- const moves = chess.moves({ square: from, verbose: true });
-
- moves.forEach(m => {
-  const sq = squares.find(x => x.userData.square === m.to);
-  if(sq) sq.material.color.setHex(0x8edb65);
- });
-}
-
-/* ============================================================
-   حالة اللعبة
-   ============================================================ */
-
-function updateStatus(){
- const status = document.getElementById("status");
-
- if(chess.isCheckmate()){
-  status.textContent = "🏆 كش مات! " + (chess.turn() === "w" ? "الأسود" : "الأبيض") + " فاز!";
-  return true;
- }
-
- if(chess.isStalemate()){
-  status.textContent = "🤝 تعادل بسبب الجمود!";
-  return true;
- }
-
- if(chess.isDraw()){
-  status.textContent = "🤝 المباراة انتهت بالتعادل";
-  return true;
- }
-
- if(chess.isCheck()){
-  status.textContent = "⚠️ كش! الملك مهدد";
-  return false;
- }
-
- status.textContent = chess.turn() === "w"
-  ? "دورك الآن - الأبيض"
-  : "🤖 الكمبيوتر يفكر...";
-
- return false;
-}
-
-/* ============================================================
-   تنفيذ الحركة
-   ============================================================ */
-
-function makeMove(from, to, promotion = "q"){
- try{
-  const move = chess.move({ from, to, promotion });
-  if(!move) return false;
-
-  draw();
-  resetColors();
-  selected = null;
-
-  document.getElementById("moves").textContent = chess.history().join("  ");
-  sound();
-
-  return true;
- }catch(e){
-  return false;
- }
-}
-
-/* ============================================================
-   تقييم اللوحة
-   ============================================================ */
-
-const PIECE_VALUES = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 };
-
-function evaluateBoard(){
- if(chess.isCheckmate()){
-  return chess.turn() === "w" ? 999999 : -999999;
- }
- if(chess.isDraw() || chess.isStalemate()) return 0;
-
- let score = 0;
- const b = chess.board();
- for(let r = 0; r < 8; r++){
-  for(let f = 0; f < 8; f++){
-   const p = b[r][f];
-   if(!p) continue;
-   const v = PIECE_VALUES[p.type];
-   score += p.color === "w" ? -v : v;
-  }
- }
- return score;
-}
-
-function minimax(depth, alpha, beta, isMax){
- if(depth === 0 || chess.isGameOver()) return evaluateBoard();
-
- const moves = chess.moves();
-
- if(isMax){
-  let best = -Infinity;
-  for(const m of moves){
-   chess.move(m);
-   const v = minimax(depth - 1, alpha, beta, false);
-   chess.undo();
-   if(v > best) best = v;
-   if(best > alpha) alpha = best;
-   if(beta <= alpha) break;
-  }
-  return best;
- } else {
-  let best = Infinity;
-  for(const m of moves){
-   chess.move(m);
-   const v = minimax(depth - 1, alpha, beta, true);
-   chess.undo();
-   if(v < best) best = v;
-   if(best < beta) beta = best;
-   if(beta <= alpha) break;
-  }
-  return best;
- }
-}
-
-/* ============================================================
-   ذكاء الكمبيوتر
-   ============================================================ */
-
-function computerMove(){
- if(chess.isGameOver() || chess.turn() !== "b") return;
-
- thinking = true;
- document.getElementById("status").textContent = "🤖 الكمبيوتر يفكر...";
-
- setTimeout(() => {
-  const level = document.getElementById("level").value;
-  const depth = level === "easy" ? 1 : 3;
-
-  const moves = chess.moves();
-  let bestMove = null;
-  let bestScore = -Infinity;
-
-  for(const m of moves){
-   chess.move(m);
-   const v = minimax(depth - 1, -Infinity, Infinity, false);
-   chess.undo();
-   if(v > bestScore){
-    bestScore = v;
-    bestMove = m;
-   }
-  }
-
-  if(bestMove){
-   chess.move(bestMove);
-   draw();
-   resetColors();
-   sound();
-   document.getElementById("moves").textContent = chess.history().join("  ");
-  }
-
-  thinking = false;
-  updateStatus();
- }, 250);
-}
-
-/* ============================================================
-   النقر والتفاعل
-   ============================================================ */
-
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-renderer.domElement.addEventListener("pointerdown", onPointerDown);
-
-function onPointerDown(e){
- if(!gameStarted || thinking || pendingPromotion) return;
- if(chess.turn() !== "w" || chess.isGameOver()) return;
-
- const rect = renderer.domElement.getBoundingClientRect();
- mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
- mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
- raycaster.setFromCamera(mouse, camera);
-
- const pieceHits = raycaster.intersectObjects(pieces.children, true);
- const squareHits = raycaster.intersectObjects(squares);
-
- let square = null;
-
- if(pieceHits.length > 0){
-  let obj = pieceHits[0].object;
-  while(obj && !obj.userData.square) obj = obj.parent;
-  if(obj) square = obj.userData.square;
- }
- if(!square && squareHits.length > 0){
-  square = squareHits[0].object.userData.square;
- }
- if(!square) return;
-
- handleSquareClick(square);
-}
-
-function handleSquareClick(square){
- if(selected){
-  const moves = chess.moves({ square: selected, verbose: true });
-  const target = moves.find(m => m.to === square);
-
-  if(target){
-   if(target.flags.includes("p")){
-    pendingPromotion = { from: selected, to: square };
-    document.getElementById("promotion").style.display = "block";
-    return;
-   }
-   makeMove(selected, square);
-   updateStatus();
-   if(!chess.isGameOver() && chess.turn() === "b") computerMove();
-   return;
-  }
- }
-
- const piece = chess.get(square);
- if(piece && piece.color === "w"){
-  selected = square;
-  showMoves(square);
-  sound();
- } else {
-  selected = null;
-  resetColors();
- }
-}
-
-/* ============================================================
-   أزرار التحكم
-   ============================================================ */
-
-window.startGame = function(){
- sound();
- document.getElementById("menuScreen").style.display = "none";
- document.getElementById("gameScreen").style.display = "block";
- gameStarted = true;
-
- if(!initialized){
-  makeBoard();
-  initialized = true;
- }
-
- chess.reset();
- selected = null;
- thinking = false;
- pendingPromotion = null;
-
- draw();
- resetColors();
- updateStatus();
- document.getElementById("promotion").style.display = "none";
- document.getElementById("moves").textContent = "سجل الحركات سيظهر هنا";
-
- setTimeout(onResize, 50);
-};
-
-window.newGame = function(){
- sound();
- chess.reset();
- selected = null;
- thinking = false;
- pendingPromotion = null;
-
- draw();
- resetColors();
- updateStatus();
- document.getElementById("promotion").style.display = "none";
- document.getElementById("moves").textContent = "سجل الحركات سيظهر هنا";
-};
-
-window.undoMove = function(){
- if(thinking) return;
- sound();
- if(chess.history().length < 2) return;
-
- chess.undo();
- chess.undo();
-
- selected = null;
- pendingPromotion = null;
- document.getElementById("promotion").style.display = "none";
-
- draw();
- resetColors();
- updateStatus();
- document.getElementById("moves").textContent = chess.history().join("  ") || "سجل الحركات سيظهر هنا";
-};
-
-window.backMenu = function(){
- sound();
- gameStarted = false;
- document.getElementById("gameScreen").style.display = "none";
- document.getElementById("menuScreen").style.display = "block";
-};
-
-window.promote = function(p){
- if(!pendingPromotion) return;
- sound();
- const { from, to } = pendingPromotion;
- pendingPromotion = null;
- document.getElementById("promotion").style.display = "none";
-
- makeMove(from, to, p);
- updateStatus();
-
- if(!chess.isGameOver() && chess.turn() === "b") computerMove();
-};
-
-/* ============================================================
-   الحجم والحركة
-   ============================================================ */
-
-function onResize(){
- const w = holder.clientWidth || 800;
- const h = holder.clientHeight || 400;
- camera.aspect = w / h;
- camera.updateProjectionMatrix();
- renderer.setSize(w, h);
-}
-
-window.addEventListener("resize", onResize);
-onResize();
-
-function animate(){
- requestAnimationFrame(animate);
- controls.update();
- renderer.render(scene, camera);
-}
-
-animate();
-
-</script>
-</body>
-</html>
+  const mesh = new THREE.Mesh(getGeoBox()
