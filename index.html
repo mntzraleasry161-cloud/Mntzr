@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Monster Chess 3D</title>
+<title>KOKTON — Monster Chess 3D</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <style>
 *{box-sizing:border-box}
 
 body{
  margin:0;
- background:radial-gradient(circle at top,#28583a,#102b20 60%,#07140f);
+ background:radial-gradient(circle at top,#1a3d28,#0a1f16 55%,#030a07);
  color:white;
  font-family:Cairo,Arial,sans-serif;
  text-align:center;
@@ -21,7 +22,7 @@ body{
 
 header{
  padding:20px 10px 12px;
- background:linear-gradient(135deg,#173d2b,#0b2118);
+ background:linear-gradient(135deg,#0f2a1d,#05130c);
  border-bottom:2px solid #c4a45a;
  box-shadow:0 5px 25px #0009;
 }
@@ -31,9 +32,11 @@ h1{
  font-size:clamp(23px,6vw,38px);
  color:#d8c17a;
  text-shadow:0 0 15px #b7a04e;
+ letter-spacing:2px;
 }
 
 .subtitle{color:#b9d3a9;font-size:13px}
+.brand{color:#e8d18a;font-size:11px;letter-spacing:4px;margin-top:2px}
 
 .section{
  width:min(95%,850px);
@@ -77,6 +80,50 @@ h1{
 .large{width:min(90%,340px);padding:18px;font-size:22px;border-radius:35px}
 .small{min-width:110px;font-size:13px;padding:10px}
 
+/* ============ شاشة تسجيل الدخول ============ */
+#loginScreen{
+ position:fixed;inset:0;z-index:100;
+ display:flex;justify-content:center;align-items:center;
+ background:radial-gradient(circle at center,#1c3d29,#050d09 70%);
+ padding:20px;
+}
+
+.login-box{
+ width:min(95%,420px);
+ background:linear-gradient(145deg,#1b3828,#0a1c13);
+ border:2px solid #c4a45a;
+ border-radius:25px;
+ padding:30px 22px;
+ box-shadow:0 0 50px #000c, inset 0 0 30px #2a5a3a55;
+ text-align:center;
+}
+
+.login-box h1{
+ font-size:clamp(28px,8vw,44px);
+ color:#d8c17a;
+ text-shadow:0 0 20px #b7a04e, 0 0 40px #8a6f22;
+ letter-spacing:3px;
+ margin:0;
+}
+
+.login-box .monster{
+ font-size:64px;
+ margin:12px 0;
+ animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+ 0%,100%{transform:translateY(0) rotate(-3deg)}
+ 50%{transform:translateY(-10px) rotate(3deg)}
+}
+
+.login-box p{color:#a9bba5;font-size:13px;margin:14px 0 20px}
+
+.login-box .btn{width:100%;margin-bottom:12px}
+
+#loginMsg{color:#ff9c7a;font-size:12px;min-height:20px;margin-top:8px}
+
+/* ============ شاشة اللعبة ============ */
 #gameScreen{display:none}
 
 #game{
@@ -88,7 +135,7 @@ h1{
 
 .game-panel{
  width:min(96%,800px);margin:15px auto;padding:13px;
- background:linear-gradient(145deg,#1b3828,#10251b);
+ background:linear-gradient(145deg,#12281c,#08160e);
  border:1px solid #71956c77;border-radius:18px;
 }
 
@@ -107,70 +154,64 @@ select{
 #promotion{display:none;padding:12px;background:#244832;border-radius:12px;margin:10px}
 
 #settings{
- display:none;position:fixed;inset:0;z-index:10;background:#000b;
+ display:none;position:fixed;inset:0;z-index:50;background:#000c;
  justify-content:center;align-items:center;padding:15px;
 }
 
 .modal{
- width:min(95%,400px);
+ width:min(95%,420px);max-height:90vh;overflow-y:auto;
  background:linear-gradient(145deg,#315b3c,#10271b);
  border:2px solid #c4a45a;border-radius:20px;padding:22px;
  box-shadow:0 0 35px #000;
- max-height:92vh;overflow-y:auto;
 }
 
 .setting-row{
  display:flex;justify-content:space-between;align-items:center;
  padding:12px 0;border-bottom:1px solid #ffffff22;
-}
-
-/* صفوف جديدة لأشرطة الكاميرا */
-.setting-row.col{
- flex-direction:column;
- align-items:stretch;
  gap:8px;
-}
-
-.setting-row.col input[type=range]{
- width:100%;
 }
 
 input[type=checkbox]{width:22px;height:22px;accent-color:#c4a45a}
 
 input[type=range]{
- accent-color:#c4a45a;
- cursor:pointer;
- height:6px;
+ width:130px;accent-color:#c4a45a;
 }
 
-.cam-label{
- color:#d8c17a;
- font-size:13px;
- display:flex;
- justify-content:space-between;
-}
-
-.cam-label b{
- color:#ffe89a;
- font-weight:900;
-}
-
-.section-mini-title{
- color:#d8c17a;font-size:14px;font-weight:900;
- margin:16px 0 6px;text-align:right;
-}
+.slider-val{color:#d8c17a;font-size:12px;min-width:34px;text-align:left}
 
 #notice{color:#d8c17a;min-height:25px;font-size:13px;margin:8px}
 
 .footer{color:#a9bba5;font-size:11px;padding:15px}
+
+.user-badge{
+ color:#d8c17a;font-size:12px;margin-top:8px;
+ padding:6px 12px;background:#0f2a1d;
+ border-radius:20px;border:1px solid #c4a45a55;display:inline-block;
+}
 </style>
 </head>
 
 <body>
 
+<!-- ============ شاشة تسجيل الدخول ============ -->
+<div id="loginScreen">
+ <div class="login-box">
+  <div class="monster">🐉</div>
+  <h1>KOKTON</h1>
+  <div class="brand">MONSTER CHESS 3D</div>
+  <p>مملكة الغابة المظلمة ⚔️</p>
+
+  <button class="btn blue large" onclick="loginGoogle()">🔐 تسجيل الدخول بجوجل</button>
+  <button class="btn gold large" onclick="loginGuest()">👤 الدخول كضيف</button>
+
+  <div id="loginMsg"></div>
+ </div>
+</div>
+
 <header>
-<h1>🐉 MONSTER CHESS 3D</h1>
+<h1>🐉 KOKTON</h1>
 <div class="subtitle">مملكة الغابة المظلمة ⚔️</div>
+<div class="brand" id="userBadge" style="display:none"></div>
 </header>
 
 <div id="menuScreen">
@@ -197,7 +238,7 @@ input[type=range]{
 <button class="btn gold small" onclick="comingSoon('الإنجازات')">🏅 الإنجازات</button>
 <button class="btn gold small" onclick="comingSoon('المهام اليومية')">📜 المهام</button>
 <button class="btn purple small" onclick="comingSoon('المتجر')">🛒 المتجر</button>
-<button class="btn blue small" onclick="comingSoon('الحساب الشخصي')">👤 حسابي</button>
+<button class="btn blue small" onclick="logout()">🚪 خروج</button>
 </div>
 <div id="notice"></div>
 </div>
@@ -235,50 +276,47 @@ input[type=range]{
 </div>
 </div>
 
+<!-- ============ الإعدادات ============ -->
 <div id="settings">
 <div class="modal">
-<h2 style="color:#d8c17a;margin-top:0">⚙️ الإعدادات</h2>
+<h2 style="color:#d8c17a">⚙️ الإعدادات</h2>
 
 <div class="setting-row">
 <span>🔊 أصوات النقر</span>
 <input type="checkbox" id="sound" checked>
 </div>
+
 <div class="setting-row">
 <span>✨ المؤثرات الصوتية</span>
 <input type="checkbox" id="effects" checked>
 </div>
 
-<!-- ========== إضافة: إعدادات الكاميرا ========== -->
-<div class="section-mini-title">🎥 زوايا الكاميرا (تثبيت القاعدة)</div>
+<h3 style="color:#d8c17a;font-size:15px;margin:18px 0 6px">📷 إعدادات الكاميرا</h3>
+<p style="color:#a9bba5;font-size:11px;margin:0 0 10px">الكاميرا ثابتة أثناء اللعب — عدّلها من هنا</p>
 
-<div class="setting-row col">
-<div class="cam-label">
+<div class="setting-row">
 <span>🔄 زاوية الدوران</span>
-<b><span id="camAzVal">20</span>°</b>
-</div>
-<input type="range" id="camAzimuth" min="0" max="360" value="20" oninput="updateCamSetting()">
-</div>
-
-<div class="setting-row col">
-<div class="cam-label">
-<span>⬆️ ارتفاع الكاميرا</span>
-<b><span id="camElVal">45</span>°</b>
-</div>
-<input type="range" id="camElevation" min="15" max="80" value="45" oninput="updateCamSetting()">
+<input type="range" id="camAngle" min="0" max="360" value="20">
+<span class="slider-val" id="camAngleVal">20°</span>
 </div>
 
-<div class="setting-row col">
-<div class="cam-label">
-<span>🔍 تقريب الكاميرا</span>
-<b><span id="camDistVal">13</span></b>
-</div>
-<input type="range" id="camDistance" min="8" max="20" value="13" oninput="updateCamSetting()">
+<div class="setting-row">
+<span>🔍 المسافة</span>
+<input type="range" id="camDist" min="10" max="20" value="14">
+<span class="slider-val" id="camDistVal">14</span>
 </div>
 
-<p style="color:#c4d8b9;font-size:12px">القاعدة ثابتة تماماً — تحكم بالكاميرا من هنا فقط.</p>
-<button class="btn green" onclick="closeSettings()">حفظ وإغلاق</button>
+<div class="setting-row">
+<span>⬆️ الارتفاع</span>
+<input type="range" id="camHeight" min="4" max="16" value="10">
+<span class="slider-val" id="camHeightVal">10</span>
+</div>
+
+<button class="btn green" style="margin-top:16px" onclick="closeSettings()">حفظ وإغلاق</button>
 </div>
 </div>
+
+<div class="footer">© KOKTON — Monster Chess 3D</div>
 
 <script type="importmap">
 {
@@ -296,6 +334,12 @@ import * as THREE from "three";
 import {OrbitControls} from "OrbitControls";
 import {Chess} from "chess";
 
+/* ============================================================
+   ⚠️ إعدادات جوجل — ضع CLIENT_ID الخاص بك هنا
+   احصل عليه من: https://console.cloud.google.com/apis/credentials
+   ============================================================ */
+const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
 const chess = new Chess();
 const holder = document.getElementById("game");
 
@@ -304,6 +348,7 @@ let thinking = false;
 let pendingPromotion = null;
 let gameStarted = false;
 let initialized = false;
+let currentUser = null;
 
 const files = "abcdefgh";
 
@@ -321,9 +366,9 @@ function position(square){
 function sound(){
  if(!document.getElementById("sound").checked) return;
  try{
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if(!AudioContext) return;
-  const ctx = new AudioContext();
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return;
+  const ctx = new AC();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   osc.connect(gain);
@@ -353,18 +398,106 @@ window.openSettings = function(){
 
 window.closeSettings = function(){
  sound();
+ applyCameraSettings();
  document.getElementById("settings").style.display = "none";
 };
 
 /* ============================================================
-   المشهد ثلاثي الأبعاد
+   🔐 تسجيل الدخول — Google + ضيف
+   ============================================================ */
+
+function saveUser(user){
+ currentUser = user;
+ localStorage.setItem("kokton_user", JSON.stringify(user));
+
+ const badge = document.getElementById("userBadge");
+ badge.style.display = "inline-block";
+ badge.textContent = user.type === "google"
+   ? "👤 " + user.name
+   : "👤 ضيف";
+
+ document.getElementById("loginScreen").style.display = "none";
+}
+
+window.loginGuest = function(){
+ const guest = {
+  type: "guest",
+  name: "ضيف",
+  id: "guest_" + Math.random().toString(36).slice(2, 8)
+ };
+ saveUser(guest);
+};
+
+function handleGoogleCredential(response){
+ try{
+  const payload = JSON.parse(atob(response.credential.split(".")[1]));
+  saveUser({
+   type: "google",
+   name: payload.name || payload.email,
+   email: payload.email,
+   picture: payload.picture,
+   id: payload.sub
+  });
+ }catch(e){
+  document.getElementById("loginMsg").textContent = "❌ فشل تسجيل الدخول بجوجل";
+ }
+}
+
+window.loginGoogle = function(){
+ if(!window.google || !google.accounts){
+  document.getElementById("loginMsg").textContent =
+    "⚠️ خدمة جوجل غير متاحة. سيتم تفعيلها بعد إعداد CLIENT_ID. استخدم الدخول كضيف.";
+  return;
+ }
+
+ if(GOOGLE_CLIENT_ID.includes("YOUR_GOOGLE")){
+  document.getElementById("loginMsg").textContent =
+    "⚠️ لم يتم إعداد CLIENT_ID. استخدم الدخول كضيف حالياً.";
+  return;
+ }
+
+ try{
+  google.accounts.id.initialize({
+   client_id: GOOGLE_CLIENT_ID,
+   callback: handleGoogleCredential,
+   auto_select: false
+  });
+  google.accounts.id.prompt((notification) => {
+   if(notification.isNotDisplayed() || notification.isSkippedMoment()){
+    document.getElementById("loginMsg").textContent =
+      "⚠️ لم تظهر نافذة جوجل. جرّب الدخول كضيف.";
+   }
+  });
+ }catch(e){
+  document.getElementById("loginMsg").textContent = "❌ خطأ: " + e.message;
+ }
+};
+
+window.logout = function(){
+ localStorage.removeItem("kokton_user");
+ location.reload();
+};
+
+/* استرجاع الجلسة السابقة */
+(function restoreSession(){
+ const saved = localStorage.getItem("kokton_user");
+ if(saved){
+  try{
+   saveUser(JSON.parse(saved));
+  }catch(e){}
+ }
+})();
+
+/* ============================================================
+   المشهد ثلاثي الأبعاد — ليلة مرعبة
    ============================================================ */
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x10251a);
-scene.fog = new THREE.Fog(0x10251a, 17, 35);
+scene.background = new THREE.Color(0x050d09);
+scene.fog = new THREE.Fog(0x050d09, 14, 48);
 
-const camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
+const camera = new THREE.PerspectiveCamera(45, 1, .1, 200);
+camera.position.set(3, 10, 12);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
@@ -374,72 +507,38 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 holder.appendChild(renderer.domElement);
 
-/* ============================================================
-   نظام التحكم بالكاميرا (تثبيت القاعدة + إعدادات من النافذة)
-   ============================================================ */
-
+/* الكاميرا — معطلة الحركة، تُتحكم من الإعدادات فقط */
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0.3, 0);
+controls.target.set(0, 0, 0);
 controls.enableDamping = false;
 controls.enablePan = false;
+controls.enableRotate = false;   // ← تعطيل الدوران
+controls.enableZoom = false;     // ← تعطيل الزوم
+controls.enabled = false;        // ← تعطيل كل التحكم
 controls.minDistance = 8;
 controls.maxDistance = 20;
-controls.maxPolarAngle = Math.PI / 2.15;
-// تعطيل السحب واللمس تماماً — القاعدة ثابتة
-controls.enabled = false;
 
-// إعدادات الكاميرا الافتراضية
-const camSettings = {
- azimuth: 20,
- elevation: 45,
- distance: 13
-};
+/* إضاءة ليلية */
+scene.add(new THREE.HemisphereLight(0x4a6b55, 0x0a140e, 1.2));
 
-function applyCamera(){
- const az = THREE.MathUtils.degToRad(camSettings.azimuth);
- const el = THREE.MathUtils.degToRad(camSettings.elevation);
- const d  = camSettings.distance;
- const x = d * Math.cos(el) * Math.sin(az);
- const y = d * Math.sin(el);
- const z = d * Math.cos(el) * Math.cos(az);
- camera.position.set(x, y, z);
- camera.lookAt(0, 0.3, 0);
-}
+const moon = new THREE.DirectionalLight(0x9fc9ff, 1.8);
+moon.position.set(-6, 14, -8);
+moon.castShadow = true;
+moon.shadow.mapSize.set(1024, 1024);
+moon.shadow.camera.left = -12;
+moon.shadow.camera.right = 12;
+moon.shadow.camera.top = 12;
+moon.shadow.camera.bottom = -12;
+scene.add(moon);
 
-window.updateCamSetting = function(){
- const az = Number(document.getElementById("camAzimuth").value);
- const el = Number(document.getElementById("camElevation").value);
- const di = Number(document.getElementById("camDistance").value);
-
- camSettings.azimuth = az;
- camSettings.elevation = el;
- camSettings.distance = di;
-
- document.getElementById("camAzVal").textContent = az;
- document.getElementById("camElVal").textContent = el;
- document.getElementById("camDistVal").textContent = di;
-
- applyCamera();
-};
-
-// تطبيق الوضعية الابتدائية
-applyCamera();
-
-scene.add(new THREE.HemisphereLight(0xd6efcf, 0x172b1c, 2));
-
-const sun = new THREE.DirectionalLight(0xffe8bd, 3);
-sun.position.set(5, 10, 7);
-sun.castShadow = true;
-sun.shadow.mapSize.set(1024, 1024);
-scene.add(sun);
-
-const greenLight = new THREE.PointLight(0x3dff85, 1.3, 15);
+const greenLight = new THREE.PointLight(0x3dff85, 1.1, 18);
 greenLight.position.set(-5, 4, -4);
 scene.add(greenLight);
 
+/* أرضية داكنة */
 const floor = new THREE.Mesh(
- new THREE.PlaneGeometry(200, 200),
- new THREE.MeshStandardMaterial({ color: 0x10291b, roughness: 1 })
+ new THREE.PlaneGeometry(300, 300),
+ new THREE.MeshStandardMaterial({ color: 0x0a1a10, roughness: 1 })
 );
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = -.7;
@@ -447,243 +546,147 @@ floor.receiveShadow = true;
 scene.add(floor);
 
 /* ============================================================
-   🌲 أشجار مرعبة تحيط بالمملكة (إضافة جديدة)
+   🌲 أشجار الليل المرعبة
    ============================================================ */
 
-const treeTrunkMat = new THREE.MeshStandardMaterial({ color: 0x1a120c, roughness: 1, metalness: 0 });
-const treeBranchMat = new THREE.MeshStandardMaterial({ color: 0x0e0a07, roughness: 1 });
-const treeHollowMat = new THREE.MeshStandardMaterial({ color: 0x050302, roughness: 1 });
-const treeEyeMat = new THREE.MeshStandardMaterial({
- color: 0xff2200,
- emissive: 0xff1500,
- emissiveIntensity: 3.5
+const treeGroup = new THREE.Group();
+scene.add(treeGroup);
+
+const trunkMat = new THREE.MeshStandardMaterial({ color: 0x1a120c, roughness: .95 });
+const barkMat  = new THREE.MeshStandardMaterial({ color: 0x0f0a06, roughness: 1 });
+const leafMat  = new THREE.MeshStandardMaterial({
+ color: 0x05140a, roughness: 1,
+ emissive: 0x0a3a18, emissiveIntensity: .15
+});
+const eyeMat = new THREE.MeshStandardMaterial({
+ color: 0xff2a00, emissive: 0xff1a00, emissiveIntensity: 4
+});
+const eyeMat2 = new THREE.MeshStandardMaterial({
+ color: 0x8fff00, emissive: 0x6fff00, emissiveIntensity: 3
 });
 
-function addScaryTree(x, z, scale = 1.5, seed = 0){
+/* ألوان جذوع مختلفة */
+const trunkMats = [
+ new THREE.MeshStandardMaterial({ color: 0x1a120c, roughness: .95 }),
+ new THREE.MeshStandardMaterial({ color: 0x2a1e14, roughness: .9 }),
+ new THREE.MeshStandardMaterial({ color: 0x0f0a06, roughness: 1 }),
+];
+
+function createScaryTree(scale = 1, withEyes = true){
  const tree = new THREE.Group();
+ const tm = trunkMats[Math.floor(Math.random() * trunkMats.length)];
 
- // جذع ملتوٍ من 4 مقاطع
- const segments = [
-  { y: 0.9,  r1: 0.42, r2: 0.32, h: 1.8, rz: 0.05,  x: 0.00 },
-  { y: 2.4,  r1: 0.32, r2: 0.22, h: 1.6, rz: -0.15, x: 0.12 },
-  { y: 3.7,  r1: 0.22, r2: 0.10, h: 1.4, rz: -0.30, x: 0.32 },
-  { y: 4.6,  r1: 0.10, r2: 0.03, h: 1.0, rz: -0.50, x: 0.55 }
- ];
- segments.forEach(s => {
-  const m = new THREE.Mesh(new THREE.CylinderGeometry(s.r2, s.r1, s.h, 7), treeTrunkMat);
-  m.position.set(s.x, s.y, 0);
-  m.rotation.z = s.rz;
-  m.castShadow = true;
-  m.receiveShadow = true;
-  tree.add(m);
- });
+ /* الجذع الرئيسي الملتوي */
+ const trunk = new THREE.Mesh(
+   new THREE.CylinderGeometry(0.18, 0.55, 4.2, 7, 3),
+   tm
+ );
+ trunk.position.y = 2.1;
+ trunk.castShadow = true;
+ trunk.rotation.z = (Math.random() - .5) * .15;
+ tree.add(trunk);
 
- // فروع يابسة متشابكة
- const branchCount = 8;
+ /* فروع ملتوية */
+ const branchCount = 3 + Math.floor(Math.random() * 3);
  for(let i = 0; i < branchCount; i++){
-  const a = (Math.PI * 2 / branchCount) * i + seed;
-  const bh = 1.0 + (i % 3) * 0.25;
-  const br = new THREE.Mesh(new THREE.ConeGeometry(0.08, bh, 6), treeBranchMat);
-  const by = 1.8 + (i % 4) * 0.7;
-  const brr = 0.35 + (i % 2) * 0.2;
-  br.position.set(Math.cos(a) * brr + 0.15, by, Math.sin(a) * brr);
-  br.rotation.z = -Math.cos(a) * 0.9;
-  br.rotation.x = Math.sin(a) * 0.9;
-  br.castShadow = true;
-  tree.add(br);
+  const len = 1.2 + Math.random() * 1.3;
+  const branch = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.04, 0.14, len, 6),
+    tm
+  );
+  const ang = (Math.PI * 2 / branchCount) * i + Math.random() * .6;
+  const yBase = 2.2 + Math.random() * 1.2;
+  branch.position.set(
+    Math.cos(ang) * 0.5,
+    yBase,
+    Math.sin(ang) * 0.5
+  );
+  branch.rotation.z = Math.cos(ang) * (0.6 + Math.random() * 0.4);
+  branch.rotation.x = -Math.sin(ang) * (0.6 + Math.random() * 0.4);
+  branch.castShadow = true;
+  tree.add(branch);
+
+  /* أطراف مدببة على الفروع */
+  const tip = new THREE.Mesh(
+    new THREE.ConeGeometry(0.05, 0.5, 5),
+    barkMat
+  );
+  tip.position.set(
+    Math.cos(ang) * (0.5 + len * 0.5),
+    yBase + len * 0.35,
+    Math.sin(ang) * (0.5 + len * 0.5)
+  );
+  tip.rotation.z = branch.rotation.z;
+  tip.rotation.x = branch.rotation.x;
+  tree.add(tip);
  }
 
- // تجويف مظلم في الجذع
- const hollow = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 10), treeHollowMat);
- hollow.position.set(0.05, 1.8, 0.28);
- tree.add(hollow);
+ /* تاج داكن كثيف */
+ const canopyCount = 4 + Math.floor(Math.random() * 3);
+ for(let i = 0; i < canopyCount; i++){
+  const leaf = new THREE.Mesh(
+    new THREE.SphereGeometry(1.0 + Math.random() * 0.6, 8, 6),
+    leafMat
+  );
+  const a = (Math.PI * 2 / canopyCount) * i + Math.random();
+  leaf.position.set(
+    Math.cos(a) * (0.4 + Math.random() * 0.5),
+    3.6 + Math.random() * 0.9,
+    Math.sin(a) * (0.4 + Math.random() * 0.5)
+  );
+  leaf.scale.set(1, 0.85 + Math.random() * 0.3, 1);
+  leaf.castShadow = true;
+  tree.add(leaf);
+ }
 
- // عينان متوهجتان
- const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 8), treeEyeMat);
- eyeL.position.set(-0.06, 1.86, 0.42);
- tree.add(eyeL);
+ /* عيون متوهجة مرعبة */
+ if(withEyes){
+  const useGreen = Math.random() > 0.6;
+  const em = useGreen ? eyeMat2 : eyeMat;
+  const eyeY = 2.6 + Math.random() * 0.5;
+  for(const ex of [-0.16, 0.16]){
+   const eye = new THREE.Mesh(
+     new THREE.SphereGeometry(0.07, 8, 8),
+     em
+   );
+   eye.position.set(ex, eyeY, 0.38);
+   tree.add(eye);
 
- const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 8), treeEyeMat);
- eyeR.position.set(0.14, 1.86, 0.42);
- tree.add(eyeR);
+   /* هالة العين */
+   const halo = new THREE.PointLight(useGreen ? 0x6fff00 : 0xff1a00, 0.4, 3);
+   halo.position.set(ex, eyeY, 0.4);
+   tree.add(halo);
+  }
+ }
 
- // وهج أحمر خفيف
- const glow = new THREE.PointLight(0xff2200, 1.2, 5);
- glow.position.set(0.05, 1.85, 0.6);
- tree.add(glow);
+ /* فم مرعب (أسنان) على بعض الأشجار */
+ if(Math.random() > 0.55){
+  for(let i = 0; i < 3; i++){
+   const tooth = new THREE.Mesh(
+     new THREE.ConeGeometry(0.03, 0.12, 4),
+     new THREE.MeshStandardMaterial({ color: 0xe3d9b8, roughness: .5 })
+   );
+   tooth.position.set(-0.08 + i * 0.08, 2.35, 0.36);
+   tooth.rotation.x = Math.PI;
+   tree.add(tooth);
+  }
+ }
 
- tree.position.set(x, -0.7, z);
  tree.scale.setScalar(scale);
- tree.rotation.y = seed;
- scene.add(tree);
+ tree.rotation.y = Math.random() * Math.PI * 2;
  return tree;
 }
 
-function addScaryForest(){
- const trees = [
-  // الحلقة القريبة (أشجار كبيرة)
-  { x: -10, z: -8,  s: 1.7 },
-  { x: -12, z: -2,  s: 1.5 },
-  { x: -10, z:  6,  s: 1.6 },
-  { x:  -7, z: -12, s: 1.4 },
-  { x:   7, z: -12, s: 1.5 },
-  { x:  10, z: -8,  s: 1.7 },
-  { x:  12, z: -2,  s: 1.6 },
-  { x:  10, z:  6,  s: 1.5 },
-  { x:   7, z:  12, s: 1.6 },
-  { x:  -7, z:  12, s: 1.5 },
-  // الحلقة البعيدة (أشجار أصغر داخل الضباب)
-  { x: -15, z:   0, s: 1.2 },
-  { x:  15, z:   0, s: 1.2 },
-  { x:   0, z: -15, s: 1.3 },
-  { x:   0, z:  15, s: 1.3 },
-  { x: -14, z: -12, s: 1.1 },
-  { x:  14, z: -12, s: 1.1 },
-  { x: -14, z:  12, s: 1.1 },
-  { x:  14, z:  12, s: 1.1 }
+/* نشر الأشجار حول الرقعة */
+function plantForest(){
+ const positions = [
+  [-7.5, -7.5, 1.1], [-6.5, -2, 0.9], [-7.8, 3, 1.0], [-6.8, 7.5, 1.1],
+  [7.5, -7.5, 1.0], [6.5, -2, 0.95], [7.8, 3, 1.05], [6.8, 7.5, 1.0],
+  [-3, -8.5, 0.85], [1, -8.8, 0.9], [4.5, -8.2, 0.85],
+  [-3, 8.5, 0.9], [1, 8.8, 0.85], [4.5, 8.2, 0.9],
+  [-10, -4, 1.2], [-10, 4, 1.15], [10, -4, 1.2], [10, 4, 1.15],
+  [-11, 0, 1.3], [11, 0, 1.3],
+  [-8, -10, 1.15], [8, -10, 1.15], [-8, 10, 1.1], [8, 10, 1.1],
  ];
- trees.forEach((t, i) => addScaryTree(t.x, t.z, t.s, i * 0.47));
-}
 
-addScaryForest();
-
-/* ============================================================
-   قاعدة الشطرنج والحواف
-   ============================================================ */
-
-const base = new THREE.Mesh(
- new THREE.BoxGeometry(8.7, .65, 8.7),
- new THREE.MeshStandardMaterial({ color: 0x263d2a, metalness: .45, roughness: .4 })
-);
-base.position.y = -.4;
-base.receiveShadow = true;
-scene.add(base);
-
-const trimMaterial = new THREE.MeshStandardMaterial({ color: 0xc4a45a, metalness: .75, roughness: .25 });
-
-function addTrim(x, z, sx, sz){
- const m = new THREE.Mesh(new THREE.BoxGeometry(sx, .13, sz), trimMaterial);
- m.position.set(x, .045, z);
- m.castShadow = true;
- scene.add(m);
-}
-
-addTrim(0, 4.12, 8.35, .13);
-addTrim(0, -4.12, 8.35, .13);
-addTrim(4.12, 0, .13, 8.35);
-addTrim(-4.12, 0, .13, 8.35);
-
-const board = new THREE.Group();
-scene.add(board);
-
-const pieces = new THREE.Group();
-scene.add(pieces);
-
-const squares = [];
-
-/* ============================================================
-   إنشاء الرقعة
-   ============================================================ */
-
-function makeBoard(){
- for(let rank = 8; rank >= 1; rank--){
-  for(let f = 0; f < 8; f++){
-   const s = files[f] + rank;
-   const p = position(s);
-   const light = (rank + f) % 2 === 0;
-
-   const mat = new THREE.MeshStandardMaterial({
-    color: light ? 0x9dbb77 : 0x345a3b,
-    roughness: .75,
-    metalness: .05
-   });
-
-   const mesh = new THREE.Mesh(new THREE.BoxGeometry(.99, .15, .99), mat);
-   mesh.position.set(p.x, -.035, p.z);
-   mesh.receiveShadow = true;
-   mesh.castShadow = true;
-   mesh.userData.square = s;
-
-   board.add(mesh);
-   squares.push(mesh);
-  }
- }
-}
-
-/* ============================================================
-   إدارة الموارد المشتركة (Geometries + Materials)
-   ============================================================ */
-
-const geoCache = new Map();
-const matCache = new Map();
-
-function geo(key, factory){
- if(!geoCache.has(key)) geoCache.set(key, factory());
- return geoCache.get(key);
-}
-
-function mat(key, factory){
- if(!matCache.has(key)) matCache.set(key, factory());
- return matCache.get(key);
-}
-
-function getGeoSphere(){ return geo('sphere', () => new THREE.SphereGeometry(1, 20, 16)); }
-function getGeoCone(){ return geo('cone', () => new THREE.ConeGeometry(1, 1, 14)); }
-function getGeoBox(){ return geo('box', () => new THREE.BoxGeometry(1, 1, 1)); }
-function getGeoCyl(rt, rb, h){
- const k = `cyl_${rt}_${rb}_${h}`;
- return geo(k, () => new THREE.CylinderGeometry(rt, rb, h, 16));
-}
-
-function getMats(color){
- const isW = color === "w";
- return {
-  main: mat(`main_${color}`, () => new THREE.MeshStandardMaterial({
-   color: isW ? 0x4a8c5c : 0x323c34, roughness: .35, metalness: .2
-  })),
-  skin: mat(`skin_${color}`, () => new THREE.MeshStandardMaterial({
-   color: isW ? 0x7db868 : 0x5a6450, roughness: .55
-  })),
-  eye: mat(`eye_${color}`, () => new THREE.MeshStandardMaterial({
-   color: isW ? 0x9dff4e : 0xff3b20,
-   emissive: isW ? 0x42ff00 : 0xff1600,
-   emissiveIntensity: 2.2
-  })),
-  dark: mat('dark', () => new THREE.MeshStandardMaterial({ color: 0x101710, roughness: .8 })),
-  gold: mat('gold', () => new THREE.MeshStandardMaterial({ color: 0xc9a64c, metalness: .8, roughness: .22 })),
-  bone: mat('bone', () => new THREE.MeshStandardMaterial({ color: 0xe3d9b8, roughness: .5 })),
-  armor: mat('armor', () => new THREE.MeshStandardMaterial({ color: 0x455c3b, metalness: .85, roughness: .28 }))
- };
-}
-
-/* ============================================================
-   بناء قطع الشطرنج (بنفس التصميم والمواد)
-   ============================================================ */
-
-function chessPiece(type, color){
- const g = new THREE.Group();
- const M = getMats(color);
-
- function sphere(x, y, z, sx, sy, sz, m){
-  const mesh = new THREE.Mesh(getGeoSphere(), m);
-  mesh.position.set(x, y, z);
-  mesh.scale.set(sx, sy, sz);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  g.add(mesh);
-  return mesh;
- }
-
- function cone(x, y, z, r, h, m, rx = 0, rz = 0){
-  const mesh = new THREE.Mesh(getGeoCone(), m);
-  mesh.position.set(x, y, z);
-  mesh.scale.set(r, h, r);
-  mesh.rotation.x = rx;
-  mesh.rotation.z = rz;
-  mesh.castShadow = true;
-  g.add(mesh);
-  return mesh;
- }
-
- function box(x, y, z, sx, sy, sz, m){
-  const mesh = new THREE.Mesh(getGeoBox()
+ positions.forE
