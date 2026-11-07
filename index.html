@@ -1,39 +1,675 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>بيدق الغولم الصخري</title>
-<style>
-  html,body{margin:0;height:100%;background:radial-gradient(circle at 50% 40%,#232047,#0c0a1c);overflow:hidden;font-family:sans-serif}
-  canvas{display:block}
-  #ui{position:fixed;top:12px;left:0;right:0;text-align:center;color:#fff}
-  button{background:#2e8bff;color:#fff;border:0;border-radius:10px;padding:10px 18px;font-size:16px;cursor:pointer}
-  p{color:#9fb4d8;font-size:13px;margin:6px}
-</style>
-<script type="importmap">
-{"imports":{
- "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
- "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
-</script>
-</head>
-<body>
-<div id="ui"><button id="btn">تصدير OBJ</button><p>اسحب للتدوير • عجلة الماوس للتقريب</p></div>
 <script type="module">
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { OBJExporter } from "three/addons/exporters/OBJExporter.js";
+import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+import {Chess} from "chess";
 
-const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-document.body.appendChild(renderer.domElement);
+const chess=new Chess();
+const holder=document.getElementById("game");
+
+let selected=null;
+let thinking=false;
+let pendingPromotion=null;
+let gameStarted=false;
+let initialized=false;
+
+const files="abcdefgh";
+
+function position(square){
+ return {
+  x:files.indexOf(square[0])-3.5,
+  z:Number(square[1])-4.5
+ };
+}
+
+function sound(){
+ if(!document.getElementById("sound").checked)return;
+ try{
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return;
+  const ctx=new AC();
+  const osc=ctx.createOscillator();
+  const gain=ctx.createGain();
+  osc.connect(gain);gain.connect(ctx.destination);
+  osc.frequency.value=650;
+  gain.gain.setValueAtTime(.07,ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.12);
+  osc.start();osc.stop(ctx.currentTime+.12);
+  osc.onended=()=>{try{ctx.close();}catch(e){}};
+ }catch(e){}
+}
+
+function notice(msg){
+ document.getElementById("notice").textContent=msg;
+}
+
+window.comingSoon=function(name){
+ sound();
+ notice("✨ "+name+" - قريباً في تحديث جديد!");
+};
+
+window.openSettings=function(){
+ sound();
+ document.getElementById("settings").style.display="flex";
+};
+
+window.closeSettings=function(){
+ sound();
+ document.getElementById("settings").style.display="none";
+};
+
+/* ==================== Three.js Setup ==================== */
 const scene=new THREE.Scene();
-const cam=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,.1,100);
-cam.position.set(2.6,2.4,4.6);
-const ctl=new OrbitControls(cam,renderer.domElement);ctl.target.set(0,1.2,0);ctl.enableDamping=true;
-scene.add(new THREE.HemisphereLight(0x9ab4ff,0x221c33,1.1));
-const sun=new THREE.DirectionalLight(0xffffff,2);sun.position.set(3,5,4);scene.add(sun);
-const glowLight=new THREE.PointLight(0x2e8bff,12,6);glowLight.position.set(0,1.4,1);scene.add(glowLight);
+scene.background=new THREE.Color(0x151126);
 
-let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
-const stone=[0x4a4a52,0x3b3b44,0x55555d].map(c=>new THREE.MeshStandardMaterial({color:c,roughness:.9,flatShading:true}));
+const camera=new THREE.PerspectiveCamera(45,1,.1,100);
+camera.position.set(7,9,11);
+
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+holder.appendChild(renderer.domElement);
+
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.target.set(0,0,0);
+controls.enableDamping=true;
+controls.enablePan=false;
+controls.minDistance=8;
+controls.maxDistance=16;
+controls.maxPolarAngle=Math.PI/2.15;
+
+scene.add(new THREE.HemisphereLight(0xffffff,0x303040,2));
+
+const sun=new THREE.DirectionalLight(0xffffff,3);
+sun.position.set(5,10,7);
+sun.castShadow=true;
+sun.shadow.mapSize.set(1024,1024);
+scene.add(sun);
+
+const floor=new THREE.Mesh(
+ new THREE.PlaneGeometry(200,200),
+ new THREE.MeshStandardMaterial({color:0x101020})
+);
+floor.rotation.x=-Math.PI/2;
+floor.position.y=-.7;
+scene.add(floor);
+
+const base=new THREE.Mesh(
+ new THREE.BoxGeometry(8.7,.65,8.7),
+ new THREE.MeshStandardMaterial({color:0x29213e,metalness:.5,roughness:.35})
+);
+base.position.y=-.4;
+base.receiveShadow=true;
+scene.add(base);
+
+const board=new THREE.Group();
+scene.add(board);
+
+const pieces=new THREE.Group();
+scene.add(pieces);
+
+const squares=[];
+
+function makeBoard(){
+ for(let rank=8;rank>=1;rank--){
+  for(let f=0;f<8;f++){
+   const s=files[f]+rank;
+   const p=position(s);
+
+   const mat=new THREE.MeshStandardMaterial({
+    color:(rank+f)%2?0x936343:0xe9d2a5,
+    roughness:.8
+   });
+
+   const mesh=new THREE.Mesh(new THREE.BoxGeometry(.99,.15,.99),mat);
+   mesh.position.set(p.x,-.035,p.z);
+   mesh.receiveShadow=true;
+   mesh.userData.square=s;
+
+   board.add(mesh);
+   squares.push(mesh);
+  }
+ }
+}
+
+/* ==================== الوحوش المفصّلة ==================== */
+function monster(type,color){
+ const g=new THREE.Group();
+
+ const isWhite=color==="w";
+ const skin=new THREE.MeshStandardMaterial({
+  color:isWhite?0x16d8bd:0x8529c9,
+  roughness:.3,metalness:.22
+ });
+ const dark=new THREE.MeshStandardMaterial({
+  color:isWhite?0x087e79:0x40105f,
+  roughness:.4,metalness:.35
+ });
+ const gold=new THREE.MeshStandardMaterial({
+  color:0xffc747,metalness:.75,roughness:.2
+ });
+ const armor=new THREE.MeshStandardMaterial({
+  color:isWhite?0xc8fff0:0x342044,
+  metalness:.65,roughness:.25
+ });
+ const eye=new THREE.MeshStandardMaterial({
+  color:0xff241c,emissive:0xff1000,emissiveIntensity:1.5
+ });
+ const white=new THREE.MeshStandardMaterial({color:0xffffff});
+ const black=new THREE.MeshStandardMaterial({color:0x08080c});
+
+ function add(geo,mat,x,y,z,sx=1,sy=1,sz=1){
+  const m=new THREE.Mesh(geo,mat);
+  m.position.set(x,y,z);
+  m.scale.set(sx,sy,sz);
+  m.castShadow=true;
+  m.receiveShadow=true;
+  g.add(m);
+  return m;
+ }
+
+ function ball(x,y,z,sx,sy,sz,mat){
+  return add(new THREE.SphereGeometry(1,24,20),mat,x,y,z,sx,sy,sz);
+ }
+
+ function spike(x,y,z,size,mat,rx=0,rz=0){
+  const m=add(new THREE.ConeGeometry(size,.48,10),mat,x,y,z);
+  m.rotation.x=rx;m.rotation.z=rz;
+  return m;
+ }
+
+ function limb(x1,y1,z1,x2,y2,z2,r,mat){
+  const a=new THREE.Vector3(x1,y1,z1);
+  const b=new THREE.Vector3(x2,y2,z2);
+  const d=new THREE.Vector3().subVectors(b,a);
+  const m=add(
+   new THREE.CylinderGeometry(r*.75,r,d.length(),12),
+   mat,(x1+x2)/2,(y1+y2)/2,(z1+z2)/2
+  );
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());
+  return m;
+ }
+
+ function ring(y,r,mat){
+  return add(new THREE.TorusGeometry(r,.055,10,32),mat,0,y,0,1,1,.75);
+ }
+
+ add(new THREE.CylinderGeometry(.39,.43,.16,32),dark,0,.12,0);
+ ring(.21,.34,gold);
+
+ for(const x of [-.19,.19]){
+  limb(x,.22,0,x,.42,.02,.105,dark);
+  ball(x,.27,.12,.14,.09,.19,armor);
+ }
+
+ ball(0,.65,0,.38,.39,.29,skin);
+ ball(0,.68,.18,.31,.31,.15,armor);
+
+ add(new THREE.BoxGeometry(.35,.28,.12),gold,0,.68,.31,.8,1,1);
+ ball(0,.69,.39,.065,.065,.035,eye);
+
+ for(const x of [-1,1]){
+  ball(x*.39,.79,0,.19,.19,.2,armor);
+  limb(x*.38,.72,0,x*.48,.42,.13,.095,skin);
+  ball(x*.48,.39,.16,.12,.11,.12,dark);
+  for(let i=0;i<3;i++){
+   spike(x*.48+(i-1)*.07,.34,.25,.055,gold,.6,0);
+  }
+ }
+
+ limb(0,.91,0,0,1.08,0,.18,dark);
+ ball(0,1.18,.03,.3,.31,.27,skin);
+ ball(0,1.08,.23,.24,.13,.12,dark);
+
+ for(const x of [-1,1]){
+  ball(x*.125,1.22,.265,.09,.105,.045,white);
+  ball(x*.125,1.22,.307,.043,.064,.025,eye);
+  ball(x*.125,1.22,.33,.018,.045,.012,black);
+ }
+
+ add(new THREE.BoxGeometry(.2,.045,.06),black,0,1.035,.285);
+ for(const x of [-.09,.09]){
+  spike(x,1.01,.32,.055,white,Math.PI,0);
+ }
+
+ for(let i=0;i<4;i++){
+  spike(0,.48+i*.17,-.26,.09,gold,-Math.PI/2,0);
+ }
+
+ if(type==="k"){
+  add(new THREE.CylinderGeometry(.29,.36,.14,8),gold,0,1.49,0);
+  for(let i=0;i<5;i++){
+   const a=(i/5)*Math.PI*2;
+   spike(Math.cos(a)*.25,1.76,Math.sin(a)*.25,.12,gold);
+  }
+  ball(0,1.55,0,.29,.08,.29,armor);
+  spike(0,1.85,0,.14,gold);
+  for(const x of [-1,1]){
+   spike(x*.23,1.49,-.02,.2,gold,0,x*-.5);
+   spike(x*.37,1.36,-.03,.14,gold,0,x*-.8);
+  }
+  for(const x of [-1,1]){
+   const wing=add(new THREE.ConeGeometry(.4,.8,4),dark,x*.48,.88,-.12,1,1,.45);
+   wing.rotation.z=x*-.9;
+   wing.rotation.x=-.4;
+  }
+ }
+
+ if(type==="q"){
+  ring(1.53,.31,gold);
+  add(new THREE.CylinderGeometry(.23,.32,.25,12),armor,0,1.53,0);
+  for(let i=0;i<7;i++){
+   const a=i*Math.PI*2/7;
+   spike(Math.cos(a)*.28,1.72,Math.sin(a)*.28,.12,gold);
+  }
+  ball(0,1.57,0,.11,.12,.11,eye);
+  for(const x of [-1,1]){
+   spike(x*.31,1.4,0,.18,gold,0,x*.7);
+  }
+  for(let i=0;i<3;i++){
+   ball(0,.53+i*.12,.39,.055,.055,.035,eye);
+  }
+ }
+
+ if(type==="r"){
+  add(new THREE.CylinderGeometry(.36,.4,.34,8),armor,0,1.48,0);
+  for(let i=0;i<8;i++){
+   const a=i*Math.PI/4;
+   add(new THREE.BoxGeometry(.15,.23,.15),gold,
+    Math.cos(a)*.28,1.68,Math.sin(a)*.28);
+  }
+  for(const x of [-1,1]){
+   add(new THREE.BoxGeometry(.17,.3,.15),dark,x*.29,.8,.22);
+   spike(x*.34,1.01,.05,.13,armor,0,x*-.5);
+  }
+  ball(0,1.52,0,.18,.12,.18,gold);
+ }
+
+ if(type==="b"){
+  spike(0,1.67,0,.19,gold);
+  ring(1.52,.28,gold);
+  add(new THREE.CylinderGeometry(.04,.33,.18,12),dark,0,1.53,0);
+  spike(0,1.85,0,.2,gold);
+  for(const x of [-1,1]){
+   const wing=add(new THREE.ConeGeometry(.3,.85,5),skin,x*.47,.91,-.18,1,1,.45);
+   wing.rotation.z=x*-.85;
+  }
+  ball(0,.7,.42,.12,.12,.07,eye);
+ }
+
+ if(type==="n"){
+  ball(0,1.16,.22,.26,.25,.35,skin);
+  ball(0,1.3,.47,.22,.17,.18,dark);
+  for(let i=0;i<5;i++){
+   spike(0,1.38-i*.1,-.12+i*.08,.12,gold);
+  }
+  for(const x of [-1,1]){
+   spike(x*.2,1.43,.12,.18,gold,0,x*.7);
+  }
+  ball(0,1.05,.43,.2,.07,.15,dark);
+  for(let i=0;i<4;i++){
+   spike((i-1.5)*.09,1.02,.53,.05,white,Math.PI,0);
+  }
+ }
+
+ if(type==="p"){
+  add(new THREE.CylinderGeometry(.19,.29,.22,8),armor,0,1.39,0);
+  spike(0,1.62,0,.17,gold);
+  for(const x of [-1,1]){
+   spike(x*.2,1.43,0,.12,gold,0,x*.6);
+  }
+  ball(0,.65,.36,.09,.09,.04,eye);
+ }
+
+ for(const x of [-1,1]){
+  ball(x*.39,.63,.12,.075,.12,.08,gold);
+ }
+
+ return g;
+}
+
+/* ==================== Drawing ==================== */
+function draw(){
+ pieces.clear();
+ const state=chess.board();
+
+ for(let r=0;r<8;r++){
+  for(let f=0;f<8;f++){
+   const p=state[r][f];
+   if(!p)continue;
+
+   const s=files[f]+(8-r);
+   const pos=position(s);
+
+   const obj=monster(p.type,p.color);
+   obj.position.set(pos.x,.05,pos.z);
+   obj.userData.square=s;
+   obj.userData.color=p.color;
+
+   pieces.add(obj);
+  }
+ }
+
+ pieces.updateMatrixWorld(true);
+}
+
+function resetColors(){
+ squares.forEach(s=>{
+  const rank=Number(s.userData.square[1]);
+  const f=files.indexOf(s.userData.square[0]);
+  s.material.color.setHex((rank+f)%2?0x936343:0xe9d2a5);
+ });
+}
+
+function showMoves(from){
+ resetColors();
+ if(!from)return;
+ const moves=chess.moves({square:from,verbose:true});
+ moves.forEach(m=>{
+  const sq=squares.find(x=>x.userData.square===m.to);
+  if(sq)sq.material.color.setHex(0x39dc83);
+ });
+}
+
+function updateStatus(){
+ const status=document.getElementById("status");
+
+ if(chess.isCheckmate()){
+  status.textContent="🏆 كش مات! "+(chess.turn()==="w"?"الأسود":"الأبيض")+" فاز!";
+  return true;
+ }
+ if(chess.isStalemate()){
+  status.textContent="🤝 تعادل بسبب الجمود!";
+  return true;
+ }
+ if(chess.isDraw()){
+  status.textContent="🤝 المباراة انتهت بالتعادل";
+  return true;
+ }
+ if(chess.isCheck()){
+  status.textContent="⚠️ كش! الملك مهدد";
+  return false;
+ }
+
+ status.textContent=chess.turn()==="w"?
+  "دورك الآن - الأبيض":"🤖 الكمبيوتر يفكر...";
+ return false;
+}
+
+function makeMove(from,to,promotion="q"){
+ try{
+  const move=chess.move({from,to,promotion});
+  if(!move)return false;
+
+  draw();
+  resetColors();
+  selected=null;
+
+  document.getElementById("moves").textContent=chess.history().join("  ");
+  sound();
+  return true;
+ }catch(e){
+  return false;
+ }
+}
+
+/* ==================== AI ==================== */
+function evaluate(){
+ if(chess.isCheckmate())return chess.turn()==="w"?-100000:100000;
+ if(chess.isDraw())return 0;
+
+ const values={p:100,n:320,b:330,r:500,q:900,k:20000};
+ let score=0;
+
+ chess.board().forEach((row,r)=>{
+  row.forEach((p,f)=>{
+   if(!p)return;
+   let value=values[p.type];
+   if(p.type==="p")value+=(p.color==="b"?r:7-r)*4;
+   const center=7-(Math.abs(3.5-f)+Math.abs(3.5-r));
+   value+=center*2;
+   score+=p.color==="w"?value:-value;
+  });
+ });
+
+ return score;
+}
+
+function minimax(depth,alpha,beta,maximizing){
+ if(depth===0||chess.isGameOver())return evaluate();
+ const moves=chess.moves();
+
+ if(maximizing){
+  let best=-Infinity;
+  for(const m of moves){
+   chess.move(m);
+   best=Math.max(best,minimax(depth-1,alpha,beta,false));
+   chess.undo();
+   alpha=Math.max(alpha,best);
+   if(beta<=alpha)break;
+  }
+  return best;
+ }else{
+  let best=Infinity;
+  for(const m of moves){
+   chess.move(m);
+   best=Math.min(best,minimax(depth-1,alpha,beta,true));
+   chess.undo();
+   beta=Math.min(beta,best);
+   if(beta<=alpha)break;
+  }
+  return best;
+ }
+}
+
+function computer(){
+ if(chess.isGameOver())return;
+ const moves=chess.moves();
+ if(!moves.length)return;
+
+ let chosen;
+
+ if(document.getElementById("level").value==="easy"){
+  const captures=moves.filter(m=>m.includes("x"));
+  const pool=Math.random()<.5&&captures.length?captures:moves;
+  chosen=pool[Math.floor(Math.random()*pool.length)];
+ }else{
+  let best=Infinity;
+  for(const m of moves){
+   chess.move(m);
+   const score=minimax(2,-Infinity,Infinity,true);
+   chess.undo();
+   if(score<best){best=score;chosen=m;}
+  }
+ }
+
+ if(chosen){
+  chess.move(chosen);
+  draw();
+  document.getElementById("moves").textContent=chess.history().join("  ");
+  sound();
+ }
+}
+
+function executePlayerMove(from,to,promotion){
+ if(!makeMove(from,to,promotion))return;
+
+ document.getElementById("promotion").style.display="none";
+
+ if(updateStatus())return;
+
+ thinking=true;
+ setTimeout(()=>{
+  if(gameStarted&&!chess.isGameOver()){
+   computer();
+   updateStatus();
+  }
+  thinking=false;
+ },350);
+}
+
+/* ==================== Raycasting & Click ==================== */
+const raycaster=new THREE.Raycaster();
+const mouse=new THREE.Vector2();
+let pointerStart=null;
+
+function onClick(event){
+ if(!gameStarted||thinking||chess.isGameOver()||pendingPromotion)return;
+
+ const rect=renderer.domElement.getBoundingClientRect();
+ mouse.set(
+  ((event.clientX-rect.left)/rect.width)*2-1,
+  -((event.clientY-rect.top)/rect.height)*2+1
+ );
+ raycaster.setFromCamera(mouse,camera);
+
+ let clickedSquare=null;
+
+ const pieceHits=raycaster.intersectObjects(pieces.children,true);
+ if(pieceHits.length){
+  let obj=pieceHits[0].object;
+  while(obj&&!obj.userData.square)obj=obj.parent;
+  if(obj)clickedSquare=obj.userData.square;
+ }
+
+ if(!clickedSquare){
+  const sqHits=raycaster.intersectObjects(squares,false);
+  if(sqHits.length)clickedSquare=sqHits[0].object.userData.square;
+ }
+
+ if(!clickedSquare){
+  selected=null;
+  resetColors();
+  return;
+ }
+
+ // محاولة تحريك القطعة المحددة
+ if(selected){
+  const moves=chess.moves({square:selected,verbose:true});
+  const target=moves.find(m=>m.to===clickedSquare);
+  if(target){
+   if(target.promotion){
+    pendingPromotion={from:selected,to:clickedSquare};
+    document.getElementById("promotion").style.display="block";
+    return;
+   }
+   const from=selected;
+   selected=null;
+   executePlayerMove(from,clickedSquare,"q");
+   return;
+  }
+ }
+
+ // تحديد قطعة جديدة
+ const piece=chess.get(clickedSquare);
+ if(piece&&piece.color===chess.turn()){
+  selected=clickedSquare;
+  showMoves(clickedSquare);
+  sound();
+ }else{
+  selected=null;
+  resetColors();
+ }
+}
+
+renderer.domElement.addEventListener("pointerdown",e=>{
+ pointerStart={x:e.clientX,y:e.clientY};
+});
+
+renderer.domElement.addEventListener("pointerup",e=>{
+ if(!pointerStart)return;
+ const dx=e.clientX-pointerStart.x;
+ const dy=e.clientY-pointerStart.y;
+ pointerStart=null;
+ if(Math.sqrt(dx*dx+dy*dy)>8)return;
+ onClick(e);
+});
+
+/* ==================== Game Controls ==================== */
+window.startGame=function(){
+ sound();
+ document.getElementById("menuScreen").style.display="none";
+ document.getElementById("gameScreen").style.display="block";
+ gameStarted=true;
+
+ if(!initialized){
+  initialized=true;
+  makeBoard();
+  draw();
+ }
+
+ setTimeout(()=>{
+  onResize();
+  updateStatus();
+ },50);
+};
+
+window.newGame=function(){
+ if(!gameStarted)return;
+ chess.reset();
+ selected=null;
+ pendingPromotion=null;
+ thinking=false;
+ document.getElementById("promotion").style.display="none";
+ document.getElementById("moves").textContent="سجل الحركات سيظهر هنا";
+ draw();
+ resetColors();
+ updateStatus();
+ sound();
+};
+
+window.undoMove=function(){
+ if(!gameStarted||thinking)return;
+ if(!chess.history().length)return;
+
+ chess.undo();
+ if(chess.history().length&&chess.turn()==="b"){
+  chess.undo();
+ }
+
+ selected=null;
+ pendingPromotion=null;
+ document.getElementById("promotion").style.display="none";
+ draw();
+ resetColors();
+ document.getElementById("moves").textContent=
+  chess.history().length?chess.history().join("  "):"سجل الحركات سيظهر هنا";
+ updateStatus();
+ sound();
+};
+
+window.backMenu=function(){
+ sound();
+ gameStarted=false;
+ document.getElementById("gameScreen").style.display="none";
+ document.getElementById("menuScreen").style.display="block";
+};
+
+window.promote=function(piece){
+ if(!pendingPromotion)return;
+ const {from,to}=pendingPromotion;
+ pendingPromotion=null;
+ document.getElementById("promotion").style.display="none";
+ executePlayerMove(from,to,piece);
+};
+
+/* ==================== Resize & Render Loop ==================== */
+function onResize(){
+ const w=holder.clientWidth;
+ const h=holder.clientHeight;
+ if(w===0||h===0)return;
+ renderer.setSize(w,h,false);
+ camera.aspect=w/h;
+ camera.updateProjectionMatrix();
+}
+
+window.addEventListener("resize",onResize);
+
+function animate(){
+ requestAnimationFrame(animate);
+ controls.update();
+ renderer.render(scene,camera);
+}
+animate();
+    </script>
