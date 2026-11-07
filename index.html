@@ -237,7 +237,7 @@ label:first-child{margin-top:0}
   transition:background .3s, border-color .3s, color .3s;}
 .fare-notice .big{font-size:24px;line-height:1}
 
-/* ============ REGION PICKER (جديد) ============ */
+/* ============ REGION PICKER ============ */
 .region-picker{margin-top:12px;padding:14px;border-radius:16px;
   background:linear-gradient(160deg,#14121a 0%,#0a090f 100%);
   border:1px solid var(--border);
@@ -572,7 +572,7 @@ label:first-child{margin-top:0}
         <span id="fareText">بغداد: 1000 دينار لكل 3 كم</span>
       </div>
 
-      <!-- ✅ محدد المنطقة -->
+      <!-- محدد المنطقة -->
       <div class="region-picker">
         <div class="region-row">
           <span class="region-label-text">📍 منطقة التسعير</span>
@@ -704,10 +704,12 @@ label:first-child{margin-top:0}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* =========================================================
-   KOKTON — v2.3
+   KOKTON — v2.3.1
    ✅ محرك تسعير لكل منطقة بالعراق
+   ✅ إصلاح: اكتشاف المنطقة لا يستبدل اختيارك الصامت
+   ✅ إصلاح: نقاط مرجعية متعددة لكل محافظة (ذي قار / واسط)
    ========================================================= */
-console.log('💰 KOKTON v2.3 — محرك تسعير متعدد المناطق');
+console.log('💰 KOKTON v2.3.1 — تسعير متعدد المناطق + كشف دقيق');
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n).toLocaleString('en-US');
@@ -740,7 +742,7 @@ function toggleTheme() {
 applyTheme(getStoredTheme());
 
 /* =========================================================
-   SERVICES — المعدلات الأساسية (بغداد = المستوى 1.0)
+   SERVICES
    ========================================================= */
 const SERVICES = {
   taxi:     { label: 'تكسي 🚕',       icon: '🚕' },
@@ -748,17 +750,14 @@ const SERVICES = {
   delivery: { label: 'مندوب توصيل 🛵', icon: '🛵' }
 };
 
-// المعدلات الأساسية في بغداد (مستوى 1.0)
 const BASE_RATES = {
-  taxi:     { perKm: 1000 / 3, min: 1000 },   // 333.33 د.ع/كم — 1000 د.ع لكل 3 كم
+  taxi:     { perKm: 1000 / 3, min: 1000 },
   tuktuk:   { perKm: 1000,     min: 2000 },
   delivery: { perKm: 2000,     min: 4000 }
 };
 
 /* =========================================================
-   🌍 محافظات العراق — كل منطقة لها مستوى تسعير مختلف
-   level: معامل يُضرب في المعدلات الأساسية
-   center: إحداثيات المركز (للتحديد التلقائي وللمركز الافتراضي)
+   🌍 محافظات العراق
    ========================================================= */
 const REGIONS = {
   baghdad:      { name: 'بغداد',       emoji: '🏛️', level: 1.00, center: [33.3152, 44.3661] },
@@ -779,6 +778,39 @@ const REGIONS = {
   qadisiyyah:   { name: 'القادسية',     emoji: '🌾', level: 0.95, center: [31.9900, 44.9200] },
   duhok:        { name: 'دهوك',         emoji: '🏔️', level: 1.05, center: [36.8669, 42.9503] },
   saladdin:     { name: 'صلاح الدين',   emoji: '🏞️', level: 0.90, center: [34.6000, 43.6833] }
+};
+
+/* نقاط مرجعية متعددة لكل محافظة لزيادة دقة الاكتشاف */
+const REGION_SAMPLES = {
+  baghdad:      [[33.3152,44.3661],[33.2000,44.3600],[33.4000,44.3500],[33.2800,44.4000]],
+  basra:        [[30.5085,47.7804],[30.5000,47.8000],[30.5300,47.7500]],
+  nineveh:      [[36.3350,43.1189],[36.3400,43.1300]],
+  erbil:        [[36.1911,44.0092],[36.1900,44.0100]],
+  najaf:        [[32.0000,44.3333],[32.0000,44.3200]],
+  karbala:      [[32.6167,44.0333],[32.6000,44.0200]],
+  sulaymaniyah: [[35.5613,45.4408],[35.5600,45.4400]],
+  kirkuk:       [[35.4681,44.3922],[35.4600,44.3900]],
+  anbar:        [[33.4206,43.3000],[33.4200,43.3000],[33.3000,43.0000],[33.5000,43.5000]],
+  babil:        [[32.4833,44.4333],[32.4800,44.4300]],
+  diyala:       [[33.7500,44.6500],[33.7500,44.6500]],
+  dhi_qar:      [
+    [31.0500, 46.2500],  // الناصرية
+    [31.4100, 46.1700],  // الشطرة
+    [31.7200, 46.1100],  // الرفاعي
+    [30.9500, 47.0200],  // الجبايش
+    [31.0000, 46.5000]   // سوق الشيوخ
+  ],
+  wasit:        [
+    [32.5167, 45.8167],  // الكوت
+    [32.1700, 46.0000],  // الحي
+    [32.9000, 45.0700],  // العزيزية
+    [32.4000, 45.5000]   // النعمانية
+  ],
+  maysan:       [[31.8333,47.1500],[31.8300,47.1500]],
+  muthanna:     [[30.5000,45.2833],[30.5000,45.2800]],
+  qadisiyyah:   [[31.9900,44.9200],[31.9900,44.9200]],
+  duhok:        [[36.8669,42.9503],[36.8600,42.9500]],
+  saladdin:     [[34.6000,43.6833],[34.6000,43.6800],[34.2000,43.8000]]
 };
 
 const REGION_KEY = 'kokton_region';
@@ -832,7 +864,7 @@ const state = {
 };
 
 /* =========================================================
-   🧮 محرك حساب السعر لكل منطقة
+   🧮 محرك حساب السعر
    ========================================================= */
 function haversine(a, b) {
   if (!a || !b) return null;
@@ -843,10 +875,6 @@ function haversine(a, b) {
   return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
-/**
- * حساب تفصيلي للسعر مع كل العوامل
- * يعيد: { total, distanceFare, regionLevel, timeMult, distMult, surge, surgeLabel, perKm, minFare }
- */
 function calcPriceDetailed(service, km, regionKey) {
   if (!km || km <= 0) return { total: null, surge: 0, surgeLabel: '' };
   const region = REGIONS[regionKey] || REGIONS.baghdad;
@@ -857,10 +885,8 @@ function calcPriceDetailed(service, km, regionKey) {
   const perKm = base.perKm * level;
   const minFare = base.min * level;
 
-  // 1) أجرة المسافة
   let distanceFare = km * perKm;
 
-  // 2) مضاعف الوقت (ذروة / ليلي)
   const hour = new Date().getHours();
   let timeMult = 1, timeSurge = 0, timeLabel = '';
   if (hour >= 23 || hour < 5) {
@@ -869,21 +895,15 @@ function calcPriceDetailed(service, km, regionKey) {
     timeMult = 1.15; timeSurge = 0.15; timeLabel = '⏰ ذروة +15%';
   }
 
-  // 3) مضاعف المسافات الطويلة (> 30 كم)
   let distMult = 1, distSurge = 0, distLabel = '';
   if (km > 30) {
     distMult = 1.10; distSurge = 0.10; distLabel = '🛣️ مسافة طويلة +10%';
   }
 
   let total = distanceFare * timeMult * distMult;
-
-  // 4) الحد الأدنى
   if (total < minFare) total = minFare;
-
-  // 5) التقريب لأقرب 250 د.ع
   total = Math.round(total / 250) * 250;
 
-  // 6) وسم الزيادة
   const labels = [];
   if (timeSurge > 0) labels.push(timeLabel);
   if (distSurge > 0) labels.push(distLabel);
@@ -905,11 +925,14 @@ function calcPrice(service, km, regionKey) {
   return calcPriceDetailed(service, km, regionKey).total;
 }
 
+/* ✅ كشف المنطقة بنقاط مرجعية متعددة (يحل مشكلة ذي قار/واسط) */
 function detectRegionFromCoords(lat, lng) {
   let best = 'baghdad', bestDist = Infinity;
-  for (const [key, r] of Object.entries(REGIONS)) {
-    const d = haversine({ lat, lng }, { lat: r.center[0], lng: r.center[1] });
-    if (d < bestDist) { bestDist = d; best = key; }
+  for (const [key, samples] of Object.entries(REGION_SAMPLES)) {
+    for (const s of samples) {
+      const d = haversine({ lat, lng }, { lat: s[0], lng: s[1] });
+      if (d < bestDist) { bestDist = d; best = key; }
+    }
   }
   return best;
 }
@@ -1276,6 +1299,7 @@ function updateFareNotice() {
   }
 }
 
+/* ✅ زر "تحديد تلقائي" — يعرض تأكيداً قبل تغيير المنطقة */
 function detectMyRegion() {
   if (!navigator.geolocation) { toast('المتصفح لا يدعم تحديد الموقع', 'error'); return; }
   toast('🛰️ جاري تحديد منطقتك...', 'info');
@@ -1283,9 +1307,17 @@ function detectMyRegion() {
     (pos) => {
       const lat = pos.coords.latitude, lng = pos.coords.longitude;
       const key = detectRegionFromCoords(lat, lng);
-      selectRegion(key, false);
       const r = REGIONS[key];
-      // حدّد موقع الانطلاق تلقائياً أيضاً
+
+      // زر تحديد تلقائي صريح: يعرض تأكيداً
+      if (key !== state.region) {
+        const ok = confirm(`📍 موقعك يقع ضمن: ${r.name}\n\nهل تريد تحويل التسعير إلى ${r.name}؟`);
+        if (ok) selectRegion(key, false);
+      } else {
+        toast(`✅ أنت بالفعل في ${r.name}`, 'success');
+      }
+
+      // تحديد موقع الانطلاق على أي حال
       const latlng = { lat, lng };
       state.pickupCoords = latlng;
       $('pickup').value = '📍 موقعي الحالي (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ')';
@@ -1352,6 +1384,7 @@ function setMapMode(mode) {
   document.querySelectorAll('.map-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
 }
 
+/* ✅ زر "موقعي الحالي" — يحدد موقع الانطلاق فقط، ولا يستبدل المنطقة */
 function locateMe() {
   if (!navigator.geolocation) { toast('المتصفح لا يدعم تحديد الموقع', 'error'); return; }
   toast('جاري تحديد موقعك...', 'info');
@@ -1359,9 +1392,7 @@ function locateMe() {
     (pos) => {
       const lat = pos.coords.latitude, lng = pos.coords.longitude;
       const latlng = { lat, lng };
-      // كشف المنطقة تلقائياً
-      const detected = detectRegionFromCoords(lat, lng);
-      selectRegion(detected, true);
+
       if (customerMap) customerMap.setView(latlng, 16);
       state.pickupCoords = latlng;
       $('pickup').value = '📍 موقعي الحالي (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ')';
@@ -1369,7 +1400,14 @@ function locateMe() {
       else if (customerMap) cPickupMarker = L.marker(latlng, { icon: makeIcon('#00d4a0', 'A') }).addTo(customerMap);
       updateRouteLine();
       updatePricePreview();
-      toast(`📍 ${REGIONS[detected].name} — ${getRegionRateText(detected)}`, 'success');
+
+      // تلميح لطيف فقط — بدون تغيير المنطقة تلقائياً
+      const guess = detectRegionFromCoords(lat, lng);
+      if (guess !== state.region) {
+        toast(`📍 موقعك أقرب لـ ${REGIONS[guess].name} — بدّل يدوياً إن أردت`, 'info');
+      } else {
+        toast('📍 تم تحديد موقعك', 'success');
+      }
     },
     () => toast('لم نتمكن من تحديد موقعك', 'error'),
     { enableHighAccuracy: true, timeout: 12000 }
@@ -1812,7 +1850,6 @@ function refreshFromStorage(force = false) {
 }
 setInterval(refreshFromStorage, 1500);
 
-// تحديث السعر بشكل دوري (لتحديث ذروة/ليلي تلقائياً)
 setInterval(() => {
   if (state.screen === 'c-booking' && state.pickupCoords && state.destCoords) {
     updatePricePreview();
