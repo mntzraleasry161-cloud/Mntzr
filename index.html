@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#050507">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>KOKTON — تكسي العاصمة v2.1</title>
+<title>KOKTON — تكسي العاصمة v2.2</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -29,27 +29,81 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 
 .hidden{display:none!important}
 
-/* ============ SPLASH ============ */
+/* =========================================================
+   ✅✅✅  SPLASH السينمائي الكامل  ✅✅✅
+   ========================================================= */
 #splash{
   position:fixed;inset:0;z-index:9999;
-  background:radial-gradient(circle at 50% 45%, rgba(255,196,0,0.18) 0%, transparent 55%),
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255,196,0,0.18) 0%, transparent 55%),
     radial-gradient(circle at 50% 50%, #14110a 0%, #050507 70%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   overflow:hidden;transition:opacity .8s ease, visibility .8s ease;
 }
 #splash.done{opacity:0;visibility:hidden}
+
+.splash-orb{
+  position:absolute;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,196,0,0.22) 0%,transparent 65%);
+  filter:blur(30px);animation:orbPulse 3s ease-in-out infinite;
+}
+@keyframes orbPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.2);opacity:1}}
+
+.splash-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.particle{
+  position:absolute;bottom:-10px;border-radius:50%;
+  background:radial-gradient(circle,#ffd24a 0%,transparent 70%);
+  animation:floatUp linear infinite;opacity:0;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) scale(.5);opacity:0}
+  10%{opacity:.9}
+  100%{transform:translateY(-110vh) scale(1.4);opacity:0}
+}
+
 .splash-logo{
+  position:relative;z-index:2;
   font-size:clamp(48px,15vw,72px);font-weight:900;letter-spacing:8px;
   background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0,#ffd24a,#8a6200);
   background-size:220% 100%;
   -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;color:transparent;
   filter:drop-shadow(0 0 30px rgba(255,196,0,0.6));
-  animation:shimmer 3s linear infinite;
+  animation:logoReveal 1.6s cubic-bezier(.2,.9,.2,1) forwards, shimmer 3s linear 1s infinite;
+  transform:scale(.3) rotateX(40deg);opacity:0;
 }
+@keyframes logoReveal{to{transform:scale(1) rotateX(0);opacity:1}}
 @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
-.splash-sub{font-size:15px;letter-spacing:4px;color:#ffd24a;font-weight:700;margin-top:8px}
-.splash-tag{font-size:12px;color:#a09a8a;letter-spacing:2px;margin-top:18px}
+
+.splash-sub{
+  position:relative;z-index:2;margin-top:6px;
+  font-size:15px;letter-spacing:4px;color:#ffd24a;font-weight:700;
+  animation:fadeInUp .8s ease 1.4s forwards;opacity:0;
+}
+.splash-line{
+  position:relative;z-index:2;margin-top:24px;width:120px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,#ffd24a,transparent);
+  animation:lineGrow 1.2s ease 1.8s forwards;opacity:0;transform:scaleX(0);
+}
+@keyframes lineGrow{to{transform:scaleX(1);opacity:1}}
+.splash-tag{
+  position:relative;z-index:2;margin-top:18px;
+  font-size:12px;color:#a09a8a;letter-spacing:2px;
+  animation:fadeInUp .8s ease 2.2s forwards;opacity:0;
+}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.splash-progress{
+  position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+  width:160px;height:3px;border-radius:3px;background:rgba(255,196,0,0.12);overflow:hidden;
+  animation:fadeInUp .6s ease 1s forwards;opacity:0;
+}
+.splash-progress::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0);border-radius:3px;
+  animation:progressFill 2.4s cubic-bezier(.6,.05,.3,.95) forwards;
+  transform-origin:right;transform:scaleX(0);
+}
+@keyframes progressFill{to{transform:scaleX(1)}}
 
 /* ============ ROLE PICKER ============ */
 #rolePicker{
@@ -60,7 +114,8 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 }
 #rolePicker.done{opacity:0;visibility:hidden}
 .role-brand{text-align:center;margin-bottom:8px}
-.brand-crown{font-size:44px;color:var(--gold);filter:drop-shadow(0 0 20px rgba(255,196,0,0.6))}
+.brand-crown{font-size:44px;color:var(--gold);filter:drop-shadow(0 0 20px rgba(255,196,0,0.6));animation:floatY 3s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .brand-name{
   font-size:52px;font-weight:900;letter-spacing:6px;
   background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0,#ffd24a,#8a6200);
@@ -93,7 +148,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   border:1px solid rgba(0,212,160,0.3);font-weight:700;
 }
 
-/* ============ AUTH SCREEN ============ */
+/* ============ AUTH ============ */
 #authScreen{
   position:fixed;inset:0;z-index:9100;
   background:radial-gradient(circle at 50% 20%, rgba(255,196,0,0.10) 0%, transparent 60%),#050507;
@@ -109,7 +164,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .auth-tab{flex:1;padding:12px;border-radius:12px;color:#a09a8a;font-size:13px;font-weight:900;transition:all .2s}
 .auth-tab.active{background:linear-gradient(180deg,rgba(255,196,0,0.18),rgba(255,196,0,0.04));color:var(--gold)}
 
-/* ============ APP SHELL ============ */
+/* ============ APP ============ */
 #app{
   max-width:520px;min-height:100vh;margin:0 auto;position:relative;
   background:radial-gradient(circle at 50% 0%, rgba(255,196,0,0.06) 0%, transparent 40%),#050507;
@@ -122,8 +177,6 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,196,0,0.10);
   transition:background .3s, border-color .3s;
 }
-
-/* ✅ زر التبديل (سائق ↔ زبون) */
 .switch-role-btn{
   display:flex;align-items:center;gap:6px;
   padding:10px 14px;border-radius:16px;
@@ -144,9 +197,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .switch-role-btn .sw-label{font-size:11px;line-height:1.1;text-align:center}
 .switch-role-btn .sw-label small{display:block;font-size:9px;opacity:.7;font-weight:700}
 
-/* ✅ مجموعة أزرار الجهة اليمنى (رئيسية + تبديل المظهر) */
 .top-right-group{display:flex;gap:6px;align-items:center}
-
 .iconbtn{
   width:42px;height:42px;border-radius:13px;
   background:linear-gradient(160deg,#1a1820,#0c0b10);
@@ -155,14 +206,11 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   transition:transform .2s, background .3s, border-color .3s;
 }
 .iconbtn:active{transform:scale(.92)}
-
-/* ✅ زر تبديل المظهر */
 .theme-btn{
   width:42px;height:42px;border-radius:13px;
   background:linear-gradient(160deg,#1a1820,#0c0b10);
   border:1px solid rgba(255,255,255,0.10);
-  font-size:20px;
-  display:flex;align-items:center;justify-content:center;
+  font-size:20px;display:flex;align-items:center;justify-content:center;
   transition:transform .2s, background .3s, border-color .3s, box-shadow .3s;
   box-shadow:0 0 15px rgba(255,196,0,0.2);
 }
@@ -258,7 +306,7 @@ label:first-child{margin-top:0}
   position:absolute;bottom:0;left:0;right:0;height:70px;
   background:linear-gradient(180deg,#1a1a22 0%,#050507 100%);
   border-top:2px solid rgba(255,196,0,0.22);
-  transition:background .3s, border-color .3s;
+  transition:background .3s;
 }
 .scene-road::after{
   content:'';position:absolute;top:50%;left:0;right:0;height:3px;
@@ -426,45 +474,19 @@ label:first-child{margin-top:0}
   border:3px solid #fff;font-size:16px;font-weight:900;
   box-shadow:0 0 20px currentColor, 0 4px 12px rgba(0,0,0,0.6);
 }
-
 .phone-link{color:#ffd24a}
 
 /* =============================================
-   ✅✅✅  الوضع النهاري (Light Theme)  ✅✅✅
+   ✅  الوضع النهاري
    ============================================= */
-[data-theme="light"]{
-  color-scheme: light;
-}
-[data-theme="light"] body{
-  background:#f5f3ee;
-  color:#17120a;
-}
-[data-theme="light"] #app{
-  background:radial-gradient(circle at 50% 0%, rgba(255,196,0,0.12) 0%, transparent 40%),#f5f3ee;
-}
-[data-theme="light"] .top{
-  background:linear-gradient(180deg,#ffffff 0%,rgba(255,255,255,0.94) 100%);
-  border-bottom-color:rgba(255,196,0,0.25);
-}
-[data-theme="light"] .bottom{
-  background:linear-gradient(0deg,#ffffff 0%,rgba(255,255,255,0.96) 100%);
-  border-top-color:rgba(255,196,0,0.25);
-}
-[data-theme="light"] .iconbtn{
-  background:linear-gradient(160deg,#faf7f0,#ede9e0);
-  border-color:rgba(0,0,0,0.10);
-  color:#8a6200;
-}
-[data-theme="light"] .theme-btn{
-  background:linear-gradient(160deg,#fff8e6,#ffe9b0);
-  border-color:rgba(255,196,0,0.4);
-  box-shadow:0 0 15px rgba(255,196,0,0.35);
-}
-[data-theme="light"] .role-tag{
-  background:rgba(255,196,0,0.20);
-  border-color:rgba(255,196,0,0.45);
-  color:#8a6200;
-}
+[data-theme="light"]{color-scheme:light}
+[data-theme="light"] body{background:#f5f3ee;color:#17120a}
+[data-theme="light"] #app{background:radial-gradient(circle at 50% 0%, rgba(255,196,0,0.12) 0%, transparent 40%),#f5f3ee}
+[data-theme="light"] .top{background:linear-gradient(180deg,#ffffff 0%,rgba(255,255,255,0.94) 100%);border-bottom-color:rgba(255,196,0,0.25)}
+[data-theme="light"] .bottom{background:linear-gradient(0deg,#ffffff 0%,rgba(255,255,255,0.96) 100%);border-top-color:rgba(255,196,0,0.25)}
+[data-theme="light"] .iconbtn{background:linear-gradient(160deg,#faf7f0,#ede9e0);border-color:rgba(0,0,0,0.10);color:#8a6200}
+[data-theme="light"] .theme-btn{background:linear-gradient(160deg,#fff8e6,#ffe9b0);border-color:rgba(255,196,0,0.4);box-shadow:0 0 15px rgba(255,196,0,0.35)}
+[data-theme="light"] .role-tag{background:rgba(255,196,0,0.20);border-color:rgba(255,196,0,0.45);color:#8a6200}
 [data-theme="light"] .nav{color:#8a8275}
 [data-theme="light"] .nav.active{color:#8a6200;background:rgba(255,196,0,0.12)}
 [data-theme="light"] .nav.active::before{background:#d99a00;box-shadow:0 0 10px #d99a00}
@@ -481,11 +503,7 @@ label:first-child{margin-top:0}
 [data-theme="light"] .empty-state .ttl{color:#6a6659}
 [data-theme="light"] .driver-status .label{color:#17120a}
 [data-theme="light"] .driver-status .sub{color:#8a8275}
-[data-theme="light"] .field{
-  background:#faf7f0;
-  border-color:rgba(0,0,0,0.10);
-  color:#17120a;
-}
+[data-theme="light"] .field{background:#faf7f0;border-color:rgba(0,0,0,0.10);color:#17120a}
 [data-theme="light"] .field::placeholder{color:#a8a296}
 [data-theme="light"] .field:focus{background:#ffffff;border-color:rgba(255,196,0,0.7)}
 [data-theme="light"] .formbox,
@@ -498,125 +516,60 @@ label:first-child{margin-top:0}
   border-color:rgba(0,0,0,0.08);
   box-shadow:0 10px 30px -15px rgba(0,0,0,0.15);
 }
-[data-theme="light"] .cta-ghost{
-  background:linear-gradient(160deg,#faf7f0,#ede9e0);
-  border-color:rgba(0,0,0,0.10);
-  color:#17120a;
-}
-[data-theme="light"] .toggle{
-  background:#faf7f0;
-  border-color:rgba(0,0,0,0.10);
-  color:#6a6659;
-}
-[data-theme="light"] .toggle.on{
-  background:linear-gradient(180deg,rgba(0,212,160,0.25),rgba(0,212,160,0.10));
-  border-color:rgba(0,212,160,0.55);
-  color:#009968;
-}
-[data-theme="light"] .scene-3d{
-  background:radial-gradient(circle at 50% 100%, rgba(255,196,0,0.30) 0%, transparent 60%),
-    linear-gradient(180deg,#e6dcf0 0%,#f5f0e6 100%);
-  border-color:rgba(255,196,0,0.35);
-}
-[data-theme="light"] .scene-road{
-  background:linear-gradient(180deg,#d4cfc5 0%,#a8a196 100%);
-  border-top-color:rgba(255,196,0,0.4);
-}
-[data-theme="light"] .map-tab{
-  background:linear-gradient(160deg,#faf7f0,#ede9e0);
-  border-color:rgba(0,0,0,0.08);
-  color:#6a6659;
-}
-[data-theme="light"] .map-tab.active{
-  border-color:rgba(255,196,0,0.6);
-  color:#8a6200;
-  background:linear-gradient(160deg,rgba(255,196,0,0.2),rgba(255,196,0,0.05));
-}
+[data-theme="light"] .cta-ghost{background:linear-gradient(160deg,#faf7f0,#ede9e0);border-color:rgba(0,0,0,0.10);color:#17120a}
+[data-theme="light"] .toggle{background:#faf7f0;border-color:rgba(0,0,0,0.10);color:#6a6659}
+[data-theme="light"] .toggle.on{background:linear-gradient(180deg,rgba(0,212,160,0.25),rgba(0,212,160,0.10));border-color:rgba(0,212,160,0.55);color:#009968}
+[data-theme="light"] .scene-3d{background:radial-gradient(circle at 50% 100%, rgba(255,196,0,0.30) 0%, transparent 60%),linear-gradient(180deg,#e6dcf0 0%,#f5f0e6 100%);border-color:rgba(255,196,0,0.35)}
+[data-theme="light"] .scene-road{background:linear-gradient(180deg,#d4cfc5 0%,#a8a196 100%);border-top-color:rgba(255,196,0,0.4)}
+[data-theme="light"] .map-tab{background:linear-gradient(160deg,#faf7f0,#ede9e0);border-color:rgba(0,0,0,0.08);color:#6a6659}
+[data-theme="light"] .map-tab.active{border-color:rgba(255,196,0,0.6);color:#8a6200;background:linear-gradient(160deg,rgba(255,196,0,0.2),rgba(255,196,0,0.05))}
 [data-theme="light"] .leaflet-container{background:#f0ebe0!important}
 [data-theme="light"] .leaflet-tile{filter:none}
-[data-theme="light"] .leaflet-control-zoom a{
-  background:#ffffff!important;
-  color:#8a6200!important;
-  border-color:rgba(0,0,0,0.15)!important;
-}
-[data-theme="light"] .leaflet-control-attribution{
-  background:rgba(255,255,255,0.9)!important;
-  color:#6a6659!important;
-}
+[data-theme="light"] .leaflet-control-zoom a{background:#ffffff!important;color:#8a6200!important;border-color:rgba(0,0,0,0.15)!important}
+[data-theme="light"] .leaflet-control-attribution{background:rgba(255,255,255,0.9)!important;color:#6a6659!important}
 [data-theme="light"] .leaflet-control-attribution a{color:#8a6200!important}
-[data-theme="light"] .toast{
-  background:linear-gradient(160deg,#ffffff,#faf7f0);
-  color:#17120a;
-  border-color:rgba(255,196,0,0.5);
-  box-shadow:0 20px 40px -10px rgba(0,0,0,0.2),0 0 30px -10px rgba(255,196,0,0.4);
-}
-[data-theme="light"] .fare-notice{
-  background:linear-gradient(160deg,rgba(0,212,160,0.18),rgba(0,212,160,0.05));
-  border-color:rgba(0,212,160,0.5);
-  color:#009968;
-}
-[data-theme="light"] #splash{
-  background:radial-gradient(circle at 50% 45%, rgba(255,196,0,0.30) 0%, transparent 55%),
-    radial-gradient(circle at 50% 50%, #fff8e6 0%, #f5f3ee 70%);
-}
+[data-theme="light"] .toast{background:linear-gradient(160deg,#ffffff,#faf7f0);color:#17120a;border-color:rgba(255,196,0,0.5);box-shadow:0 20px 40px -10px rgba(0,0,0,0.2),0 0 30px -10px rgba(255,196,0,0.4)}
+[data-theme="light"] .fare-notice{background:linear-gradient(160deg,rgba(0,212,160,0.18),rgba(0,212,160,0.05));border-color:rgba(0,212,160,0.5);color:#009968}
+[data-theme="light"] #splash{background:radial-gradient(circle at 50% 45%, rgba(255,196,0,0.30) 0%, transparent 55%),radial-gradient(circle at 50% 50%, #fff8e6 0%, #f5f3ee 70%)}
 [data-theme="light"] .splash-sub{color:#8a6200}
 [data-theme="light"] .splash-tag{color:#6a6659}
-[data-theme="light"] #rolePicker{
-  background:radial-gradient(circle at 50% 30%, rgba(255,196,0,0.18) 0%, transparent 60%),#f5f3ee;
-}
-[data-theme="light"] .role-card{
-  background:linear-gradient(160deg,#ffffff,#faf7f0);
-  border-color:rgba(255,196,0,0.3);
-}
-[data-theme="light"] .role-card.driver{
-  background:linear-gradient(160deg,#fff4d6,#faf0dd);
-}
+[data-theme="light"] .splash-line{background:linear-gradient(90deg,transparent,#d99a00,transparent)}
+[data-theme="light"] .splash-orb{background:radial-gradient(circle,rgba(255,196,0,0.30) 0%,transparent 65%)}
+[data-theme="light"] #rolePicker{background:radial-gradient(circle at 50% 30%, rgba(255,196,0,0.18) 0%, transparent 60%),#f5f3ee}
+[data-theme="light"] .role-card{background:linear-gradient(160deg,#ffffff,#faf7f0);border-color:rgba(255,196,0,0.3)}
+[data-theme="light"] .role-card.driver{background:linear-gradient(160deg,#fff4d6,#faf0dd)}
 [data-theme="light"] .role-name{color:#8a6200}
 [data-theme="light"] .role-desc{color:#6a6659}
 [data-theme="light"] .role-title{color:#6a6659}
 [data-theme="light"] .role-footer{color:#a8a296}
-[data-theme="light"] #authScreen{
-  background:radial-gradient(circle at 50% 20%, rgba(255,196,0,0.18) 0%, transparent 60%),#f5f3ee;
-}
-[data-theme="light"] .auth-tabs{
-  background:#ede9e0;
-  border-color:rgba(0,0,0,0.08);
-}
+[data-theme="light"] #authScreen{background:radial-gradient(circle at 50% 20%, rgba(255,196,0,0.18) 0%, transparent 60%),#f5f3ee}
+[data-theme="light"] .auth-tabs{background:#ede9e0;border-color:rgba(0,0,0,0.08)}
 [data-theme="light"] .auth-tab{color:#6a6659}
-[data-theme="light"] .auth-tab.active{
-  background:linear-gradient(180deg,rgba(255,196,0,0.3),rgba(255,196,0,0.1));
-  color:#8a6200;
-}
+[data-theme="light"] .auth-tab.active{background:linear-gradient(180deg,rgba(255,196,0,0.3),rgba(255,196,0,0.1));color:#8a6200}
 [data-theme="light"] .brand-sub{color:#8a6200}
-[data-theme="light"] .version-badge{
-  background:rgba(0,212,160,0.2);
-  border-color:rgba(0,212,160,0.5);
-  color:#009968;
-}
+[data-theme="light"] .version-badge{background:rgba(0,212,160,0.2);border-color:rgba(0,212,160,0.5);color:#009968}
 [data-theme="light"] .phone-link{color:#b8860b}
 [data-theme="light"] .price,
 [data-theme="light"] .order-price,
-[data-theme="light"] .stat-value{
-  color:#b8860b;
-  text-shadow:none;
-}
-[data-theme="light"] .cta-primary{
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 6px 0 #8a6200,0 16px 30px -10px rgba(255,196,0,0.55);
-}
+[data-theme="light"] .stat-value{color:#b8860b;text-shadow:none}
 </style>
 </head>
 <body>
 
-<!-- ===================== SPLASH ===================== -->
+<!-- ===================== ✅ SPLASH السينمائي ===================== -->
 <div id="splash">
+  <div class="splash-orb"></div>
+  <div class="splash-particles" id="particles"></div>
   <div class="splash-logo">KOKTON</div>
   <div class="splash-sub">تكسي العاصمة</div>
+  <div class="splash-line"></div>
   <div class="splash-tag">أسرع • أأمن • أفخم</div>
+  <div class="splash-progress"></div>
 </div>
 
 <!-- ===================== ROLE PICKER ===================== -->
 <div id="rolePicker" class="hidden">
-  <div class="version-badge">v2.1 ✅</div>
+  <div class="version-badge">v2.2 ✅</div>
   <div class="role-brand">
     <div class="brand-crown">♛</div>
     <div class="brand-name">KOKTON</div>
@@ -635,7 +588,7 @@ label:first-child{margin-top:0}
       <div class="role-desc">استقبل الطلبات<br>واكسب أكثر</div>
     </button>
   </div>
-  <div class="role-footer">v2.1 — سعر التكسي: 1000 د.ع لكل 4 كم</div>
+  <div class="role-footer">v2.2 — تكسي: 1000 د.ع لكل 4 كم</div>
 </div>
 
 <!-- ===================== AUTH ===================== -->
@@ -684,7 +637,6 @@ label:first-child{margin-top:0}
 <div id="app" class="hidden">
 
   <header class="top">
-    <!-- ✅ مجموعة يمين: رئيسية + تبديل المظهر -->
     <div class="top-right-group">
       <button class="iconbtn" onclick="goScreen(state.role === 'customer' ? 'c-home' : 'd-home')" aria-label="الرئيسية">⌂</button>
       <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="تبديل الوضع">☀️</button>
@@ -695,7 +647,6 @@ label:first-child{margin-top:0}
       <span class="role-tag" id="roleTag">زبون</span>
     </div>
 
-    <!-- ✅ زر تبديل الحساب (يسار - الجهة المقابلة) -->
     <button class="switch-role-btn" onclick="switchRole()" title="تبديل الحساب">
       <span class="sw-icon">⇄</span>
       <span class="sw-label" id="switchLabel">سائق<small>تبديل</small></span>
@@ -704,7 +655,6 @@ label:first-child{margin-top:0}
 
   <main>
 
-    <!-- CUSTOMER HOME -->
     <section id="c-home" class="screen active">
       <div class="scene-3d">
         <div class="scene-road"></div>
@@ -729,7 +679,6 @@ label:first-child{margin-top:0}
       <button class="cta-primary" onclick="selectService('taxi')">ابدأ الآن ➜</button>
     </section>
 
-    <!-- CUSTOMER BOOKING -->
     <section id="c-booking" class="screen">
       <div class="section-title" id="bookingTitle">🚕 اطلب تكسي</div>
       <div class="fare-notice">
@@ -858,11 +807,13 @@ label:first-child{margin-top:0}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* =========================================================
-   KOKTON — v2.1
-   ✅ التكسي: 1000 د.ع لكل 4 كم
-   ✅ زر التبديل بين الوضع الليلي والنهاري
+   KOKTON — v2.2
+   ✅ سبلاش سينمائي كامل
+   ✅ تكسي: 1000 د.ع لكل 4 كم (rate = 250 د.ع/كم)
+   ✅ زر تبديل المظهر 🌙/☀️
+   ✅ زر تبديل الحساب ⇄
    ========================================================= */
-console.log('🚕 KOKTON v2.1 — التكسي: 1000 د.ع لكل 4 كم + وضع ليلي/نهاري');
+console.log('🎬 KOKTON v2.2 — سبلاش سينمائي + تكسي: 1000 د.ع لكل 4 كم');
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n).toLocaleString('en-US');
@@ -870,20 +821,14 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&a
 const haptic = () => { if (navigator.vibrate) try { navigator.vibrate(18); } catch(e){} };
 
 /* =========================================================
-   ✅✅✅  THEME (ليل/نهار)  ✅✅✅
+   THEME
    ========================================================= */
 const THEME_KEY = 'kokton_theme';
-
-function getStoredTheme() {
-  try { return localStorage.getItem(THEME_KEY) || 'dark'; } catch(e) { return 'dark'; }
-}
-
+function getStoredTheme() { try { return localStorage.getItem(THEME_KEY) || 'dark'; } catch(e) { return 'dark'; } }
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
-  // meta theme-color (شريط الحالة بالموبايل)
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.content = theme === 'dark' ? '#050507' : '#f5f3ee';
-  // زر التبديل
   const btn = $('themeBtn');
   if (btn) {
     btn.textContent = theme === 'dark' ? '☀️' : '🌙';
@@ -891,7 +836,6 @@ function applyTheme(theme) {
   }
   try { localStorage.setItem(THEME_KEY, theme); } catch(e){}
 }
-
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme') || 'dark';
   const next = current === 'dark' ? 'light' : 'dark';
@@ -899,12 +843,10 @@ function toggleTheme() {
   haptic();
   toast(next === 'light' ? '☀️ الوضع النهاري' : '🌙 الوضع الليلي', 'success');
 }
-
-// ✅ تطبيق المظهر فوراً (قبل تحميل DOM)
 applyTheme(getStoredTheme());
 
 /* =========================================================
-   SERVICES
+   SERVICES — تكسي = 250 د.ع/كم → 4 كم = 1000 د.ع
    ========================================================= */
 const SERVICES = {
   taxi:     { label: 'تكسي 🚕',       rate: 250,  min: 1000, icon: '🚕', fareText: '1000 دينار لكل 4 كيلومتر' },
@@ -959,7 +901,6 @@ function hashPwd(p) {
   for (let i = 0; i < p.length; i++) h = ((h << 5) - h + p.charCodeAt(i)) | 0;
   return 'h' + Math.abs(h).toString(36);
 }
-
 function getAccounts() {
   try {
     const raw = localStorage.getItem(LS.accounts);
@@ -969,7 +910,6 @@ function getAccounts() {
   } catch(e) { return { customer: {}, driver: {} }; }
 }
 function setAccounts(a) { try { localStorage.setItem(LS.accounts, JSON.stringify(a)); } catch(e){} }
-
 function getSession(role) {
   try {
     const phone = sessionStorage.getItem('kokton_phone_' + role);
@@ -996,7 +936,6 @@ function clearSession(role) {
   } catch(e){}
 }
 function getActiveRole() { try { return sessionStorage.getItem('kokton_active_role'); } catch(e) { return null; } }
-
 function syncProfileFromAccount(role, acc) {
   const data = { name: acc.name || '', phone: acc.phone || '' };
   if (role === 'customer') {
@@ -1014,7 +953,6 @@ function getOrders() { try { return JSON.parse(localStorage.getItem(LS.orders) |
 function setOrders(list) { try { localStorage.setItem(LS.orders, JSON.stringify(list)); } catch(e){} broadcastUpdate(); }
 function getCustomer() { try { return JSON.parse(localStorage.getItem(LS.customer) || '{}'); } catch(e){ return {}; } }
 function getDriver()   { try { return JSON.parse(localStorage.getItem(LS.driver)   || '{}'); } catch(e){ return {}; } }
-
 function getDriverId() {
   const s = getSession('driver');
   if (s) return 'driver_' + s.phone;
@@ -1062,7 +1000,6 @@ function haversine(a, b) {
   const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLng/2)**2;
   return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
 }
-
 function calcPrice(service, km) {
   if (!km || km <= 0) return null;
   const s = SERVICES[service];
@@ -1071,15 +1008,32 @@ function calcPrice(service, km) {
 }
 
 /* =========================================================
-   SPLASH
+   ✅ SPLASH — الجزيئات + التشغيل
    ========================================================= */
+function buildParticles() {
+  const wrap = $('particles');
+  if (!wrap) return;
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random() * 4;
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.animationDelay = (Math.random() * 3) + 's';
+    p.style.animationDuration = (3 + Math.random() * 3) + 's';
+    wrap.appendChild(p);
+  }
+}
+
 function initSplash() {
+  buildParticles();
   setTimeout(() => {
     $('splash').classList.add('done');
     const activeRole = getActiveRole();
     if (activeRole && getSession(activeRole)) enterApp(activeRole);
     else showRolePicker();
-  }, 2000);
+  }, 3400);
 }
 
 function showRolePicker() {
@@ -1180,11 +1134,9 @@ function enterApp(role) {
   $('app').classList.remove('hidden');
   $('roleTag').textContent = role === 'customer' ? 'زبون' : 'سائق';
   $('switchLabel').innerHTML = (role === 'customer' ? 'سائق' : 'زبون') + '<small>تبديل</small>';
-
   renderNav();
   const first = role === 'customer' ? 'c-home' : 'd-home';
   goScreen(first);
-
   if (role === 'driver') {
     state.driverId = getDriverId();
     state.online = getOnline();
@@ -1733,7 +1685,6 @@ setInterval(refreshFromStorage, 1500);
 document.addEventListener('DOMContentLoaded', () => {
   state.driverId = getDriverId();
   state.online = getOnline();
-  // ✅ تحديث زر المظهر مرة أخرى بعد تحميل DOM
   applyTheme(getStoredTheme());
   initSplash();
 });
