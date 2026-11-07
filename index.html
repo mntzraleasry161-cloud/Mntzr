@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#050507">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>KOKTON — تكسي العاصمة v2.2</title>
+<title>KOKTON — تكسي العاصمة v2.3</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -26,371 +26,278 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   --radius:22px;
   --success:#00d4a0;--danger:#ff4d6d;
 }
-
 .hidden{display:none!important}
 
-/* =========================================================
-   ✅✅✅  SPLASH السينمائي الكامل  ✅✅✅
-   ========================================================= */
+/* ============ SPLASH ============ */
 #splash{
   position:fixed;inset:0;z-index:9999;
-  background:
-    radial-gradient(circle at 50% 45%, rgba(255,196,0,0.18) 0%, transparent 55%),
+  background:radial-gradient(circle at 50% 45%, rgba(255,196,0,0.18) 0%, transparent 55%),
     radial-gradient(circle at 50% 50%, #14110a 0%, #050507 70%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   overflow:hidden;transition:opacity .8s ease, visibility .8s ease;
 }
 #splash.done{opacity:0;visibility:hidden}
-
-.splash-orb{
-  position:absolute;width:340px;height:340px;border-radius:50%;
+.splash-orb{position:absolute;width:340px;height:340px;border-radius:50%;
   background:radial-gradient(circle,rgba(255,196,0,0.22) 0%,transparent 65%);
-  filter:blur(30px);animation:orbPulse 3s ease-in-out infinite;
-}
+  filter:blur(30px);animation:orbPulse 3s ease-in-out infinite;}
 @keyframes orbPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.2);opacity:1}}
-
 .splash-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.particle{
-  position:absolute;bottom:-10px;border-radius:50%;
+.particle{position:absolute;bottom:-10px;border-radius:50%;
   background:radial-gradient(circle,#ffd24a 0%,transparent 70%);
-  animation:floatUp linear infinite;opacity:0;
-}
-@keyframes floatUp{
-  0%{transform:translateY(0) scale(.5);opacity:0}
-  10%{opacity:.9}
-  100%{transform:translateY(-110vh) scale(1.4);opacity:0}
-}
-
-.splash-logo{
-  position:relative;z-index:2;
-  font-size:clamp(48px,15vw,72px);font-weight:900;letter-spacing:8px;
-  background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0,#ffd24a,#8a6200);
-  background-size:220% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;color:transparent;
+  animation:floatUp linear infinite;opacity:0;}
+@keyframes floatUp{0%{transform:translateY(0) scale(.5);opacity:0}10%{opacity:.9}100%{transform:translateY(-110vh) scale(1.4);opacity:0}}
+.splash-logo{position:relative;z-index:2;font-size:clamp(48px,15vw,72px);font-weight:900;letter-spacing:8px;
+  background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0,#ffd24a,#8a6200);background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
   filter:drop-shadow(0 0 30px rgba(255,196,0,0.6));
   animation:logoReveal 1.6s cubic-bezier(.2,.9,.2,1) forwards, shimmer 3s linear 1s infinite;
-  transform:scale(.3) rotateX(40deg);opacity:0;
-}
+  transform:scale(.3) rotateX(40deg);opacity:0;}
 @keyframes logoReveal{to{transform:scale(1) rotateX(0);opacity:1}}
 @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
-
-.splash-sub{
-  position:relative;z-index:2;margin-top:6px;
-  font-size:15px;letter-spacing:4px;color:#ffd24a;font-weight:700;
-  animation:fadeInUp .8s ease 1.4s forwards;opacity:0;
-}
-.splash-line{
-  position:relative;z-index:2;margin-top:24px;width:120px;height:2px;border-radius:2px;
+.splash-sub{position:relative;z-index:2;margin-top:6px;font-size:15px;letter-spacing:4px;color:#ffd24a;font-weight:700;
+  animation:fadeInUp .8s ease 1.4s forwards;opacity:0;}
+.splash-line{position:relative;z-index:2;margin-top:24px;width:120px;height:2px;border-radius:2px;
   background:linear-gradient(90deg,transparent,#ffd24a,transparent);
-  animation:lineGrow 1.2s ease 1.8s forwards;opacity:0;transform:scaleX(0);
-}
+  animation:lineGrow 1.2s ease 1.8s forwards;opacity:0;transform:scaleX(0);}
 @keyframes lineGrow{to{transform:scaleX(1);opacity:1}}
-.splash-tag{
-  position:relative;z-index:2;margin-top:18px;
-  font-size:12px;color:#a09a8a;letter-spacing:2px;
-  animation:fadeInUp .8s ease 2.2s forwards;opacity:0;
-}
+.splash-tag{position:relative;z-index:2;margin-top:18px;font-size:12px;color:#a09a8a;letter-spacing:2px;
+  animation:fadeInUp .8s ease 2.2s forwards;opacity:0;}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.splash-progress{
-  position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+.splash-progress{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
   width:160px;height:3px;border-radius:3px;background:rgba(255,196,0,0.12);overflow:hidden;
-  animation:fadeInUp .6s ease 1s forwards;opacity:0;
-}
-.splash-progress::after{
-  content:'';position:absolute;inset:0;
+  animation:fadeInUp .6s ease 1s forwards;opacity:0;}
+.splash-progress::after{content:'';position:absolute;inset:0;
   background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0);border-radius:3px;
-  animation:progressFill 2.4s cubic-bezier(.6,.05,.3,.95) forwards;
-  transform-origin:right;transform:scaleX(0);
-}
+  animation:progressFill 2.4s cubic-bezier(.6,.05,.3,.95) forwards;transform-origin:right;transform:scaleX(0);}
 @keyframes progressFill{to{transform:scaleX(1)}}
 
 /* ============ ROLE PICKER ============ */
-#rolePicker{
-  position:fixed;inset:0;z-index:9000;
+#rolePicker{position:fixed;inset:0;z-index:9000;
   background:radial-gradient(circle at 50% 30%, rgba(255,196,0,0.10) 0%, transparent 60%),#050507;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:24px;transition:opacity .5s ease, visibility .5s ease;
-}
+  padding:24px;transition:opacity .5s ease, visibility .5s ease;}
 #rolePicker.done{opacity:0;visibility:hidden}
 .role-brand{text-align:center;margin-bottom:8px}
 .brand-crown{font-size:44px;color:var(--gold);filter:drop-shadow(0 0 20px rgba(255,196,0,0.6));animation:floatY 3s ease-in-out infinite}
 @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.brand-name{
-  font-size:52px;font-weight:900;letter-spacing:6px;
-  background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0,#ffd24a,#8a6200);
-  background-size:220% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;color:transparent;
-  animation:shimmer 4s linear infinite;line-height:1.1;
-}
+.brand-name{font-size:52px;font-weight:900;letter-spacing:6px;
+  background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0,#ffd24a,#8a6200);background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  animation:shimmer 4s linear infinite;line-height:1.1;}
 .brand-sub{font-size:14px;color:#ffd24a;letter-spacing:4px;margin-top:4px;font-weight:700}
 .role-title{margin:32px 0 16px;font-size:15px;color:#a09a8a;letter-spacing:2px}
 .role-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:420px}
-.role-card{
-  padding:24px 14px;
+.role-card{padding:24px 14px;
   background:linear-gradient(160deg,#1a1820 0%,#0c0b10 100%);
   border:1px solid var(--border);border-radius:var(--radius);
   text-align:center;color:#fff;
   box-shadow:0 20px 40px -20px rgba(0,0,0,0.95);
-  transition:transform .25s, border-color .25s;
-}
+  transition:transform .25s, border-color .25s;}
 .role-card:active{transform:scale(.97)}
 .role-card.driver{background:linear-gradient(160deg,#22190a 0%,#0f0c05 100%);border-color:rgba(255,196,0,0.32)}
 .role-emoji{font-size:48px;margin-bottom:10px;display:block}
 .role-name{font-size:18px;font-weight:900;color:var(--gold);margin-bottom:4px}
 .role-desc{font-size:11px;color:#a09a8a;line-height:1.5}
 .role-footer{position:absolute;bottom:20px;font-size:10px;color:#5a554a;letter-spacing:1px}
-.version-badge{
-  position:absolute;top:20px;right:20px;
-  font-size:10px;padding:4px 10px;border-radius:20px;
-  background:rgba(0,212,160,0.15);color:#00d4a0;
-  border:1px solid rgba(0,212,160,0.3);font-weight:700;
-}
+.version-badge{position:absolute;top:20px;right:20px;font-size:10px;padding:4px 10px;border-radius:20px;
+  background:rgba(0,212,160,0.15);color:#00d4a0;border:1px solid rgba(0,212,160,0.3);font-weight:700;}
 
 /* ============ AUTH ============ */
-#authScreen{
-  position:fixed;inset:0;z-index:9100;
+#authScreen{position:fixed;inset:0;z-index:9100;
   background:radial-gradient(circle at 50% 20%, rgba(255,196,0,0.10) 0%, transparent 60%),#050507;
   display:flex;flex-direction:column;align-items:center;
-  padding:32px 20px 40px;overflow-y:auto;
-}
+  padding:32px 20px 40px;overflow-y:auto;}
 .auth-wrap{width:100%;max-width:420px}
-.auth-tabs{
-  display:flex;gap:6px;margin:24px 0 16px;padding:4px;
-  background:#0c0b10;border:1px solid rgba(255,255,255,0.08);
-  border-radius:16px;
-}
+.auth-tabs{display:flex;gap:6px;margin:24px 0 16px;padding:4px;
+  background:#0c0b10;border:1px solid rgba(255,255,255,0.08);border-radius:16px;}
 .auth-tab{flex:1;padding:12px;border-radius:12px;color:#a09a8a;font-size:13px;font-weight:900;transition:all .2s}
 .auth-tab.active{background:linear-gradient(180deg,rgba(255,196,0,0.18),rgba(255,196,0,0.04));color:var(--gold)}
 
 /* ============ APP ============ */
-#app{
-  max-width:520px;min-height:100vh;margin:0 auto;position:relative;
+#app{max-width:520px;min-height:100vh;margin:0 auto;position:relative;
   background:radial-gradient(circle at 50% 0%, rgba(255,196,0,0.06) 0%, transparent 40%),#050507;
-  overflow:hidden;transition:background .3s;
-}
-.top{
-  position:sticky;top:0;z-index:100;height:auto;min-height:64px;
+  overflow:hidden;transition:background .3s;}
+.top{position:sticky;top:0;z-index:100;height:auto;min-height:64px;
   display:flex;align-items:center;justify-content:space-between;padding:10px 12px;gap:8px;
   background:linear-gradient(180deg,#0a0a0f 0%,rgba(10,10,15,0.92) 100%);
   backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,196,0,0.10);
-  transition:background .3s, border-color .3s;
-}
-.switch-role-btn{
-  display:flex;align-items:center;gap:6px;
-  padding:10px 14px;border-radius:16px;
+  transition:background .3s, border-color .3s;}
+.switch-role-btn{display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:16px;
   background:linear-gradient(180deg,#ffe36b 0%,#ffc400 45%,#d99a00 100%);
-  color:#17120a;font-weight:900;font-size:12px;
-  border:2px solid #fff3b0;
+  color:#17120a;font-weight:900;font-size:12px;border:2px solid #fff3b0;
   box-shadow:0 0 20px rgba(255,196,0,0.6), 0 4px 12px rgba(0,0,0,0.5);
-  animation:switchGlow 2s ease-in-out infinite;
-  transition:transform .1s;
-  white-space:nowrap;
-}
+  animation:switchGlow 2s ease-in-out infinite;transition:transform .1s;white-space:nowrap;}
 .switch-role-btn:active{transform:scale(.94)}
-@keyframes switchGlow{
-  0%,100%{box-shadow:0 0 20px rgba(255,196,0,0.5), 0 4px 12px rgba(0,0,0,0.5)}
-  50%{box-shadow:0 0 35px rgba(255,196,0,0.9), 0 4px 12px rgba(0,0,0,0.5)}
-}
+@keyframes switchGlow{0%,100%{box-shadow:0 0 20px rgba(255,196,0,0.5), 0 4px 12px rgba(0,0,0,0.5)}50%{box-shadow:0 0 35px rgba(255,196,0,0.9), 0 4px 12px rgba(0,0,0,0.5)}}
 .switch-role-btn .sw-icon{font-size:16px;line-height:1}
 .switch-role-btn .sw-label{font-size:11px;line-height:1.1;text-align:center}
 .switch-role-btn .sw-label small{display:block;font-size:9px;opacity:.7;font-weight:700}
-
 .top-right-group{display:flex;gap:6px;align-items:center}
-.iconbtn{
-  width:42px;height:42px;border-radius:13px;
+.iconbtn{width:42px;height:42px;border-radius:13px;
   background:linear-gradient(160deg,#1a1820,#0c0b10);
   border:1px solid rgba(255,255,255,0.10);color:#ffd24a;font-size:20px;
   display:flex;align-items:center;justify-content:center;
-  transition:transform .2s, background .3s, border-color .3s;
-}
+  transition:transform .2s, background .3s, border-color .3s;}
 .iconbtn:active{transform:scale(.92)}
-.theme-btn{
-  width:42px;height:42px;border-radius:13px;
+.theme-btn{width:42px;height:42px;border-radius:13px;
   background:linear-gradient(160deg,#1a1820,#0c0b10);
-  border:1px solid rgba(255,255,255,0.10);
-  font-size:20px;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,0.10);font-size:20px;
+  display:flex;align-items:center;justify-content:center;
   transition:transform .2s, background .3s, border-color .3s, box-shadow .3s;
-  box-shadow:0 0 15px rgba(255,196,0,0.2);
-}
+  box-shadow:0 0 15px rgba(255,196,0,0.2);}
 .theme-btn:active{transform:scale(.92) rotate(20deg);box-shadow:0 0 25px rgba(255,196,0,0.6)}
-
 .brand-small{display:flex;align-items:center;gap:6px;flex:1;justify-content:center;min-width:0}
-.brand-mini{
-  font-size:16px;font-weight:900;letter-spacing:2px;
-  background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0,#ffd24a,#8a6200);
-  background-size:220% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;color:transparent;
-  animation:shimmer 3s linear infinite;
-}
-.role-tag{
-  font-size:10px;padding:4px 8px;border-radius:20px;
+.brand-mini{font-size:16px;font-weight:900;letter-spacing:2px;
+  background:linear-gradient(90deg,#8a6200,#ffd24a,#fff3b0,#ffd24a,#8a6200);background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  animation:shimmer 3s linear infinite;}
+.role-tag{font-size:10px;padding:4px 8px;border-radius:20px;
   background:rgba(255,196,0,0.12);color:#ffd24a;font-weight:700;
-  border:1px solid rgba(255,196,0,0.25);white-space:nowrap;
-}
+  border:1px solid rgba(255,196,0,0.25);white-space:nowrap;}
 .screen{display:none;padding:16px 16px 100px;animation:screenIn .35s}
 .screen.active{display:block}
 @keyframes screenIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .section-title{font-size:19px;font-weight:900;margin:14px 0 10px;display:flex;align-items:center;gap:8px}
 .section-title::before{content:'';width:4px;height:18px;border-radius:4px;background:linear-gradient(180deg,#ffd24a,#8a6200)}
 .muted{color:#a09a8a;font-size:13px;line-height:1.7}
-
-.bottom{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);
   width:min(520px,100%);height:74px;z-index:500;
   background:linear-gradient(0deg,#0a0a0f 0%,rgba(10,10,15,0.96) 100%);
   backdrop-filter:blur(20px);border-top:1px solid rgba(255,196,0,0.10);
   display:flex;justify-content:space-around;align-items:center;padding:0 6px;
-  transition:background .3s, border-color .3s;
-}
-.nav{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  transition:background .3s, border-color .3s;}
+.nav{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
   color:#6a6659;font-size:10px;font-weight:700;padding:8px 4px;border-radius:14px;
-  transition:color .2s, background .2s;position:relative;
-}
+  transition:color .2s, background .2s;position:relative;}
 .nav b{font-size:20px;line-height:1;font-weight:400}
 .nav.active{color:var(--gold);background:rgba(255,196,0,0.06)}
-.nav.active::before{
-  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:24px;height:2px;border-radius:2px;background:var(--gold);
-  box-shadow:0 0 10px var(--gold);
-}
-
-.cta-primary{
-  width:100%;padding:16px;margin-top:16px;border-radius:18px;
+.nav.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:24px;height:2px;border-radius:2px;background:var(--gold);box-shadow:0 0 10px var(--gold);}
+.cta-primary{width:100%;padding:16px;margin-top:16px;border-radius:18px;
   font-size:17px;font-weight:900;
   background:linear-gradient(180deg,#ffe36b 0%,#ffc400 45%,#d99a00 100%);
   color:#17120a;
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 6px 0 #8a6200,0 16px 30px -10px rgba(255,196,0,0.45);
-  transition:transform .1s;
-}
+  transition:transform .1s;}
 .cta-primary:active{transform:translateY(4px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 2px 0 #8a6200}
-
-.cta-ghost{
-  width:100%;padding:14px;margin-top:10px;
+.cta-ghost{width:100%;padding:14px;margin-top:10px;
   background:linear-gradient(160deg,#1a1820,#0c0b10);
   border:1px solid rgba(255,255,255,0.10);
   color:#e8e3d4;font-weight:700;font-size:14px;border-radius:16px;
-  transition:transform .1s, background .3s, border-color .3s;
-}
+  transition:transform .1s, background .3s, border-color .3s;}
 .cta-ghost:active{transform:scale(.97)}
-
-.field{
-  width:100%;padding:14px 16px;margin-top:8px;
+.field{width:100%;padding:14px 16px;margin-top:8px;
   background:#0c0b10;border:1px solid rgba(255,255,255,0.09);
   border-radius:14px;color:#fff;font-size:14px;outline:none;
-  transition:border-color .2s, background .3s, color .3s;
-}
+  transition:border-color .2s, background .3s, color .3s;}
 .field::placeholder{color:#5a554a}
 .field:focus{border-color:rgba(255,196,0,0.55);box-shadow:0 0 0 3px rgba(255,196,0,0.10)}
 .field[readonly]{opacity:.65}
 label{display:block;font-size:12px;color:#a09a8a;font-weight:700;margin-top:12px}
 label:first-child{margin-top:0}
-.formbox{
-  background:linear-gradient(160deg,#14121a 0%,#0a090f 100%);
+.formbox{background:linear-gradient(160deg,#14121a 0%,#0a090f 100%);
   border:1px solid var(--border);border-radius:var(--radius);padding:16px;
-  transition:background .3s, border-color .3s;
-}
-
-.scene-3d{
-  position:relative;height:200px;margin:4px 0 16px;
+  transition:background .3s, border-color .3s;}
+.scene-3d{position:relative;height:200px;margin:4px 0 16px;
   border-radius:var(--radius);overflow:hidden;
   background:radial-gradient(circle at 50% 100%, rgba(255,196,0,0.18) 0%, transparent 60%),
     linear-gradient(180deg,#15131c 0%,#08070b 100%);
   border:1px solid rgba(255,196,0,0.18);
-  transition:background .3s, border-color .3s;
-}
-.scene-road{
-  position:absolute;bottom:0;left:0;right:0;height:70px;
+  transition:background .3s, border-color .3s;}
+.scene-road{position:absolute;bottom:0;left:0;right:0;height:70px;
   background:linear-gradient(180deg,#1a1a22 0%,#050507 100%);
-  border-top:2px solid rgba(255,196,0,0.22);
-  transition:background .3s;
-}
-.scene-road::after{
-  content:'';position:absolute;top:50%;left:0;right:0;height:3px;
-  background:repeating-linear-gradient(90deg,#ffd24a 0 30px,transparent 30px 60px);
-  opacity:.5;
-}
-.scene-taxi{
-  position:absolute;bottom:18px;left:50%;
-  transform:translateX(-50%) scaleX(-1);font-size:82px;z-index:2;
+  border-top:2px solid rgba(255,196,0,0.22);transition:background .3s;}
+.scene-road::after{content:'';position:absolute;top:50%;left:0;right:0;height:3px;
+  background:repeating-linear-gradient(90deg,#ffd24a 0 30px,transparent 30px 60px);opacity:.5;}
+.scene-taxi{position:absolute;bottom:18px;left:50%;transform:translateX(-50%) scaleX(-1);font-size:82px;z-index:2;
   filter:drop-shadow(0 12px 20px rgba(255,196,0,0.35));
-  animation:taxiFloat 3s ease-in-out infinite;
-}
+  animation:taxiFloat 3s ease-in-out infinite;}
 @keyframes taxiFloat{0%,100%{transform:translateX(-50%) scaleX(-1) translateY(0)}50%{transform:translateX(-50%) scaleX(-1) translateY(-6px)}}
 .hero-text{text-align:center;margin-bottom:8px}
 .hero-title{font-size:30px;font-weight:900;line-height:1.2}
 .hero-title span{color:var(--gold)}
 .hero-tag{font-size:12px;color:#a09a8a;letter-spacing:2px;margin-top:4px}
-
 .services-3d{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.service-3d{
-  padding:16px 6px 14px;
+.service-3d{padding:16px 6px 14px;
   background:linear-gradient(160deg,#1a1820 0%,#0c0b10 100%);
   border:1px solid rgba(255,196,0,0.22);border-radius:18px;
-  text-align:center;color:#fff;transition:transform .2s, border-color .2s, background .3s;
-}
+  text-align:center;color:#fff;transition:transform .2s, border-color .2s, background .3s;}
 .service-3d:active{transform:scale(.96);border-color:rgba(255,196,0,0.6)}
 .service-3d .emoji{display:block;font-size:42px;margin-bottom:8px}
 .service-3d strong{display:block;font-size:13px;color:var(--gold);font-weight:900}
 .service-3d small{display:block;font-size:9.5px;color:#a09a8a;margin-top:4px}
 
-.fare-notice{
-  display:flex;align-items:center;gap:10px;
+/* ============ FARE NOTICE ============ */
+.fare-notice{display:flex;align-items:center;gap:10px;
   margin-top:10px;padding:12px 14px;border-radius:14px;
   background:linear-gradient(160deg,rgba(0,212,160,0.15),rgba(0,212,160,0.03));
   border:1px solid rgba(0,212,160,0.4);
   color:#00d4a0;font-weight:900;font-size:13px;
   box-shadow:0 0 20px -5px rgba(0,212,160,0.4);
-  transition:background .3s, border-color .3s, color .3s;
-}
+  transition:background .3s, border-color .3s, color .3s;}
 .fare-notice .big{font-size:24px;line-height:1}
 
-.map-tabs{display:flex;gap:8px;margin-bottom:10px}
-.map-tab{
-  flex:1;padding:11px;border-radius:14px;
+/* ============ REGION PICKER (جديد) ============ */
+.region-picker{margin-top:12px;padding:14px;border-radius:16px;
+  background:linear-gradient(160deg,#14121a 0%,#0a090f 100%);
+  border:1px solid var(--border);
+  transition:background .3s, border-color .3s;}
+.region-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.region-label-text{font-size:12.5px;color:#ffd24a;font-weight:900;display:flex;align-items:center;gap:6px}
+.region-detect-btn{padding:6px 12px;border-radius:10px;
+  background:linear-gradient(180deg,rgba(0,212,160,0.2),rgba(0,212,160,0.06));
+  border:1px solid rgba(0,212,160,0.45);color:#00d4a0;
+  font-size:11px;font-weight:900;transition:transform .15s, background .2s;}
+.region-detect-btn:active{transform:scale(.94)}
+.region-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.region-chips::-webkit-scrollbar{display:none}
+.region-chip{flex-shrink:0;padding:8px 12px;border-radius:11px;
+  background:#0c0b10;border:1px solid rgba(255,255,255,0.08);
+  color:#a09a8a;font-size:11.5px;font-weight:700;white-space:nowrap;
+  transition:all .2s;display:flex;align-items:center;gap:4px;}
+.region-chip:active{transform:scale(.95)}
+.region-chip.active{background:linear-gradient(180deg,rgba(255,196,0,0.22),rgba(255,196,0,0.06));
+  border-color:rgba(255,196,0,0.65);color:#ffd24a;
+  box-shadow:0 0 15px -3px rgba(255,196,0,0.5);}
+.region-info-line{margin-top:10px;font-size:11px;color:#a09a8a;
+  padding:8px 10px;border-radius:10px;background:rgba(255,196,0,0.05);
+  border:1px dashed rgba(255,196,0,0.2);line-height:1.6;}
+.region-info-line b{color:#ffd24a}
+
+.map-tabs{display:flex;gap:8px;margin-bottom:10px;margin-top:12px}
+.map-tab{flex:1;padding:11px;border-radius:14px;
   background:linear-gradient(160deg,#1a1820,#0c0b10);
   border:1px solid rgba(255,255,255,0.09);
-  color:#a09a8a;font-size:12px;font-weight:700;transition:all .2s;
-}
-.map-tab.active{
-  border-color:rgba(255,196,0,0.6);color:var(--gold);
-  background:linear-gradient(160deg,rgba(255,196,0,0.12),rgba(255,196,0,0.02));
-}
-#customerMap,#driverMap{
-  height:38vh;min-height:240px;border-radius:var(--radius);
-  border:1px solid rgba(255,196,0,0.2);overflow:hidden;z-index:1;
-}
+  color:#a09a8a;font-size:12px;font-weight:700;transition:all .2s;}
+.map-tab.active{border-color:rgba(255,196,0,0.6);color:var(--gold);
+  background:linear-gradient(160deg,rgba(255,196,0,0.12),rgba(255,196,0,0.02));}
+#customerMap,#driverMap{height:38vh;min-height:240px;border-radius:var(--radius);
+  border:1px solid rgba(255,196,0,0.2);overflow:hidden;z-index:1;}
 .leaflet-container{background:#0a0a0f!important;font-family:inherit!important;transition:background .3s}
 .leaflet-tile{filter:brightness(.85) contrast(1.05) saturate(.9)}
 .leaflet-control-attribution{background:rgba(0,0,0,0.5)!important;color:#a09a8a!important;font-size:9px!important}
 .leaflet-control-attribution a{color:#ffd24a!important}
 .leaflet-control-zoom a{background:#1a1820!important;color:#ffd24a!important;border-color:rgba(255,196,0,0.2)!important}
-
-.order-card-3d{
-  margin-top:12px;padding:16px;
+.order-card-3d{margin-top:12px;padding:16px;
   background:linear-gradient(160deg,#1a1820 0%,#0c0b10 100%);
   border:1px solid var(--border);border-radius:var(--radius);
-  transition:background .3s, border-color .3s;
-}
+  transition:background .3s, border-color .3s;}
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .price{color:var(--gold);font-size:24px;font-weight:900;text-shadow:0 0 20px rgba(255,196,0,0.4)}
+.surge-badge{margin-top:4px;font-size:10.5px;font-weight:900;padding:3px 8px;border-radius:8px;
+  background:rgba(255,140,0,0.15);color:#ffaa33;
+  border:1px solid rgba(255,140,0,0.4);display:inline-block;white-space:nowrap;}
 
-.order-item{
-  padding:14px;margin-top:12px;
+.order-item{padding:14px;margin-top:12px;
   background:linear-gradient(160deg,#14121a 0%,#0a090f 100%);
   border:1px solid rgba(255,255,255,0.08);border-radius:18px;
-  transition:background .3s, border-color .3s;
-}
+  transition:background .3s, border-color .3s;}
 .order-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
 .order-service{font-size:14px;font-weight:900;color:#fff}
-.status-badge{
-  font-size:10px;font-weight:900;padding:5px 10px;border-radius:20px;
+.status-badge{font-size:10px;font-weight:900;padding:5px 10px;border-radius:20px;
   background:rgba(255,196,0,0.12);color:#ffd24a;
-  border:1px solid rgba(255,196,0,0.25);white-space:nowrap;
-}
+  border:1px solid rgba(255,196,0,0.25);white-space:nowrap;}
 .status-badge.accepted{background:rgba(78,161,255,0.15);color:#4ea1ff;border-color:rgba(78,161,255,0.3)}
 .status-badge.arrived{background:rgba(124,92,255,0.15);color:#7c5cff;border-color:rgba(124,92,255,0.3)}
 .status-badge.ongoing{background:rgba(0,212,160,0.15);color:#00d4a0;border-color:rgba(0,212,160,0.3)}
@@ -400,85 +307,60 @@ label:first-child{margin-top:0}
 .order-meta b{color:#e8e3d4;font-weight:700}
 .order-price{color:var(--gold);font-weight:900;font-size:14px;margin-top:8px;display:inline-block}
 .order-actions{display:flex;gap:8px;margin-top:12px}
-.btn-accept{
-  flex:1;padding:12px;border-radius:13px;
+.btn-accept{flex:1;padding:12px;border-radius:13px;
   background:linear-gradient(180deg,#ffe36b,#ffc400);color:#17120a;
-  font-weight:900;font-size:14px;box-shadow:0 4px 0 #8a6200;
-}
+  font-weight:900;font-size:14px;box-shadow:0 4px 0 #8a6200;}
 .btn-accept:active{transform:translateY(3px);box-shadow:0 1px 0 #8a6200}
-.btn-cancel{
-  flex:1;padding:12px;border-radius:13px;
+.btn-cancel{flex:1;padding:12px;border-radius:13px;
   background:rgba(255,77,109,0.12);color:#ff4d6d;font-weight:700;font-size:13px;
-  border:1px solid rgba(255,77,109,0.3);
-}
-.btn-next{
-  flex:1;padding:12px;border-radius:13px;
+  border:1px solid rgba(255,77,109,0.3);}
+.btn-next{flex:1;padding:12px;border-radius:13px;
   background:linear-gradient(180deg,#4ea1ff,#1e6fd9);color:#fff;
-  font-weight:900;font-size:14px;box-shadow:0 4px 0 #0d4a99;
-}
-
-.driver-status{
-  display:flex;justify-content:space-between;align-items:center;
+  font-weight:900;font-size:14px;box-shadow:0 4px 0 #0d4a99;}
+.driver-status{display:flex;justify-content:space-between;align-items:center;
   padding:16px;margin-bottom:12px;
   background:linear-gradient(160deg,#1a1820 0%,#0c0b10 100%);
   border:1px solid var(--border);border-radius:var(--radius);
-  transition:background .3s, border-color .3s;
-}
+  transition:background .3s, border-color .3s;}
 .driver-status .label{font-size:13px;color:#a09a8a;font-weight:700}
 .driver-status .sub{font-size:11px;color:#5a554a;margin-top:2px}
-.toggle{
-  display:flex;align-items:center;gap:8px;
+.toggle{display:flex;align-items:center;gap:8px;
   padding:8px 14px;border-radius:20px;
   background:#0c0b10;border:1px solid rgba(255,255,255,0.1);
-  color:#a09a8a;font-size:12px;font-weight:900;transition:all .3s;
-}
-.toggle.on{
-  background:linear-gradient(180deg,rgba(0,212,160,0.2),rgba(0,212,160,0.05));
+  color:#a09a8a;font-size:12px;font-weight:900;transition:all .3s;}
+.toggle.on{background:linear-gradient(180deg,rgba(0,212,160,0.2),rgba(0,212,160,0.05));
   border-color:rgba(0,212,160,0.5);color:#00d4a0;
-  box-shadow:0 0 20px -5px rgba(0,212,160,0.5);
-}
+  box-shadow:0 0 20px -5px rgba(0,212,160,0.5);}
 .toggle-dot{width:8px;height:8px;border-radius:50%;background:#5a554a}
 .toggle.on .toggle-dot{background:#00d4a0;box-shadow:0 0 8px #00d4a0}
-
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.stat-card{
-  padding:16px 12px;text-align:center;
+.stat-card{padding:16px 12px;text-align:center;
   background:linear-gradient(160deg,#1a1820 0%,#0c0b10 100%);
   border:1px solid var(--border);border-radius:var(--radius);
-  transition:background .3s, border-color .3s;
-}
+  transition:background .3s, border-color .3s;}
 .stat-icon{font-size:24px;margin-bottom:6px}
 .stat-value{font-size:22px;font-weight:900;color:var(--gold);line-height:1.1}
 .stat-label{font-size:10.5px;color:#a09a8a;margin-top:4px;font-weight:700}
-
 .empty-state{text-align:center;padding:40px 16px;color:#6a6659}
 .empty-state .big{font-size:48px;margin-bottom:12px;opacity:.6}
 .empty-state .ttl{font-size:14px;font-weight:900;color:#a09a8a;margin-bottom:6px}
-
-.toast{
-  position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
   background:linear-gradient(160deg,#1a1820,#0c0b10);
   border:1px solid rgba(255,196,0,0.4);color:#fff;font-size:13px;font-weight:700;
   padding:12px 20px;border-radius:14px;
   box-shadow:0 20px 40px -10px rgba(0,0,0,0.9);
   z-index:9999;opacity:0;pointer-events:none;
-  transition:opacity .3s, transform .3s;max-width:88vw;text-align:center;
-}
+  transition:opacity .3s, transform .3s;max-width:88vw;text-align:center;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.success{border-color:rgba(0,212,160,0.5)}
 .toast.error{border-color:rgba(255,77,109,0.5)}
-
-.kokton-marker{
-  display:flex;align-items:center;justify-content:center;
+.kokton-marker{display:flex;align-items:center;justify-content:center;
   width:36px;height:36px;border-radius:50%;
   border:3px solid #fff;font-size:16px;font-weight:900;
-  box-shadow:0 0 20px currentColor, 0 4px 12px rgba(0,0,0,0.6);
-}
+  box-shadow:0 0 20px currentColor, 0 4px 12px rgba(0,0,0,0.6);}
 .phone-link{color:#ffd24a}
 
-/* =============================================
-   ✅  الوضع النهاري
-   ============================================= */
+/* ============ الوضع النهاري ============ */
 [data-theme="light"]{color-scheme:light}
 [data-theme="light"] body{background:#f5f3ee;color:#17120a}
 [data-theme="light"] #app{background:radial-gradient(circle at 50% 0%, rgba(255,196,0,0.12) 0%, transparent 40%),#f5f3ee}
@@ -511,11 +393,17 @@ label:first-child{margin-top:0}
 [data-theme="light"] .driver-status,
 [data-theme="light"] .stat-card,
 [data-theme="light"] .order-item,
-[data-theme="light"] .service-3d{
+[data-theme="light"] .service-3d,
+[data-theme="light"] .region-picker{
   background:linear-gradient(160deg,#ffffff 0%,#faf7f0 100%);
   border-color:rgba(0,0,0,0.08);
   box-shadow:0 10px 30px -15px rgba(0,0,0,0.15);
 }
+[data-theme="light"] .region-chip{background:#faf7f0;border-color:rgba(0,0,0,0.10);color:#6a6659}
+[data-theme="light"] .region-chip.active{background:linear-gradient(180deg,rgba(255,196,0,0.35),rgba(255,196,0,0.12));border-color:rgba(255,196,0,0.7);color:#8a6200}
+[data-theme="light"] .region-label-text{color:#8a6200}
+[data-theme="light"] .region-info-line{background:rgba(255,196,0,0.10);border-color:rgba(255,196,0,0.35);color:#6a6659}
+[data-theme="light"] .region-info-line b{color:#8a6200}
 [data-theme="light"] .cta-ghost{background:linear-gradient(160deg,#faf7f0,#ede9e0);border-color:rgba(0,0,0,0.10);color:#17120a}
 [data-theme="light"] .toggle{background:#faf7f0;border-color:rgba(0,0,0,0.10);color:#6a6659}
 [data-theme="light"] .toggle.on{background:linear-gradient(180deg,rgba(0,212,160,0.25),rgba(0,212,160,0.10));border-color:rgba(0,212,160,0.55);color:#009968}
@@ -530,6 +418,7 @@ label:first-child{margin-top:0}
 [data-theme="light"] .leaflet-control-attribution a{color:#8a6200!important}
 [data-theme="light"] .toast{background:linear-gradient(160deg,#ffffff,#faf7f0);color:#17120a;border-color:rgba(255,196,0,0.5);box-shadow:0 20px 40px -10px rgba(0,0,0,0.2),0 0 30px -10px rgba(255,196,0,0.4)}
 [data-theme="light"] .fare-notice{background:linear-gradient(160deg,rgba(0,212,160,0.18),rgba(0,212,160,0.05));border-color:rgba(0,212,160,0.5);color:#009968}
+[data-theme="light"] .surge-badge{background:rgba(255,140,0,0.20);border-color:rgba(255,140,0,0.5);color:#cc6600}
 [data-theme="light"] #splash{background:radial-gradient(circle at 50% 45%, rgba(255,196,0,0.30) 0%, transparent 55%),radial-gradient(circle at 50% 50%, #fff8e6 0%, #f5f3ee 70%)}
 [data-theme="light"] .splash-sub{color:#8a6200}
 [data-theme="light"] .splash-tag{color:#6a6659}
@@ -556,7 +445,7 @@ label:first-child{margin-top:0}
 </head>
 <body>
 
-<!-- ===================== ✅ SPLASH السينمائي ===================== -->
+<!-- SPLASH -->
 <div id="splash">
   <div class="splash-orb"></div>
   <div class="splash-particles" id="particles"></div>
@@ -567,9 +456,9 @@ label:first-child{margin-top:0}
   <div class="splash-progress"></div>
 </div>
 
-<!-- ===================== ROLE PICKER ===================== -->
+<!-- ROLE PICKER -->
 <div id="rolePicker" class="hidden">
-  <div class="version-badge">v2.2 ✅</div>
+  <div class="version-badge">v2.3 ✅</div>
   <div class="role-brand">
     <div class="brand-crown">♛</div>
     <div class="brand-name">KOKTON</div>
@@ -588,10 +477,10 @@ label:first-child{margin-top:0}
       <div class="role-desc">استقبل الطلبات<br>واكسب أكثر</div>
     </button>
   </div>
-  <div class="role-footer">v2.2 — تكسي: 1000 د.ع لكل 3 كم</div>
+  <div class="role-footer">v2.3 — تسعير ذكي لكل منطقة بالعراق</div>
 </div>
 
-<!-- ===================== AUTH ===================== -->
+<!-- AUTH -->
 <div id="authScreen" class="hidden">
   <div class="auth-wrap">
     <div class="role-brand" style="margin-bottom:0">
@@ -633,20 +522,17 @@ label:first-child{margin-top:0}
   </div>
 </div>
 
-<!-- ===================== APP ===================== -->
+<!-- APP -->
 <div id="app" class="hidden">
-
   <header class="top">
     <div class="top-right-group">
       <button class="iconbtn" onclick="goScreen(state.role === 'customer' ? 'c-home' : 'd-home')" aria-label="الرئيسية">⌂</button>
       <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="تبديل الوضع">☀️</button>
     </div>
-
     <div class="brand-small">
       <span class="brand-mini">KOKTON</span>
       <span class="role-tag" id="roleTag">زبون</span>
     </div>
-
     <button class="switch-role-btn" onclick="switchRole()" title="تبديل الحساب">
       <span class="sw-icon">⇄</span>
       <span class="sw-label" id="switchLabel">سائق<small>تبديل</small></span>
@@ -654,14 +540,13 @@ label:first-child{margin-top:0}
   </header>
 
   <main>
-
     <section id="c-home" class="screen active">
       <div class="scene-3d">
         <div class="scene-road"></div>
         <div class="scene-taxi">🚕</div>
       </div>
       <div class="hero-text">
-        <div class="hero-title">تكسي <span>العاصمة</span></div>
+        <div class="hero-title">تكسي <span>العراق</span></div>
         <div class="hero-tag">KOKTON • التميز في كل رحلة</div>
       </div>
       <div class="section-title">اختر الخدمة</div>
@@ -673,7 +558,7 @@ label:first-child{margin-top:0}
           <span class="emoji">🛺</span><strong>تكتك</strong><small>مشوار سريع</small>
         </button>
         <button class="service-3d" onclick="selectService('taxi')">
-          <span class="emoji">🚕</span><strong>تكسي</strong><small>1000 د.ع / 3 كم</small>
+          <span class="emoji">🚕</span><strong>تكسي</strong><small>تسعيرة لكل منطقة</small>
         </button>
       </div>
       <button class="cta-primary" onclick="selectService('taxi')">ابدأ الآن ➜</button>
@@ -681,11 +566,22 @@ label:first-child{margin-top:0}
 
     <section id="c-booking" class="screen">
       <div class="section-title" id="bookingTitle">🚕 اطلب تكسي</div>
+
       <div class="fare-notice">
         <span class="big">💰</span>
-        <span id="fareText">1000 دينار لكل 3 كيلومتر</span>
+        <span id="fareText">بغداد: 1000 دينار لكل 3 كم</span>
       </div>
-      <p class="muted" style="margin-top:12px">حدد موقع الانطلاق والوجهة على الخريطة.</p>
+
+      <!-- ✅ محدد المنطقة -->
+      <div class="region-picker">
+        <div class="region-row">
+          <span class="region-label-text">📍 منطقة التسعير</span>
+          <button class="region-detect-btn" onclick="detectMyRegion()">🎯 تحديد تلقائي</button>
+        </div>
+        <div class="region-chips" id="regionChips"></div>
+        <div class="region-info-line" id="regionInfoLine">—</div>
+      </div>
+
       <div class="map-tabs">
         <button class="map-tab active" data-mode="pickup" onclick="setMapMode('pickup')">📍 الانطلاق</button>
         <button class="map-tab" data-mode="dest" onclick="setMapMode('dest')">🎯 الوجهة</button>
@@ -703,10 +599,12 @@ label:first-child{margin-top:0}
           <div>
             <div class="muted">الخدمة المختارة</div>
             <strong id="chosenService">تكسي 🚕</strong>
+            <div class="muted" id="regionInfo" style="margin-top:4px;font-size:11px">بغداد</div>
           </div>
           <div style="text-align:left">
             <div class="muted">السعر التقديري</div>
             <div class="price" id="price">—</div>
+            <div class="surge-badge hidden" id="surgeBadge"></div>
           </div>
         </div>
         <button class="cta-primary" onclick="submitOrder()">تأكيد الطلب</button>
@@ -799,7 +697,6 @@ label:first-child{margin-top:0}
       <button class="cta-ghost" onclick="logout()" style="color:#ff8a8a;border-color:rgba(255,77,109,0.25)">🚪 تسجيل الخروج</button>
       <button class="cta-ghost" onclick="resetAll()" style="color:#ff4d6d;border-color:rgba(255,77,109,0.25)">مسح كل البيانات</button>
     </section>
-
   </main>
   <nav class="bottom" id="bottomNav"></nav>
 </div>
@@ -807,13 +704,10 @@ label:first-child{margin-top:0}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* =========================================================
-   KOKTON — v2.2
-   ✅ سبلاش سينمائي كامل
-   ✅ تكسي: 1000 د.ع لكل 3 كم (rate = 1000/3 ≈ 333.33 د.ع/كم)
-   ✅ زر تبديل المظهر 🌙/☀️
-   ✅ زر تبديل الحساب ⇄
+   KOKTON — v2.3
+   ✅ محرك تسعير لكل منطقة بالعراق
    ========================================================= */
-console.log('🎬 KOKTON v2.2 — سبلاش سينمائي + تكسي: 1000 د.ع لكل 3 كم');
+console.log('💰 KOKTON v2.3 — محرك تسعير متعدد المناطق');
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n).toLocaleString('en-US');
@@ -846,13 +740,56 @@ function toggleTheme() {
 applyTheme(getStoredTheme());
 
 /* =========================================================
-   SERVICES — تكسي = 1000 د.ع / 3 كم → 333.33 د.ع/كم
+   SERVICES — المعدلات الأساسية (بغداد = المستوى 1.0)
    ========================================================= */
 const SERVICES = {
-  taxi:     { label: 'تكسي 🚕',       rate: 1000 / 3, min: 1000, icon: '🚕', fareText: '1000 دينار لكل 3 كيلومتر' },
-  tuktuk:   { label: 'تكتك 🛺',       rate: 1000,     min: 2000, icon: '🛺', fareText: '1000 دينار لكل كيلومتر' },
-  delivery: { label: 'مندوب توصيل 🛵', rate: 2000,     min: 4000, icon: '🛵', fareText: '2000 دينار لكل كيلومتر' }
+  taxi:     { label: 'تكسي 🚕',       icon: '🚕' },
+  tuktuk:   { label: 'تكتك 🛺',       icon: '🛺' },
+  delivery: { label: 'مندوب توصيل 🛵', icon: '🛵' }
 };
+
+// المعدلات الأساسية في بغداد (مستوى 1.0)
+const BASE_RATES = {
+  taxi:     { perKm: 1000 / 3, min: 1000 },   // 333.33 د.ع/كم — 1000 د.ع لكل 3 كم
+  tuktuk:   { perKm: 1000,     min: 2000 },
+  delivery: { perKm: 2000,     min: 4000 }
+};
+
+/* =========================================================
+   🌍 محافظات العراق — كل منطقة لها مستوى تسعير مختلف
+   level: معامل يُضرب في المعدلات الأساسية
+   center: إحداثيات المركز (للتحديد التلقائي وللمركز الافتراضي)
+   ========================================================= */
+const REGIONS = {
+  baghdad:      { name: 'بغداد',       emoji: '🏛️', level: 1.00, center: [33.3152, 44.3661] },
+  basra:        { name: 'البصرة',       emoji: '🛢️', level: 1.10, center: [30.5085, 47.7804] },
+  nineveh:      { name: 'الموصل',       emoji: '🕌', level: 0.90, center: [36.3350, 43.1189] },
+  erbil:        { name: 'أربيل',        emoji: '⛰️', level: 1.15, center: [36.1911, 44.0092] },
+  najaf:        { name: 'النجف',        emoji: '🕌', level: 1.00, center: [32.0000, 44.3333] },
+  karbala:      { name: 'كربلاء',       emoji: '🕌', level: 1.00, center: [32.6167, 44.0333] },
+  sulaymaniyah: { name: 'السليمانية',   emoji: '🏔️', level: 1.10, center: [35.5613, 45.4408] },
+  kirkuk:       { name: 'كركوك',        emoji: '🛢️', level: 1.00, center: [35.4681, 44.3922] },
+  anbar:        { name: 'الأنبار',       emoji: '🏜️', level: 0.95, center: [33.4206, 43.3000] },
+  babil:        { name: 'بابل',         emoji: '🏛️', level: 0.95, center: [32.4833, 44.4333] },
+  diyala:       { name: 'ديالى',        emoji: '🌾', level: 0.90, center: [33.7500, 44.6500] },
+  dhi_qar:      { name: 'ذي قار',       emoji: '🏺', level: 0.95, center: [31.0500, 46.2500] },
+  wasit:        { name: 'واسط',         emoji: '🌾', level: 0.90, center: [32.5167, 45.8167] },
+  maysan:       { name: 'ميسان',        emoji: '🌾', level: 0.90, center: [31.8333, 47.1500] },
+  muthanna:     { name: 'المثنى',       emoji: '🏜️', level: 0.90, center: [30.5000, 45.2833] },
+  qadisiyyah:   { name: 'القادسية',     emoji: '🌾', level: 0.95, center: [31.9900, 44.9200] },
+  duhok:        { name: 'دهوك',         emoji: '🏔️', level: 1.05, center: [36.8669, 42.9503] },
+  saladdin:     { name: 'صلاح الدين',   emoji: '🏞️', level: 0.90, center: [34.6000, 43.6833] }
+};
+
+const REGION_KEY = 'kokton_region';
+function getSavedRegion() {
+  try {
+    const r = localStorage.getItem(REGION_KEY);
+    if (r && REGIONS[r]) return r;
+  } catch(e){}
+  return 'baghdad';
+}
+function setSavedRegion(key) { try { localStorage.setItem(REGION_KEY, key); } catch(e){} }
 
 const STATUS = {
   pending:   { label: 'بانتظار سائق',       cls: '' },
@@ -890,8 +827,99 @@ const state = {
   role: null, pendingRole: null, screen: null,
   service: 'taxi', mapMode: 'pickup',
   pickupCoords: null, destCoords: null,
-  driverId: null, online: false
+  driverId: null, online: false,
+  region: getSavedRegion()
 };
+
+/* =========================================================
+   🧮 محرك حساب السعر لكل منطقة
+   ========================================================= */
+function haversine(a, b) {
+  if (!a || !b) return null;
+  const R = 6371, toRad = d => d * Math.PI / 180;
+  const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat), lat2 = toRad(b.lat);
+  const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLng/2)**2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+/**
+ * حساب تفصيلي للسعر مع كل العوامل
+ * يعيد: { total, distanceFare, regionLevel, timeMult, distMult, surge, surgeLabel, perKm, minFare }
+ */
+function calcPriceDetailed(service, km, regionKey) {
+  if (!km || km <= 0) return { total: null, surge: 0, surgeLabel: '' };
+  const region = REGIONS[regionKey] || REGIONS.baghdad;
+  const base = BASE_RATES[service];
+  if (!base) return { total: null, surge: 0, surgeLabel: '' };
+
+  const level = region.level;
+  const perKm = base.perKm * level;
+  const minFare = base.min * level;
+
+  // 1) أجرة المسافة
+  let distanceFare = km * perKm;
+
+  // 2) مضاعف الوقت (ذروة / ليلي)
+  const hour = new Date().getHours();
+  let timeMult = 1, timeSurge = 0, timeLabel = '';
+  if (hour >= 23 || hour < 5) {
+    timeMult = 1.25; timeSurge = 0.25; timeLabel = '🌙 ليلي +25%';
+  } else if ((hour >= 7 && hour < 10) || (hour >= 16 && hour < 19)) {
+    timeMult = 1.15; timeSurge = 0.15; timeLabel = '⏰ ذروة +15%';
+  }
+
+  // 3) مضاعف المسافات الطويلة (> 30 كم)
+  let distMult = 1, distSurge = 0, distLabel = '';
+  if (km > 30) {
+    distMult = 1.10; distSurge = 0.10; distLabel = '🛣️ مسافة طويلة +10%';
+  }
+
+  let total = distanceFare * timeMult * distMult;
+
+  // 4) الحد الأدنى
+  if (total < minFare) total = minFare;
+
+  // 5) التقريب لأقرب 250 د.ع
+  total = Math.round(total / 250) * 250;
+
+  // 6) وسم الزيادة
+  const labels = [];
+  if (timeSurge > 0) labels.push(timeLabel);
+  if (distSurge > 0) labels.push(distLabel);
+
+  return {
+    total,
+    distanceFare: Math.round(distanceFare),
+    minFare: Math.round(minFare),
+    regionLevel: level,
+    perKm: Math.round(perKm * 10) / 10,
+    timeMult,
+    distMult,
+    surge: timeSurge + distSurge,
+    surgeLabel: labels.join(' • ')
+  };
+}
+
+function calcPrice(service, km, regionKey) {
+  return calcPriceDetailed(service, km, regionKey).total;
+}
+
+function detectRegionFromCoords(lat, lng) {
+  let best = 'baghdad', bestDist = Infinity;
+  for (const [key, r] of Object.entries(REGIONS)) {
+    const d = haversine({ lat, lng }, { lat: r.center[0], lng: r.center[1] });
+    if (d < bestDist) { bestDist = d; best = key; }
+  }
+  return best;
+}
+
+function getRegionRateText(key) {
+  const r = REGIONS[key];
+  if (!r) return '';
+  const taxiPer3km = Math.round(BASE_RATES.taxi.perKm * r.level * 3 / 100) * 100;
+  return `التكسي ≈ ${fmt(taxiPer3km)} د.ع / 3 كم`;
+}
 
 /* =========================================================
    AUTH
@@ -992,24 +1020,8 @@ function toast(msg, type = 'info') {
   }, 2800);
 }
 
-function haversine(a, b) {
-  if (!a || !b) return null;
-  const R = 6371, toRad = d => d * Math.PI / 180;
-  const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
-  const lat1 = toRad(a.lat), lat2 = toRad(b.lat);
-  const h = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLng/2)**2;
-  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
-}
-function calcPrice(service, km) {
-  if (!km || km <= 0) return null;
-  const s = SERVICES[service];
-  const raw = km * s.rate;
-  // تقريب لأقرب 100 دينار عراقي
-  return Math.max(s.min, Math.round(raw / 100) * 100);
-}
-
 /* =========================================================
-   ✅ SPLASH — الجزيئات + التشغيل
+   SPLASH
    ========================================================= */
 function buildParticles() {
   const wrap = $('particles');
@@ -1026,7 +1038,6 @@ function buildParticles() {
     wrap.appendChild(p);
   }
 }
-
 function initSplash() {
   buildParticles();
   setTimeout(() => {
@@ -1036,7 +1047,6 @@ function initSplash() {
     else showRolePicker();
   }, 3400);
 }
-
 function showRolePicker() {
   $('app').classList.add('hidden');
   $('authScreen').classList.add('hidden');
@@ -1050,14 +1060,12 @@ function hideRolePicker() {
   rp.classList.add('done');
   setTimeout(() => rp.classList.add('hidden'), 500);
 }
-
 function pickRole(role) {
   haptic();
   state.pendingRole = role;
   if (getSession(role)) enterApp(role);
   else showAuth(role);
 }
-
 function showAuth(role) {
   state.pendingRole = role;
   hideRolePicker();
@@ -1068,18 +1076,15 @@ function showAuth(role) {
     .forEach(id => { const el = $(id); if (el) el.value = ''; });
   switchAuthTab('login');
 }
-
 function switchAuthTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   $('authLogin').classList.toggle('hidden', tab !== 'login');
   $('authRegister').classList.toggle('hidden', tab !== 'register');
 }
-
 function backToRolePicker() {
   $('authScreen').classList.add('hidden');
   showRolePicker();
 }
-
 function doLogin() {
   const phone = $('loginPhone').value.trim();
   const password = $('loginPassword').value;
@@ -1095,7 +1100,6 @@ function doLogin() {
   toast('✅ مرحباً ' + acc.name, 'success');
   setTimeout(() => enterApp(role), 400);
 }
-
 function doRegister() {
   const name = $('regName').value.trim();
   const phone = $('regPhone').value.trim();
@@ -1117,7 +1121,6 @@ function doRegister() {
   toast('✅ تم إنشاء الحساب', 'success');
   setTimeout(() => enterApp(role), 400);
 }
-
 function logout() {
   if (!confirm('هل تريد تسجيل الخروج؟')) return;
   clearSession(state.role);
@@ -1126,7 +1129,6 @@ function logout() {
   showRolePicker();
   toast('تم تسجيل الخروج', 'info');
 }
-
 function enterApp(role) {
   state.role = role;
   state.pendingRole = null;
@@ -1145,7 +1147,6 @@ function enterApp(role) {
   }
   refreshFromStorage(true);
 }
-
 function switchRole() {
   haptic();
   const newRole = state.role === 'customer' ? 'driver' : 'customer';
@@ -1196,8 +1197,14 @@ function goScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
   state.screen = id;
   updateNavActive();
-  if (id === 'c-booking') setTimeout(() => { initCustomerMap(); if (customerMap) customerMap.invalidateSize(); }, 200);
-  if (id === 'd-home')    setTimeout(() => { initDriverMap();   if (driverMap)   driverMap.invalidateSize();   renderDriverHome(); }, 200);
+  if (id === 'c-booking') setTimeout(() => {
+    initCustomerMap();
+    if (customerMap) customerMap.invalidateSize();
+    renderRegionChips();
+    updateRegionInfo();
+    updateFareNotice();
+  }, 200);
+  if (id === 'd-home')    setTimeout(() => { initDriverMap(); if (driverMap) driverMap.invalidateSize(); renderDriverHome(); }, 200);
   if (id === 'c-orders')  renderCustomerOrders();
   if (id === 'd-orders')  renderDriverOrders();
   if (id === 'd-earnings') renderEarnings();
@@ -1206,12 +1213,102 @@ function goScreen(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+/* =========================================================
+   REGION UI
+   ========================================================= */
+function renderRegionChips() {
+  const el = $('regionChips');
+  if (!el) return;
+  el.innerHTML = Object.entries(REGIONS).map(([key, r]) =>
+    `<button class="region-chip ${key === state.region ? 'active' : ''}" onclick="selectRegion('${key}')">
+      ${r.emoji} ${r.name}
+    </button>`
+  ).join('');
+}
+
+function selectRegion(key, silent) {
+  if (!REGIONS[key]) return;
+  const changed = state.region !== key;
+  state.region = key;
+  setSavedRegion(key);
+  renderRegionChips();
+  updateRegionInfo();
+  updateFareNotice();
+  updatePricePreview();
+
+  if (!silent && changed) {
+    haptic();
+    const r = REGIONS[key];
+    toast(`📍 ${r.name} — ${getRegionRateText(key)}`, 'success');
+    if (customerMap && !state.pickupCoords && !state.destCoords) {
+      customerMap.setView(r.center, 13);
+    }
+  }
+}
+
+function updateRegionInfo() {
+  const r = REGIONS[state.region];
+  if (!r) return;
+  const el = $('regionInfo');
+  if (el) el.textContent = `${r.emoji} ${r.name}`;
+  const line = $('regionInfoLine');
+  if (line) {
+    const level = r.level;
+    const taxiPerKm = Math.round(BASE_RATES.taxi.perKm * level * 10) / 10;
+    const taxiMin = Math.round(BASE_RATES.taxi.min * level);
+    const levelTxt = level > 1 ? `مرتفع (×${level})` : level < 1 ? `منخفض (×${level})` : 'قياسي';
+    line.innerHTML = `<b>${r.name}</b> — مستوى التسعير: ${levelTxt}<br>
+      التكسي: <b>${taxiPerKm} د.ع/كم</b> • الحد الأدنى: <b>${fmt(taxiMin)} د.ع</b>`;
+  }
+}
+
+function updateFareNotice() {
+  const el = $('fareText');
+  if (!el) return;
+  const r = REGIONS[state.region];
+  if (!r) return;
+  if (state.service === 'taxi') {
+    const per3km = Math.round(BASE_RATES.taxi.perKm * r.level * 3 / 100) * 100;
+    el.textContent = `${r.emoji} ${r.name}: ${fmt(per3km)} دينار لكل 3 كم`;
+  } else {
+    const perKm = Math.round(BASE_RATES[state.service].perKm * r.level / 100) * 100;
+    el.textContent = `${r.emoji} ${r.name}: ${fmt(perKm)} دينار لكل كم`;
+  }
+}
+
+function detectMyRegion() {
+  if (!navigator.geolocation) { toast('المتصفح لا يدعم تحديد الموقع', 'error'); return; }
+  toast('🛰️ جاري تحديد منطقتك...', 'info');
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude, lng = pos.coords.longitude;
+      const key = detectRegionFromCoords(lat, lng);
+      selectRegion(key, false);
+      const r = REGIONS[key];
+      // حدّد موقع الانطلاق تلقائياً أيضاً
+      const latlng = { lat, lng };
+      state.pickupCoords = latlng;
+      $('pickup').value = '📍 موقعي الحالي (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ')';
+      if (customerMap) customerMap.setView([lat, lng], 15);
+      if (cPickupMarker) cPickupMarker.setLatLng(latlng);
+      else if (customerMap) cPickupMarker = L.marker(latlng, { icon: makeIcon('#00d4a0', 'A') }).addTo(customerMap);
+      updateRouteLine();
+      updatePricePreview();
+    },
+    () => toast('لم نتمكن من تحديد موقعك', 'error'),
+    { enableHighAccuracy: true, timeout: 12000 }
+  );
+}
+
+/* =========================================================
+   CUSTOMER BOOKING
+   ========================================================= */
 function selectService(s) {
   haptic();
   state.service = s;
   $('bookingTitle').textContent = SERVICES[s].label + ' — تحديد الرحلة';
   $('chosenService').textContent = SERVICES[s].label;
-  $('fareText').textContent = SERVICES[s].fareText;
+  updateFareNotice();
   updatePricePreview();
   goScreen('c-booking');
 }
@@ -1225,7 +1322,8 @@ function initCustomerMap() {
     $('customerMap').innerHTML = '<div class="empty-state"><div class="big">🗺️</div><div class="ttl">تعذر تحميل الخريطة</div></div>';
     return;
   }
-  customerMap = L.map('customerMap', { zoomControl: true }).setView([31.05, 46.26], 13);
+  const region = REGIONS[state.region] || REGIONS.baghdad;
+  customerMap = L.map('customerMap', { zoomControl: true }).setView(region.center, 13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19, attribution: '© OpenStreetMap'
   }).addTo(customerMap);
@@ -1259,15 +1357,19 @@ function locateMe() {
   toast('جاري تحديد موقعك...', 'info');
   navigator.geolocation.getCurrentPosition(
     (pos) => {
-      const latlng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      const lat = pos.coords.latitude, lng = pos.coords.longitude;
+      const latlng = { lat, lng };
+      // كشف المنطقة تلقائياً
+      const detected = detectRegionFromCoords(lat, lng);
+      selectRegion(detected, true);
       if (customerMap) customerMap.setView(latlng, 16);
       state.pickupCoords = latlng;
-      $('pickup').value = '📍 موقعي الحالي (' + latlng.lat.toFixed(4) + ', ' + latlng.lng.toFixed(4) + ')';
+      $('pickup').value = '📍 موقعي الحالي (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ')';
       if (cPickupMarker) cPickupMarker.setLatLng(latlng);
       else if (customerMap) cPickupMarker = L.marker(latlng, { icon: makeIcon('#00d4a0', 'A') }).addTo(customerMap);
       updateRouteLine();
       updatePricePreview();
-      toast('تم تحديد موقعك', 'success');
+      toast(`📍 ${REGIONS[detected].name} — ${getRegionRateText(detected)}`, 'success');
     },
     () => toast('لم نتمكن من تحديد موقعك', 'error'),
     { enableHighAccuracy: true, timeout: 12000 }
@@ -1296,13 +1398,23 @@ function updateRouteLine() {
 
 function updatePricePreview() {
   const el = $('price');
+  const surgeEl = $('surgeBadge');
   if (!el) return;
   if (state.pickupCoords && state.destCoords) {
     const km = haversine(state.pickupCoords, state.destCoords);
-    const p = calcPrice(state.service, km);
-    el.textContent = fmt(p) + ' د.ع';
+    const res = calcPriceDetailed(state.service, km, state.region);
+    el.textContent = res.total != null ? fmt(res.total) + ' د.ع' : '—';
+    if (surgeEl) {
+      if (res.surge > 0) {
+        surgeEl.textContent = res.surgeLabel;
+        surgeEl.classList.remove('hidden');
+      } else {
+        surgeEl.classList.add('hidden');
+      }
+    }
   } else {
     el.textContent = '—';
+    if (surgeEl) surgeEl.classList.add('hidden');
   }
 }
 
@@ -1313,9 +1425,10 @@ function submitOrder() {
   if (!dest) { toast('اكتب الوجهة المطلوبة', 'error'); return; }
 
   const km = haversine(state.pickupCoords, state.destCoords);
-  const price = calcPrice(state.service, km);
+  const price = calcPrice(state.service, km, state.region);
   const cust = getCustomer();
   const session = getSession('customer');
+  const region = REGIONS[state.region];
 
   const order = {
     id: 'ord_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
@@ -1327,6 +1440,9 @@ function submitOrder() {
     dest,   destCoords:   state.destCoords,
     distanceKm: km ? Number(km.toFixed(2)) : null,
     price: price,
+    region: state.region,
+    regionName: region ? region.name : null,
+    regionEmoji: region ? region.emoji : '',
     status: 'pending',
     driverId: null, driverName: null, driverPhone: null, driverCar: null,
     createdAt: Date.now(), updatedAt: Date.now()
@@ -1370,6 +1486,7 @@ function renderCustomerOrders() {
         ${o.driverPhone ? `<div style="font-size:11px;color:#a09a8a;margin-top:2px">📞 ${esc(o.driverPhone)}</div>` : ''}
       </div>` : '';
     const actions = o.status === 'pending' ? `<div class="order-actions"><button class="btn-cancel" onclick="cancelOrder('${o.id}')">إلغاء الطلب</button></div>` : '';
+    const regionLine = o.regionName ? `<div>📍 المنطقة: <b>${esc(o.regionEmoji || '')} ${esc(o.regionName)}</b></div>` : '';
 
     return `<div class="order-item">
       <div class="order-head">
@@ -1377,6 +1494,7 @@ function renderCustomerOrders() {
         <span class="status-badge ${st.cls}">${st.label}</span>
       </div>
       <div class="order-meta">
+        ${regionLine}
         <div>من: <b>${esc(o.pickup)}</b></div>
         <div>إلى: <b>${esc(o.dest)}</b></div>
         ${o.distanceKm ? `<div>المسافة: <b>${o.distanceKm} كم</b></div>` : ''}
@@ -1400,6 +1518,9 @@ function cancelOrder(id) {
   toast('تم إلغاء الطلب', 'info');
 }
 
+/* =========================================================
+   DRIVER
+   ========================================================= */
 function updateOnlineUI() {
   const t = $('onlineToggle'), l = $('onlineLabel'), sub = $('onlineSub');
   if (!t) return;
@@ -1433,7 +1554,7 @@ function initDriverMap() {
     $('driverMap').innerHTML = '<div class="empty-state"><div class="big">🗺️</div><div class="ttl">تعذر تحميل الخريطة</div></div>';
     return;
   }
-  driverMap = L.map('driverMap', { zoomControl: true }).setView([31.05, 46.26], 13);
+  driverMap = L.map('driverMap', { zoomControl: true }).setView([33.3152, 44.3661], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19, attribution: '© OpenStreetMap'
   }).addTo(driverMap);
@@ -1471,6 +1592,7 @@ function renderDriverHome() {
       <span class="status-badge ${st.cls}">${st.label}</span>
     </div>
     <div class="order-meta">
+      ${active.regionName ? `<div>📍 المنطقة: <b>${esc(active.regionEmoji || '')} ${esc(active.regionName)}</b></div>` : ''}
       <div>👤 الزبون: <b>${esc(active.customerName)}</b></div>
       ${active.customerPhone ? `<div>📞 <a href="tel:${esc(active.customerPhone)}" class="phone-link">${esc(active.customerPhone)}</a></div>` : ''}
       <div>📍 من: <b>${esc(active.pickup)}</b></div>
@@ -1524,6 +1646,7 @@ function renderDriverOrders() {
             <span class="status-badge ${st.cls}">${st.label}</span>
           </div>
           <div class="order-meta">
+            ${o.regionName ? `<div>📍 <b>${esc(o.regionEmoji || '')} ${esc(o.regionName)}</b></div>` : ''}
             <div>👤 ${esc(o.customerName)}${o.customerPhone ? ' — ' + esc(o.customerPhone) : ''}</div>
             <div>📍 من: <b>${esc(o.pickup)}</b></div>
             <div>🎯 إلى: <b>${esc(o.dest)}</b></div>
@@ -1545,7 +1668,10 @@ function renderDriverOrders() {
         const st = STATUS[o.status];
         return `<div class="order-item" style="opacity:.9">
           <div class="order-head"><span class="order-service">${o.serviceLabel}</span><span class="status-badge ${st.cls}">${st.label}</span></div>
-          <div class="order-meta"><div>📍 ${esc(o.pickup)} → 🎯 ${esc(o.dest)}</div></div>
+          <div class="order-meta">
+            ${o.regionName ? `<div>📍 ${esc(o.regionEmoji || '')} ${esc(o.regionName)}</div>` : ''}
+            <div>📍 ${esc(o.pickup)} → 🎯 ${esc(o.dest)}</div>
+          </div>
           ${o.price ? `<div class="order-price">${fmt(o.price)} د.ع</div>` : ''}
         </div>`;
       }).join('');
@@ -1613,7 +1739,10 @@ function renderEarnings() {
   el.innerHTML = completed.slice(0, 15).map(o => `
     <div class="order-item" style="padding:12px">
       <div class="order-head"><span class="order-service" style="font-size:13px">${o.serviceLabel}</span><span class="status-badge completed">مكتملة</span></div>
-      <div class="order-meta" style="font-size:11.5px"><div>📍 ${esc(o.pickup)} → 🎯 ${esc(o.dest)}</div></div>
+      <div class="order-meta" style="font-size:11.5px">
+        ${o.regionName ? `<div>📍 ${esc(o.regionEmoji || '')} ${esc(o.regionName)}</div>` : ''}
+        <div>📍 ${esc(o.pickup)} → 🎯 ${esc(o.dest)}</div>
+      </div>
       <div class="order-price">${fmt(o.price || 0)} د.ع</div>
     </div>
   `).join('');
@@ -1661,7 +1790,7 @@ function saveDriverProfile() {
 }
 function resetAll() {
   if (!confirm('هل تريد مسح كل البيانات؟')) return;
-  try { Object.values(LS).forEach(k => localStorage.removeItem(k)); sessionStorage.clear(); } catch(e){}
+  try { Object.values(LS).forEach(k => localStorage.removeItem(k)); localStorage.removeItem(REGION_KEY); sessionStorage.clear(); } catch(e){}
   broadcastUpdate();
   toast('تم مسح كل البيانات', 'info');
   setTimeout(() => location.reload(), 900);
@@ -1683,9 +1812,17 @@ function refreshFromStorage(force = false) {
 }
 setInterval(refreshFromStorage, 1500);
 
+// تحديث السعر بشكل دوري (لتحديث ذروة/ليلي تلقائياً)
+setInterval(() => {
+  if (state.screen === 'c-booking' && state.pickupCoords && state.destCoords) {
+    updatePricePreview();
+  }
+}, 60000);
+
 document.addEventListener('DOMContentLoaded', () => {
   state.driverId = getDriverId();
   state.online = getOnline();
+  if (!REGIONS[state.region]) state.region = 'baghdad';
   applyTheme(getStoredTheme());
   initSplash();
 });
