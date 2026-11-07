@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بيدق الغولم الصخري</title>
+<style>
+  html,body{margin:0;height:100%;background:radial-gradient(circle at 50% 40%,#232047,#0c0a1c);overflow:hidden;font-family:sans-serif}
+  canvas{display:block}
+  #ui{position:fixed;top:12px;left:0;right:0;text-align:center;color:#fff}
+  button{background:#2e8bff;color:#fff;border:0;border-radius:10px;padding:10px 18px;font-size:16px;cursor:pointer}
+  p{color:#9fb4d8;font-size:13px;margin:6px}
+</style>
+<script type="importmap">
+{"imports":{
+ "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+ "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<div id="ui"><button id="btn">تصدير OBJ</button><p>اسحب للتدوير • عجلة الماوس للتقريب</p></div>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OBJExporter } from "three/addons/exporters/OBJExporter.js";
+
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,.1,100);
+cam.position.set(2.6,2.4,4.6);
+const ctl=new OrbitControls(cam,renderer.domElement);ctl.target.set(0,1.2,0);ctl.enableDamping=true;
+scene.add(new THREE.HemisphereLight(0x9ab4ff,0x221c33,1.1));
+const sun=new THREE.DirectionalLight(0xffffff,2);sun.position.set(3,5,4);scene.add(sun);
+const glowLight=new THREE.PointLight(0x2e8bff,12,6);glowLight.position.set(0,1.4,1);scene.add(glowLight);
+
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const stone=[0x4a4a52,0x3b3b44,0x55555d].map(c=>new THREE.MeshStandardMaterial({color:c,roughness:.9,flatShading:true}));
