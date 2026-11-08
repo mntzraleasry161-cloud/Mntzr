@@ -9,6 +9,8 @@
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
+html[data-theme="dark"]{color-scheme:dark}
+html[data-theme="light"]{color-scheme:light}
 body{
   background:#050507;color:#fff;
   font-family:-apple-system,'SF Arabic','Segoe UI',Tahoma,Arial,sans-serif;
@@ -177,27 +179,30 @@ label:first-child{margin-top:0}
 /* Subscriber */
 .sub-card{padding:14px;margin-bottom:10px;border-radius:16px;
   background:linear-gradient(160deg,#14121a 0%,#0a090f 100%);
-  border:1px solid rgba(255,255,255,0.08);display:flex;gap:12px;align-items:center;}
+  border:1px solid rgba(255,255,255,0.08);display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
 .sub-avatar{width:48px;height:48px;border-radius:14px;flex-shrink:0;
   background:linear-gradient(160deg,#00e0a4,#006644);color:#042018;
   display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;}
 .sub-info{flex:1;min-width:0}
 .sub-name{font-size:14px;font-weight:900;color:#fff}
-.sub-detail{font-size:11px;color:#a09a8a;margin-top:2px}
+.sub-detail{font-size:11px;color:#a09a8a;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sub-amps{font-size:15px;font-weight:900;color:var(--gold);white-space:nowrap;text-align:left}
 .sub-amps small{display:block;font-size:9px;color:#a09a8a;font-weight:700}
 
-/* Shop */
-.shop-card{padding:14px;margin-bottom:10px;border-radius:16px;
-  background:linear-gradient(160deg,#1a1410 0%,#0f0a05 100%);
-  border:1px solid rgba(255,196,0,0.22);}
-.shop-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
-.shop-name{font-size:15px;font-weight:900;color:#fff;display:flex;align-items:center;gap:6px}
-.shop-type{font-size:11px;color:#a09a8a;margin-top:2px}
-.shop-balance{font-size:16px;font-weight:900;white-space:nowrap;text-align:left}
-.shop-balance.debt{color:#ff4d6d}
-.shop-balance.credit{color:#00e0a4}
-.shop-balance small{display:block;font-size:9px;color:#a09a8a;font-weight:700}
+/* Days counter */
+.days-row{flex-basis:100%;display:flex;gap:8px;margin-top:6px;align-items:stretch}
+.days-badge{flex:1;padding:8px 12px;border-radius:10px;font-size:11px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.days-badge small{color:#a09a8a;font-weight:700;font-size:10px}
+.days-badge.ok{color:#00e0a4;background:rgba(0,224,164,0.12);border:1px solid rgba(0,224,164,0.3)}
+.days-badge.near{color:#ffd24a;background:rgba(255,196,0,0.12);border:1px solid rgba(255,196,0,0.3)}
+.days-badge.warn{color:#ff4d6d;background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.3)}
+[data-theme="light"] .days-badge.ok{color:#006644;background:rgba(0,180,132,0.12)}
+[data-theme="light"] .days-badge.near{color:#8a6200;background:rgba(255,196,0,0.18)}
+[data-theme="light"] .days-badge.warn{color:#cc0033;background:rgba(255,77,109,0.12)}
+
+/* Card actions */
 .shop-actions{display:flex;gap:6px;margin-top:10px}
 .mini-btn{flex:1;padding:8px;border-radius:10px;font-size:11px;font-weight:900;
   background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#e8e3d4;}
@@ -290,18 +295,6 @@ select.field option{background:#0c0b10;color:#fff}
 /* Divider */
 .divider{height:1px;background:rgba(255,255,255,0.06);margin:14px 0}
 
-/* Transaction row */
-.tx-row{display:flex;justify-content:space-between;align-items:center;gap:10px;
-  padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;}
-.tx-row:last-child{border-bottom:0}
-.tx-type{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:900}
-.tx-type.sale{background:rgba(255,77,109,0.15);color:#ff4d6d}
-.tx-type.pay{background:rgba(0,224,164,0.15);color:#00e0a4}
-.tx-amount{font-weight:900;color:#fff}
-.tx-amount.sale{color:#ff4d6d}
-.tx-amount.pay{color:#00e0a4}
-.tx-date{font-size:10px;color:#6a6659}
-
 /* Light theme */
 [data-theme="light"]{color-scheme:light}
 [data-theme="light"] body{background:#f0f5f2;color:#0a1410}
@@ -318,15 +311,14 @@ select.field option{background:#0c0b10;color:#fff}
 [data-theme="light"] .field::placeholder{color:#8fa89b}
 [data-theme="light"] .field:focus{background:#fff;border-color:rgba(0,224,164,0.7)}
 [data-theme="light"] .formbox,[data-theme="light"] .card,[data-theme="light"] .stat-card,
-[data-theme="light"] .gen-card,[data-theme="light"] .sub-card,[data-theme="light"] .shop-card{
+[data-theme="light"] .gen-card,[data-theme="light"] .sub-card{
   background:linear-gradient(160deg,#fff 0%,#f0faf6 100%);
   border-color:rgba(0,0,0,0.08);box-shadow:0 10px 30px -15px rgba(0,0,0,0.1);
 }
 [data-theme="light"] .gen-card{border-color:rgba(0,224,164,0.3)}
-[data-theme="light"] .shop-card{border-color:rgba(255,196,0,0.3)}
 [data-theme="light"] .cta-ghost{background:linear-gradient(160deg,#f0faf6,#d6f0e5);border-color:rgba(0,0,0,0.10);color:#0a1410}
-[data-theme="light"] .gen-name,[data-theme="light"] .sub-name,[data-theme="light"] .shop-name{color:#0a1410}
-[data-theme="light"] .gen-meta,[data-theme="light"] .sub-detail,[data-theme="light"] .shop-type{color:#4a6055}
+[data-theme="light"] .gen-name,[data-theme="light"] .sub-name{color:#0a1410}
+[data-theme="light"] .gen-meta,[data-theme="light"] .sub-detail{color:#4a6055}
 [data-theme="light"] .gen-row{background:rgba(0,224,164,0.08);border-color:rgba(0,224,164,0.2)}
 [data-theme="light"] .gen-row b{color:#006644}
 [data-theme="light"] .tabs{background:#e6f2ec;border-color:rgba(0,0,0,0.08)}
@@ -363,7 +355,7 @@ select.field option{background:#0c0b10;color:#fff}
   <div class="splash-logo">أمبير</div>
   <div class="splash-sub">إدارة المولدات الأهلية</div>
   <div class="splash-line"></div>
-  <div class="splash-tag">أمبيرات • فواتير • محلات • حسابات</div>
+  <div class="splash-tag">أمبيرات • فواتير • مشتركين • حسابات</div>
   <div class="splash-progress"></div>
 </div>
 
@@ -396,9 +388,9 @@ select.field option{background:#0c0b10;color:#fff}
           <div class="stat-label">مشتركين</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">🏪</div>
-          <div class="stat-value gold" id="statShops">0</div>
-          <div class="stat-label">محلات</div>
+          <div class="stat-icon">🔌</div>
+          <div class="stat-value" id="statAmps">0</div>
+          <div class="stat-label">إجمالي الأمبيرات</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">💰</div>
@@ -407,35 +399,15 @@ select.field option{background:#0c0b10;color:#fff}
         </div>
       </div>
 
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <div style="font-size:14px;font-weight:900">📊 ملخص الأمبيرات</div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div class="gen-row" style="background:rgba(0,224,164,0.10);border-color:rgba(0,224,164,0.25)">
-            <div style="color:#a09a8a;font-size:10.5px">إجمالي الأمبيرات المخصصة</div>
-            <b id="sumAmps" style="color:var(--primary)">0 A</b>
-          </div>
-          <div class="gen-row" style="background:rgba(255,196,0,0.10);border-color:rgba(255,196,0,0.25)">
-            <div style="color:#a09a8a;font-size:10.5px">إجمالي الديون على المحلات</div>
-            <b id="sumDebt" style="color:var(--gold)">0 د.ع</b>
-          </div>
-        </div>
-      </div>
-
       <div class="section-title">إجراءات سريعة</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
         <button class="cta-ghost" style="margin-top:0;padding:20px 10px;font-size:13px;text-align:center" onclick="openGenModal()">
           <div style="font-size:32px;margin-bottom:6px">⚡</div>
-          إضافة مولد
+          مولد
         </button>
         <button class="cta-ghost" style="margin-top:0;padding:20px 10px;font-size:13px;text-align:center" onclick="openSubModal()">
           <div style="font-size:32px;margin-bottom:6px">👥</div>
-          إضافة مشترك
-        </button>
-        <button class="cta-ghost" style="margin-top:0;padding:20px 10px;font-size:13px;text-align:center" onclick="openShopModal()">
-          <div style="font-size:32px;margin-bottom:6px">🏪</div>
-          إضافة محل
+          مشترك
         </button>
         <button class="cta-ghost" style="margin-top:0;padding:20px 10px;font-size:13px;text-align:center" onclick="goScreen('calc')">
           <div style="font-size:32px;margin-bottom:6px">🧮</div>
@@ -455,19 +427,9 @@ select.field option{background:#0c0b10;color:#fff}
       <div class="section-title">👥 المشتركين</div>
       <div class="search-box">
         <span class="search-icon">🔍</span>
-        <input class="field" id="subSearch" placeholder="بحث بالاسم أو الهاتف..." oninput="renderSubscribers()">
+        <input class="field" id="subSearch" placeholder="بحث بالاسم، الهاتف، أو الموقع..." oninput="renderSubscribers()">
       </div>
       <div id="subList"></div>
-    </section>
-
-    <!-- ===== SHOPS ===== -->
-    <section id="shops" class="screen">
-      <div class="section-title">🏪 المحلات التجارية</div>
-      <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input class="field" id="shopSearch" placeholder="بحث في المحلات..." oninput="renderShops()">
-      </div>
-      <div id="shopList"></div>
     </section>
 
     <!-- ===== CALCULATOR ===== -->
@@ -479,7 +441,6 @@ select.field option{background:#0c0b10;color:#fff}
         <button class="tab" data-calc="invoice" onclick="switchCalc('invoice')">فاتورة مشترك</button>
       </div>
 
-      <!-- Sub calculator -->
       <div id="calcSub" class="calc-panel">
         <div class="formbox">
           <label>عدد الأمبيرات (A)</label>
@@ -498,7 +459,6 @@ select.field option{background:#0c0b10;color:#fff}
         </div>
       </div>
 
-      <!-- Sale calculator -->
       <div id="calcSale" class="calc-panel hidden">
         <div class="formbox">
           <label>سعر الشراء (الجملة) د.ع</label>
@@ -515,7 +475,6 @@ select.field option{background:#0c0b10;color:#fff}
         </div>
       </div>
 
-      <!-- Invoice calculator -->
       <div id="calcInvoice" class="calc-panel hidden">
         <div class="formbox">
           <label>اختر مشترك (اختياري)</label>
@@ -540,13 +499,10 @@ select.field option{background:#0c0b10;color:#fff}
     </section>
   </main>
 
-  <!-- FAB for quick add -->
   <button class="fab" id="fab" onclick="handleFab()">+</button>
-
   <nav class="bottom" id="bottomNav"></nav>
 </div>
 
-<!-- MODAL CONTAINER -->
 <div id="modalRoot"></div>
 
 <script>
@@ -557,6 +513,35 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp
 const haptic = () => { if (navigator.vibrate) try { navigator.vibrate(15); } catch(e){} };
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 const now = () => Date.now();
+const DAY_MS = 86400000;
+const SUB_PERIOD_DAYS = 30; // مدة الاشتراك الشهري
+
+/* ============ DATE HELPERS ============ */
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function dateStrToTs(s){
+  if (!s) return now();
+  const parts = String(s).split('-');
+  if (parts.length !== 3) return now();
+  const ts = new Date(Number(parts[0]), Number(parts[1])-1, Number(parts[2])).getTime();
+  return isNaN(ts) ? now() : ts;
+}
+function tsToDateStr(ts){
+  const d = new Date(ts);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function formatDate(ts){
+  const d = new Date(ts);
+  return d.getFullYear() + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0');
+}
+function subDaysInfo(sub){
+  const start = sub.startDate || sub.createdAt || now();
+  const elapsed = Math.floor((now() - start) / DAY_MS);
+  const left = SUB_PERIOD_DAYS - elapsed;
+  return { start, elapsed, left, expired: left <= 0 };
+}
 
 /* ============ THEME ============ */
 const THEME_KEY = 'ampere_theme';
@@ -579,21 +564,15 @@ applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
 /* ============ DATA ============ */
 const KEYS = {
   generators: 'ampere_generators',
-  subscribers: 'ampere_subscribers',
-  shops: 'ampere_shops',
-  transactions: 'ampere_transactions'
+  subscribers: 'ampere_subscribers'
 };
 
 function load(key){ try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ return []; } }
 function save(key, data){ try { localStorage.setItem(key, JSON.stringify(data)); } catch(e){} }
 function getGenerators(){ return load(KEYS.generators); }
 function getSubscribers(){ return load(KEYS.subscribers); }
-function getShops(){ return load(KEYS.shops); }
-function getTransactions(){ return load(KEYS.transactions); }
 function saveGenerators(d){ save(KEYS.generators, d); renderAll(); }
 function saveSubscribers(d){ save(KEYS.subscribers, d); renderAll(); }
-function saveShops(d){ save(KEYS.shops, d); renderAll(); }
-function saveTransactions(d){ save(KEYS.transactions, d); renderAll(); }
 
 /* ============ TOAST ============ */
 let toastTimer = null;
@@ -614,7 +593,6 @@ const NAV_ITEMS = [
   { id: 'home', icon: '⌂', label: 'الرئيسية' },
   { id: 'generators', icon: '⚡', label: 'المولدات' },
   { id: 'subscribers', icon: '👥', label: 'المشتركين' },
-  { id: 'shops', icon: '🏪', label: 'المحلات' },
   { id: 'calc', icon: '🧮', label: 'الحاسبة' }
 ];
 let currentScreen = 'home';
@@ -632,11 +610,9 @@ function goScreen(id){
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
   renderNav();
   if (id === 'subscribers') renderSubscribers();
-  if (id === 'shops') renderShops();
   if (id === 'generators') renderGenerators();
   if (id === 'calc') initCalcSelects();
   if (id === 'home') renderHome();
-  // FAB visibility
   const fab = $('fab');
   if (id === 'calc') fab.classList.add('hidden');
   else fab.classList.remove('hidden');
@@ -647,7 +623,6 @@ function goHome(){ goScreen('home'); }
 function handleFab(){
   if (currentScreen === 'generators') openGenModal();
   else if (currentScreen === 'subscribers') openSubModal();
-  else if (currentScreen === 'shops') openShopModal();
   else if (currentScreen === 'home') openGenModal();
 }
 
@@ -655,11 +630,9 @@ function handleFab(){
 function renderHome(){
   const gens = getGenerators();
   const subs = getSubscribers();
-  const shops = getShops();
 
   $('statGens').textContent = gens.length;
   $('statSubs').textContent = subs.length;
-  $('statShops').textContent = shops.length;
 
   let revenue = 0;
   let totalAmps = 0;
@@ -670,11 +643,7 @@ function renderHome(){
     totalAmps += Number(s.amps);
   });
   $('statRevenue').textContent = fmt(Math.round(revenue));
-  $('sumAmps').textContent = fmt(totalAmps) + ' A';
-
-  let debt = 0;
-  shops.forEach(sh => { if (Number(sh.balance) > 0) debt += Number(sh.balance); });
-  $('sumDebt').textContent = fmt(Math.round(debt)) + ' د.ع';
+  $('statAmps').textContent = fmt(totalAmps) + 'A';
 }
 
 /* ============ GENERATORS ============ */
@@ -772,7 +741,8 @@ function renderSubscribers(){
   let list = getSubscribers();
   if (query) list = list.filter(s =>
     (s.name || '').toLowerCase().includes(query) ||
-    (s.phone || '').includes(query)
+    (s.phone || '').includes(query) ||
+    (s.location || '').toLowerCase().includes(query)
   );
   const el = $('subList');
   if (list.length === 0){
@@ -785,34 +755,79 @@ function renderSubscribers(){
   el.innerHTML = list.map(s => {
     const g = gens.find(x => x.id === s.generatorId);
     const monthly = Number(s.amps) * (g ? Number(g.pricePerAmp) : Number(s.pricePerAmp || 0));
+    const info = subDaysInfo(s);
+
+    // شارة عداد الأيام
+    let cls = 'ok', label;
+    if (info.expired){
+      cls = 'warn';
+      label = `⚠️ انتهى منذ ${Math.abs(info.left)} يوم`;
+    } else if (info.left <= 5){
+      cls = 'warn';
+      label = `⏱ متبقي ${info.left} يوم`;
+    } else if (info.left <= 10){
+      cls = 'near';
+      label = `⏱ متبقي ${info.left} يوم`;
+    } else {
+      cls = 'ok';
+      label = `⏱ متبقي ${info.left} يوم`;
+    }
+
+    // السطر الأول: الموقع + الهاتف + المولد
+    const parts1 = [];
+    if (s.location) parts1.push('📍 ' + esc(s.location));
+    parts1.push(s.phone ? '📞 ' + esc(s.phone) : 'بدون رقم');
+    if (g) parts1.push('⚡ ' + esc(g.name));
+
     return `<div class="sub-card">
       <div class="sub-avatar">${esc((s.name || '?').charAt(0))}</div>
       <div class="sub-info">
         <div class="sub-name">${esc(s.name)}</div>
-        <div class="sub-detail">${esc(s.phone || 'بدون رقم')}${g ? ' • ' + esc(g.name) : ''}</div>
+        <div class="sub-detail">${parts1.join(' • ')}</div>
         <div class="sub-detail" style="color:var(--primary);font-weight:900">${fmt(Math.round(monthly))} د.ع/شهر</div>
       </div>
       <div class="sub-amps">${fmt(s.amps)} A<small>أمبير</small></div>
-      <button class="mini-btn" style="flex:0;padding:6px 8px" onclick="openSubModal(null,'${s.id}')">✎</button>
+      <button class="mini-btn" style="flex:0;padding:6px 10px;width:auto" onclick="openSubModal(null,'${s.id}')">✎</button>
+      <div class="days-row">
+        <div class="days-badge ${cls}">
+          ${label} <small>• بدأ ${formatDate(info.start)}</small>
+        </div>
+        <button class="mini-btn primary" style="flex:0;padding:8px 12px;width:auto;white-space:nowrap" onclick="renewSub('${s.id}')">🔄 تجديد</button>
+      </div>
     </div>`;
   }).join('');
+}
+
+function renewSub(id){
+  const list = getSubscribers();
+  const i = list.findIndex(s => s.id === id);
+  if (i < 0) return;
+  list[i].startDate = now();
+  saveSubscribers(list);
+  haptic();
+  toast('✅ تم تجديد الاشتراك لمدة 30 يوم', 'success');
 }
 
 function openSubModal(presetGenId, subId){
   const sub = subId ? getSubscribers().find(s => s.id === subId) : null;
   const gens = getGenerators();
   const gopts = gens.map(g => `<option value="${g.id}" ${(sub?.generatorId === g.id) || (presetGenId === g.id) ? 'selected' : ''}>${esc(g.name)} — ${fmt(g.pricePerAmp)} د.ع/A</option>`).join('');
+  const defaultStart = sub ? (sub.startDate || sub.createdAt || now()) : now();
   openModal(sub ? 'تعديل مشترك' : 'إضافة مشترك', `
     <label>اسم المشترك *</label>
     <input class="field" id="mSubName" placeholder="الاسم الكامل" value="${esc(sub?.name || '')}">
     <label>رقم الهاتف</label>
     <input class="field" id="mSubPhone" type="tel" placeholder="07XXXXXXXXX" value="${esc(sub?.phone || '')}">
+    <label>الموقع / العنوان</label>
+    <input class="field" id="mSubLoc" placeholder="مثلاً: الكرادة - شارع 62" value="${esc(sub?.location || '')}">
     <label>المولد التابع له</label>
     <select class="field" id="mSubGen">${gopts || '<option value="">— لا يوجد مولدات —</option>'}</select>
     <label>عدد الأمبيرات *</label>
     <input class="field" id="mSubAmps" type="number" inputmode="decimal" placeholder="5" value="${esc(sub?.amps || '')}">
     <label>سعر الأمبير (فقط إن لم يُربط بمولد)</label>
     <input class="field" id="mSubPrice" type="number" inputmode="decimal" placeholder="12000" value="${esc(sub?.pricePerAmp || '')}">
+    <label>تاريخ بدء الاشتراك (لمدة 30 يوم)</label>
+    <input class="field" id="mSubStart" type="date" value="${tsToDateStr(defaultStart)}">
     <label>ملاحظات</label>
     <input class="field" id="mSubNotes" placeholder="اختياري" value="${esc(sub?.notes || '')}">
     <div class="modal-actions">
@@ -827,15 +842,18 @@ function saveSub(id){
   const amps = Number($('mSubAmps').value) || 0;
   if (!name){ toast('اسم المشترك مطلوب', 'error'); return; }
   if (amps <= 0){ toast('أدخل عدد الأمبيرات', 'error'); return; }
+  const existing = id ? getSubscribers().find(s => s.id === id) : null;
   const data = {
     id: id || uid(),
     name,
     phone: $('mSubPhone').value.trim(),
+    location: $('mSubLoc').value.trim(),
     generatorId: $('mSubGen').value,
     amps,
     pricePerAmp: Number($('mSubPrice').value) || 0,
+    startDate: dateStrToTs($('mSubStart').value),
     notes: $('mSubNotes').value.trim(),
-    createdAt: now()
+    createdAt: existing?.createdAt || now()
   };
   const list = getSubscribers();
   const i = list.findIndex(s => s.id === data.id);
@@ -843,141 +861,6 @@ function saveSub(id){
   saveSubscribers(list);
   haptic();
   toast('✅ تم الحفظ', 'success');
-  closeModal();
-}
-
-/* ============ SHOPS ============ */
-function renderShops(){
-  const query = ($('shopSearch')?.value || '').trim().toLowerCase();
-  let list = getShops();
-  if (query) list = list.filter(s =>
-    (s.name || '').toLowerCase().includes(query) ||
-    (s.phone || '').includes(query)
-  );
-  const el = $('shopList');
-  if (list.length === 0){
-    el.innerHTML = `<div class="empty-state"><div class="big">🏪</div>
-      <div class="ttl">لا يوجد محلات بعد</div>
-      <div class="muted">اضغط + لإضافة محل</div></div>`;
-    return;
-  }
-  el.innerHTML = list.map(s => {
-    const bal = Number(s.balance) || 0;
-    const cls = bal > 0 ? 'debt' : bal < 0 ? 'credit' : '';
-    const lbl = bal > 0 ? 'دين' : bal < 0 ? 'رصيد' : 'مسدد';
-    return `<div class="shop-card">
-      <div class="shop-head">
-        <div>
-          <div class="shop-name">🏪 ${esc(s.name)}</div>
-          <div class="shop-type">${esc(s.type || 'محل تجاري')}${s.phone ? ' • ' + esc(s.phone) : ''}</div>
-        </div>
-        <div class="shop-balance ${cls}">
-          ${fmt(Math.abs(bal))} د.ع<small>${lbl}</small>
-        </div>
-      </div>
-      <div class="shop-actions">
-        <button class="mini-btn primary" onclick="openTxModal('${s.id}','pay')">💵 دفعة</button>
-        <button class="mini-btn" onclick="openTxModal('${s.id}','sale')">📦 بيع آجل</button>
-        <button class="mini-btn gold" onclick="openShopModal('${s.id}')">✎</button>
-        <button class="mini-btn danger" onclick="deleteShop('${s.id}')">🗑</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function openShopModal(id){
-  const shop = id ? getShops().find(s => s.id === id) : null;
-  openModal(shop ? 'تعديل محل' : 'إضافة محل', `
-    <label>اسم المحل *</label>
-    <input class="field" id="mShopName" placeholder="اسم المحل" value="${esc(shop?.name || '')}">
-    <label>رقم الهاتف</label>
-    <input class="field" id="mShopPhone" type="tel" placeholder="07XXXXXXXXX" value="${esc(shop?.phone || '')}">
-    <label>نوع المحل</label>
-    <input class="field" id="mShopType" placeholder="مثلاً: بقالة، ملابس..." value="${esc(shop?.type || '')}">
-    <label>الرصيد الابتدائي (د.ع) — للمحلات القديمة</label>
-    <input class="field" id="mShopBal" type="number" inputmode="decimal" placeholder="0" value="${esc(shop?.balance || 0)}">
-    <label>ملاحظات</label>
-    <input class="field" id="mShopNotes" placeholder="اختياري" value="${esc(shop?.notes || '')}">
-    <div class="modal-actions">
-      <button class="cta-ghost" style="margin-top:0" onclick="closeModal()">إلغاء</button>
-      <button class="cta-primary" style="margin-top:0" onclick="saveShop('${id || ''}')">حفظ</button>
-    </div>
-  `);
-}
-
-function saveShop(id){
-  const name = $('mShopName').value.trim();
-  if (!name){ toast('اسم المحل مطلوب', 'error'); return; }
-  const data = {
-    id: id || uid(),
-    name,
-    phone: $('mShopPhone').value.trim(),
-    type: $('mShopType').value.trim(),
-    balance: Number($('mShopBal').value) || 0,
-    notes: $('mShopNotes').value.trim(),
-    createdAt: now()
-  };
-  const list = getShops();
-  const i = list.findIndex(s => s.id === data.id);
-  if (i >= 0) list[i] = data; else list.push(data);
-  saveShops(list);
-  haptic();
-  toast('✅ تم الحفظ', 'success');
-  closeModal();
-}
-
-function deleteShop(id){
-  if (!confirm('حذف المحل وجميع معاملاته؟')) return;
-  saveShops(getShops().filter(s => s.id !== id));
-  saveTransactions(getTransactions().filter(t => t.shopId !== id));
-  toast('تم الحذف', 'gold');
-}
-
-/* Transactions */
-function openTxModal(shopId, type){
-  const shop = getShops().find(s => s.id === shopId);
-  if (!shop) return;
-  const isSale = type === 'sale';
-  openModal((isSale ? '📦 بيع آجل' : '💵 دفعة') + ' — ' + esc(shop.name), `
-    <label>المبلغ (د.ع) *</label>
-    <input class="field" id="mTxAmount" type="number" inputmode="decimal" placeholder="0">
-    <label>ملاحظة</label>
-    <input class="field" id="mTxNotes" placeholder="اختياري">
-    <div class="muted" style="margin-top:12px;font-size:11px">
-      ${isSale ? 'سيُضاف المبلغ على دين المحل.' : 'سيُخصم المبلغ من دين المحل.'}
-    </div>
-    <div class="modal-actions">
-      <button class="cta-ghost" style="margin-top:0" onclick="closeModal()">إلغاء</button>
-      <button class="${isSale ? 'cta-primary' : 'cta-primary'}" style="margin-top:0" onclick="saveTx('${shopId}','${type}')">تأكيد</button>
-    </div>
-  `);
-}
-
-function saveTx(shopId, type){
-  const amount = Number($('mTxAmount').value) || 0;
-  if (amount <= 0){ toast('أدخل المبلغ', 'error'); return; }
-  const shops = getShops();
-  const shop = shops.find(s => s.id === shopId);
-  if (!shop) return;
-
-  const delta = type === 'sale' ? amount : -amount;
-  shop.balance = (Number(shop.balance) || 0) + delta;
-  saveShops(shops);
-
-  const txs = getTransactions();
-  txs.push({
-    id: uid(),
-    shopId,
-    shopName: shop.name,
-    type,
-    amount,
-    notes: $('mTxNotes').value.trim(),
-    date: now()
-  });
-  saveTransactions(txs);
-
-  haptic();
-  toast(type === 'sale' ? '📦 تم تسجيل البيع' : '💵 تم تسجيل الدفعة', 'success');
   closeModal();
 }
 
@@ -1116,7 +999,6 @@ function renderAll(){
   renderHome();
   if (currentScreen === 'generators') renderGenerators();
   if (currentScreen === 'subscribers') renderSubscribers();
-  if (currentScreen === 'shops') renderShops();
   if (currentScreen === 'calc') initCalcSelects();
 }
 
@@ -1128,7 +1010,6 @@ function init(){
     renderNav();
     renderHome();
     goScreen('home');
-    // Seed example data if empty (first run)
     if (getGenerators().length === 0 && !localStorage.getItem('ampere_seeded')){
       localStorage.setItem('ampere_seeded', '1');
       saveGenerators([{
@@ -1140,10 +1021,8 @@ function init(){
   }, 3400);
 }
 
-/* Start */
 init();
 
-/* Global keyboard shortcuts */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
