@@ -295,7 +295,7 @@ select.field option{background:#0c0b10;color:#fff}
 /* Divider */
 .divider{height:1px;background:rgba(255,255,255,0.06);margin:14px 0}
 
-/* ============ MAP (NEW) ============ */
+/* ============ MAP ============ */
 #mapContainer{
   width:100%;height:340px;border-radius:16px;overflow:hidden;
   border:1px solid rgba(0,224,164,0.3);background:#0c0b10;
@@ -822,7 +822,10 @@ function renderSubscribers(){
         <div class="sub-detail" style="color:var(--primary);font-weight:900">${fmt(Math.round(monthly))} د.ع/شهر</div>
       </div>
       <div class="sub-amps">${fmt(s.amps)} A<small>أمبير</small></div>
-      <button class="mini-btn" style="flex:0;padding:6px 10px;width:auto" onclick="openSubModal(null,'${s.id}')">✎</button>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <button class="mini-btn" style="flex:0;padding:6px 8px;width:auto" onclick="openSubModal(null,'${s.id}')" title="تعديل">✎</button>
+        <button class="mini-btn danger" style="flex:0;padding:6px 8px;width:auto" onclick="confirmDeleteSub('${s.id}')" title="حذف المشترك">🗑️</button>
+      </div>
       <div class="days-row">
         <div class="days-badge ${cls}">
           ${label} <small>• بدأ ${formatDate(info.start)}</small>
@@ -842,6 +845,63 @@ function renewSub(id){
   saveSubscribers(list);
   haptic();
   toast('✅ تم تجديد الاشتراك لمدة 30 يوم', 'success');
+}
+
+/* ============ DELETE SUBSCRIBER ============ */
+function confirmDeleteSub(id){
+  const sub = getSubscribers().find(s => s.id === id);
+  if (!sub) { toast('المشترك غير موجود', 'error'); return; }
+  const gens = getGenerators();
+  const gen = sub.generatorId ? gens.find(g => g.id === sub.generatorId) : null;
+  const monthly = Number(sub.amps) * (gen ? Number(gen.pricePerAmp) : Number(sub.pricePerAmp || 0));
+
+  openModal('⚠️ حذف المشترك', `
+    <div style="text-align:center;padding:10px 0 4px">
+      <div style="width:76px;height:76px;margin:0 auto 14px;border-radius:50%;
+        background:radial-gradient(circle,rgba(255,77,109,0.25) 0%,rgba(255,77,109,0.05) 70%);
+        display:flex;align-items:center;justify-content:center;font-size:38px;
+        border:2px solid rgba(255,77,109,0.4)">🗑️</div>
+      <div style="font-size:17px;font-weight:900;color:#fff;margin-bottom:10px">هل تريد حذف هذا المشترك؟</div>
+      <div style="font-size:13px;color:#a09a8a;line-height:1.8">
+        سيتم حذف <b style="color:#ff4d6d">${esc(sub.name)}</b> نهائياً من قائمة المشتركين.<br>
+        لا يمكن التراجع عن هذا الإجراء.
+      </div>
+    </div>
+
+    <div style="margin-top:16px;padding:14px;background:rgba(255,77,109,0.08);
+      border:1px solid rgba(255,77,109,0.25);border-radius:14px;font-size:12px;color:#ff4d6d;line-height:1.9">
+      <div style="display:flex;justify-content:space-between">
+        <span>⚡ الأمبيرات المحرّرة:</span>
+        <b style="color:#fff">${fmt(sub.amps)} A</b>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span>💰 الإيراد المفقود شهرياً:</span>
+        <b style="color:#fff">${fmt(Math.round(monthly))} د.ع</b>
+      </div>
+      ${gen ? `<div style="display:flex;justify-content:space-between">
+        <span>🔌 المولد المرتبط:</span>
+        <b style="color:#fff">${esc(gen.name)}</b>
+      </div>` : ''}
+    </div>
+
+    <div class="modal-actions">
+      <button class="cta-ghost" style="margin-top:0" onclick="closeModal()">إلغاء</button>
+      <button class="cta-primary" style="margin-top:0;
+        background:linear-gradient(180deg,#ff8da1,#ff4d6d 50%,#d63350);color:#fff;
+        box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 6px 0 #8a0030,0 16px 30px -10px rgba(255,77,109,0.5)"
+        onclick="doDeleteSub('${id}')">🗑️ حذف نهائي</button>
+    </div>
+  `);
+}
+
+function doDeleteSub(id){
+  const sub = getSubscribers().find(s => s.id === id);
+  if (!sub) return;
+  const list = getSubscribers().filter(s => s.id !== id);
+  saveSubscribers(list);
+  haptic();
+  closeModal();
+  toast('🗑️ تم حذف ' + sub.name + ' وتحرير ' + fmt(sub.amps) + 'A', 'gold');
 }
 
 function openSubModal(presetGenId, subId){
@@ -889,6 +949,12 @@ function openSubModal(presetGenId, subId){
       <button class="cta-ghost" style="margin-top:0" onclick="closeModal()">إلغاء</button>
       <button class="cta-primary" style="margin-top:0" onclick="saveSub('${subId || ''}')">حفظ</button>
     </div>
+    ${sub ? `
+      <div class="divider"></div>
+      <button class="cta-ghost cta-danger" style="margin-top:0" onclick="confirmDeleteSub('${subId}')">
+        🗑️ حذف المشترك نهائياً
+      </button>
+    ` : ''}
   `);
 }
 
@@ -927,7 +993,7 @@ function saveSub(id){
   closeModal();
 }
 
-/* ============ GEOLOCATION (NEW) ============ */
+/* ============ GEOLOCATION ============ */
 function captureLocation(btn){
   if (!navigator.geolocation){
     toast('المتصفح لا يدعم تحديد الموقع', 'error');
@@ -974,7 +1040,7 @@ function clearLocation(){
   toast('تم مسح الموقع', 'gold');
 }
 
-/* ============ MAP (NEW) ============ */
+/* ============ MAP ============ */
 let mapInstance = null;
 let leafletLoading = null;
 
